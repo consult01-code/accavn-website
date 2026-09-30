@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="vi" data-lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cổng khách hàng — ACCA Consulting Vietnam</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Cổng khách hàng ACCA Consulting Vietnam: xem tình hình kinh doanh, lãi/lỗ, thuế VAT, TNCN, BHXH ước tính và nhắc hạn nộp cho cơ quan nhà nước.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap">
+<style>
+  :root{
+    --bg:#F7F4EC;--surface:#FFFFFF;--surface-2:#F1ECE0;
+    --ink:#182b24;--muted:#54655d;--line:#e2dccd;
+    --primary:#0E4D3C;--primary-600:#0b5f49;--primary-050:#e6efe9;
+    --gold:#B4842A;--gold-soft:#f3e6c8;--good:#1f7a52;--bad:#c0392b;--warn:#b9761f;
+    --shadow:0 1px 2px rgba(16,40,30,.05),0 12px 30px -18px rgba(16,40,30,.35);
+    --radius:16px;color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+    --bg:#0e1613;--surface:#16221d;--surface-2:#1c2a24;
+    --ink:#eae4d6;--muted:#a3b1a8;--line:#2a3a32;
+    --primary:#4bbf97;--primary-600:#5fd0a8;--primary-050:#17281f;
+    --gold:#d9ad55;--gold-soft:#2b2a1c;--good:#4bbf97;--bad:#e57373;--warn:#e0a458;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -22px rgba(0,0,0,.7);color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0e1613;--surface:#16221d;--surface-2:#1c2a24;
+    --ink:#eae4d6;--muted:#a3b1a8;--line:#2a3a32;
+    --primary:#4bbf97;--primary-600:#5fd0a8;--primary-050:#17281f;
+    --gold:#d9ad55;--gold-soft:#2b2a1c;--good:#4bbf97;--bad:#e57373;--warn:#e0a458;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -22px rgba(0,0,0,.7);color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  [hidden]{display:none!important}
+  h1,h2,h3{line-height:1.2;margin:0;font-weight:700;letter-spacing:-.01em}
+  p{margin:0}
+  a{color:inherit}
+  .wrap{width:100%;max-width:1120px;margin-inline:auto;padding-inline:20px}
+  .num{font-variant-numeric:tabular-nums}
+
+  /* header */
+  header.site{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;gap:14px;height:64px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:700;text-decoration:none;min-width:0}
+  .mark{width:38px;height:38px;border-radius:10px;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:700;font-size:1.15rem;flex:none}
+  :root[data-theme="dark"] .mark{color:#0e1613}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mark{color:#0e1613}}
+  .brand b{font-size:.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand small{display:block;font-weight:500;font-size:.7rem;color:var(--muted)}
+  .nav-tools{display:flex;align-items:center;gap:8px;margin-left:auto}
+  .lang-sel,.theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);height:38px;border-radius:10px;cursor:pointer;font:inherit;font-size:.85rem;font-weight:600}
+  .lang-sel{padding:0 8px}
+  .theme-btn{width:38px;display:grid;place-items:center;font-size:1rem}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:11px;font-weight:600;text-decoration:none;font-size:.92rem;border:1px solid transparent;cursor:pointer;font-family:inherit}
+  .btn-primary{background:var(--primary);color:#fff}
+  :root[data-theme="dark"] .btn-primary{color:#0e1613}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn-primary{color:#0e1613}}
+  .btn-primary:hover{background:var(--primary-600)}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--primary);color:var(--primary)}
+  .btn-sm{padding:8px 13px;font-size:.85rem;border-radius:9px}
+  .btn[disabled]{opacity:.55;cursor:not-allowed}
+
+  /* login */
+  .login-wrap{min-height:calc(100vh - 64px);display:grid;place-items:center;padding:40px 20px}
+  .login-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:34px;width:100%;max-width:410px}
+  .login-card .lc-ic{width:52px;height:52px;border-radius:14px;background:var(--primary-050);color:var(--primary);display:grid;place-items:center;margin-bottom:16px}
+  .login-card h1{font-size:1.5rem}
+  .login-card .sub{color:var(--muted);font-size:.92rem;margin-top:6px;margin-bottom:22px}
+  .field{margin-bottom:15px}
+  .field label{display:block;font-size:.85rem;font-weight:600;margin-bottom:6px}
+  .field input,.field select{width:100%;height:46px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:11px;padding:0 13px;font:inherit;font-size:.95rem}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-050)}
+  .login-card .btn{width:100%;margin-top:6px}
+  .msg{font-size:.86rem;margin-top:12px;padding:10px 12px;border-radius:10px;display:none}
+  .msg.err{display:block;background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+  .msg.ok{display:block;background:var(--primary-050);color:var(--primary)}
+  .login-foot{margin-top:18px;font-size:.82rem;color:var(--muted);text-align:center}
+  .login-foot a{color:var(--primary);font-weight:600;text-decoration:none}
+
+  /* dashboard */
+  .dash{padding-block:26px 60px}
+  .dash-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:22px}
+  .dash-head .co{min-width:0}
+  .dash-head h1{font-size:1.35rem}
+  .dash-head .co small{color:var(--muted);font-size:.85rem}
+  .dash-head .sp{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+  .kpi .lbl{font-size:.8rem;color:var(--muted);font-weight:600}
+  .kpi .val{font-size:1.5rem;font-weight:800;margin-top:6px;letter-spacing:-.02em}
+  .kpi .val.pos{color:var(--good)}.kpi .val.neg{color:var(--bad)}
+  .kpi .sub{font-size:.76rem;color:var(--muted);margin-top:3px}
+
+  .grid2{display:grid;grid-template-columns:1.55fr 1fr;gap:20px;align-items:start}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .card-h{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+  .card-h h2{font-size:1.02rem}
+  .card-h .hint{margin-left:auto;font-size:.76rem;color:var(--muted)}
+  .card-b{padding:6px 18px 16px}
+
+  table{width:100%;border-collapse:collapse;font-size:.86rem}
+  th,td{text-align:right;padding:10px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  thead th{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr.tot td{font-weight:700;border-top:2px solid var(--line);background:var(--surface-2)}
+  td.pos{color:var(--good)}td.neg{color:var(--bad)}
+  .tbl-scroll{overflow-x:auto}
+
+  .rem{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .rem:last-child{border-bottom:none}
+  .rem .dot{width:10px;height:10px;border-radius:50%;margin-top:6px;flex:none}
+  .rem .dot.soon{background:var(--warn)}.rem .dot.due{background:var(--bad)}.rem .dot.ok{background:var(--good)}
+  .rem .r-main b{font-size:.9rem;display:block}
+  .rem .r-main span{font-size:.8rem;color:var(--muted)}
+  .rem .r-when{margin-left:auto;text-align:right;flex:none}
+  .rem .r-when b{font-size:.86rem}
+  .rem .r-when span{font-size:.75rem;display:block}
+  .rem .r-when .cd{font-weight:700}
+  .rem .r-when .cd.soon{color:var(--warn)}.rem .r-when .cd.due{color:var(--bad)}.rem .r-when .cd.ok{color:var(--good)}
+
+  .note{font-size:.82rem;color:var(--muted);background:var(--surface-2);border:1px dashed var(--line);border-radius:12px;padding:12px 14px;margin-top:18px;line-height:1.5}
+  .sec-title{font-size:1.05rem;font-weight:700;margin:34px 0 14px}
+  .cred-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .cred{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+  .cred h3{font-size:.95rem;display:flex;align-items:center;gap:8px}
+  .cred .st{font-size:.76rem;font-weight:600;margin-left:auto;padding:3px 9px;border-radius:999px}
+  .cred .st.linked{background:var(--primary-050);color:var(--primary)}
+  .cred .st.none{background:var(--surface-2);color:var(--muted)}
+  .cred p{font-size:.8rem;color:var(--muted);margin:8px 0 12px}
+  .secnote{display:flex;gap:10px;font-size:.8rem;color:var(--muted);background:color-mix(in srgb,var(--gold) 10%,transparent);border:1px solid var(--gold-soft);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+  .secnote svg{flex:none;color:var(--gold)}
+
+  footer{border-top:1px solid var(--line);padding:22px 0;font-size:.82rem;color:var(--muted);text-align:center;margin-top:20px}
+
+  @media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.cred-grid{grid-template-columns:1fr}}
+  @media(max-width:520px){.dash-head .sp{width:100%}.kpi .val{font-size:1.3rem}}
+
+  /* modal */
+  .modal-bd{position:fixed;inset:0;background:rgba(10,20,16,.55);display:none;place-items:center;z-index:80;padding:20px}
+  .modal-bd.on{display:grid}
+  .modal{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);width:100%;max-width:440px;padding:24px}
+  .modal h3{font-size:1.15rem;margin-bottom:4px}
+  .modal .mx{float:right;cursor:pointer;color:var(--muted);border:none;background:none;font-size:1.3rem;line-height:1}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="./">
+      <span class="mark">A</span>
+      <span><b>ACCA Consulting Vietnam</b><small data-i18n="brand_sub">Cổng khách hàng</small></span>
+    </a>
+    <div class="nav-tools">
+      <select class="lang-sel" id="langSel" aria-label="Language">
+        <option value="vi">🇻🇳 VI</option>
+        <option value="en">🇬🇧 EN</option>
+      </select>
+      <button class="theme-btn" id="themeBtn" title="Giao diện sáng/tối">◐</button>
+      <button class="btn btn-ghost btn-sm" id="logoutBtn" hidden data-i18n="logout">Đăng xuất</button>
+    </div>
+  </div>
+</header>
+
+<!-- LOGIN -->
+<main id="loginView">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="lc-ic">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h1 data-i18n="login_h">Cổng khách hàng</h1>
+      <p class="sub" data-i18n="login_sub">Đăng nhập để xem tình hình kinh doanh, thuế và nhắc hạn nộp của doanh nghiệp bạn.</p>
+      <form id="loginForm" autocomplete="on">
+        <div class="field">
+          <label for="email" data-i18n="email_lbl">Email đăng nhập</label>
+          <input type="email" id="email" name="email" required placeholder="ten@congty.com" autocomplete="username">
+        </div>
+        <div class="field">
+          <label for="pass" data-i18n="pass_lbl">Mật khẩu</label>
+          <input type="password" id="pass" name="password" required placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button class="btn btn-primary" type="submit" id="loginBtn" data-i18n="login_btn">Đăng nhập</button>
+        <div class="msg" id="loginMsg"></div>
+      </form>
+      <div class="login-foot">
+        <span data-i18n="login_help">Chưa có tài khoản?</span>
+        <a href="./#lienhe" data-i18n="login_contact">Liên hệ ACCA để được cấp</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- DASHBOARD -->
+<main id="dashView" hidden>
+  <div class="wrap dash">
+    <div class="dash-head">
+      <div class="co">
+        <h1 id="coName">—</h1>
+        <small><span data-i18n="mst_lbl">MST</span>: <span id="coMst">—</span> · <span id="coPeriod">—</span></small>
+      </div>
+      <div class="sp">
+        <span class="pill" id="updatedPill">—</span>
+      </div>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-h">
+          <h2 data-i18n="pl_h">Lãi/lỗ &amp; thuế theo tháng</h2>
+          <span class="hint" id="plYear"></span>
+        </div>
+        <div class="card-b tbl-scroll">
+          <table id="plTable">
+            <thead><tr>
+              <th data-i18n="th_month">Tháng</th>
+              <th data-i18n="th_rev">Doanh thu</th>
+              <th data-i18n="th_exp">Chi phí</th>
+              <th data-i18n="th_pl">Lãi/lỗ</th>
+              <th data-i18n="th_vat">VAT</th>
+              <th data-i18n="th_pit">TNCN</th>
+              <th data-i18n="th_bhxh">BHXH</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <h2 data-i18n="rem_h">Nhắc hạn nộp cơ quan nhà nước</h2>
+        </div>
+        <div class="card-b" id="remList"></div>
+      </div>
+    </div>
+
+    <div class="note" id="estNote" data-i18n="est_note">
+      * Số liệu thuế VAT, TNCN và BHXH là ƯỚC TÍNH tự động từ dữ liệu hóa đơn – chứng từ, mang tính tham khảo. Số nộp chính thức căn cứ tờ khai do ACCA lập và xác nhận.
+    </div>
+
+    <h2 class="sec-title" data-i18n="cred_h">Kết nối dữ liệu tự động</h2>
+    <div class="secnote">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span data-i18n="cred_secnote">Thông tin đăng nhập bạn cung cấp được gửi mã hóa và lưu trong kho bảo mật riêng của ACCA (không lưu trên bảng tính). Dùng để hệ thống tự tải hóa đơn – chứng từ hằng ngày, giúp báo cáo của bạn luôn cập nhật.</span>
+    </div>
+    <div class="cred-grid" id="credGrid"></div>
+  </div>
+  <footer class="wrap">
+    <span>© <span id="yr"></span> ACCA Consulting Vietnam · MST 0316119996 · <a href="./" data-i18n="back_home" style="color:var(--primary);text-decoration:none;font-weight:600">Về trang chủ</a></span>
+  </footer>
+</main>
+
+<!-- CREDENTIAL MODAL -->
+<div class="modal-bd" id="credModal">
+  <div class="modal">
+    <button class="mx" id="credClose">×</button>
+    <h3 id="credTitle">—</h3>
+    <p class="sub" style="color:var(--muted);font-size:.85rem;margin:2px 0 16px" data-i18n="cred_modal_sub">Nhập thông tin đăng nhập của cổng này. Dữ liệu được mã hóa trước khi gửi.</p>
+    <form id="credForm">
+      <div class="field"><label data-i18n="cred_user">Tài khoản / MST đăng nhập</label><input type="text" id="credUser" autocomplete="off" required></div>
+      <div class="field"><label data-i18n="cred_pass">Mật khẩu</label><input type="password" id="credPass" autocomplete="new-password" required></div>
+      <div class="secnote" style="margin:4px 0 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z"/></svg><span data-i18n="cred_modal_note">ACCA cam kết chỉ dùng để tải dữ liệu kế toán của doanh nghiệp bạn, không dùng cho mục đích khác.</span></div>
+      <button class="btn btn-primary" type="submit" style="width:100%" data-i18n="cred_save">Lưu & kết nối</button>
+      <div class="msg" id="credMsg"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  /* ====== CONFIG ======
+     Khi backend sẵn sàng, dán URL Web App (Google Apps Script) vào BACKEND_URL.
+     Để trống ("") = chế độ DEMO với dữ liệu mẫu để xem giao diện. */
+  var CONFIG = {
+    BACKEND_URL: "",              // vd: "https://script.google.com/macros/s/XXXX/exec"
+    DEMO_EMAIL: "demo@congty.com",
+    DEMO_PASS:  "demo"
+  };
+
+  var $ = function(s,r){return (r||document).querySelector(s);};
+  var el = function(t,c,h){var e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
+
+  /* ---------- i18n (VI/EN) ---------- */
+  var I18N = {
+    brand_sub:{vi:"Cổng khách hàng",en:"Client portal"},
+    login_h:{vi:"Cổng khách hàng",en:"Client portal"},
+    login_sub:{vi:"Đăng nhập để xem tình hình kinh doanh, thuế và nhắc hạn nộp của doanh nghiệp bạn.",en:"Sign in to view your company's business status, taxes and filing reminders."},
+    email_lbl:{vi:"Email đăng nhập",en:"Login email"},
+    pass_lbl:{vi:"Mật khẩu",en:"Password"},
+    login_btn:{vi:"Đăng nhập",en:"Sign in"},
+    login_help:{vi:"Chưa có tài khoản?",en:"No account yet?"},
+    login_contact:{vi:"Liên hệ ACCA để được cấp",en:"Contact ACCA to get one"},
+    logout:{vi:"Đăng xuất",en:"Sign out"},
+    mst_lbl:{vi:"MST",en:"Tax code"},
+    pl_h:{vi:"Lãi/lỗ & thuế theo tháng",en:"Monthly P&L & taxes"},
+    rem_h:{vi:"Nhắc hạn nộp cơ quan nhà nước",en:"Government filing reminders"},
+    th_month:{vi:"Tháng",en:"Month"},th_rev:{vi:"Doanh thu",en:"Revenue"},th_exp:{vi:"Chi phí",en:"Expense"},
+    th_pl:{vi:"Lãi/lỗ",en:"P&L"},th_vat:{vi:"VAT",en:"VAT"},th_pit:{vi:"TNCN",en:"PIT"},th_bhxh:{vi:"BHXH",en:"Soc. ins."},
+    kpi_rev:{vi:"Doanh thu lũy kế",en:"Revenue YTD"},
+    kpi_exp:{vi:"Chi phí lũy kế",en:"Expense YTD"},
+    kpi_pl:{vi:"Lãi/lỗ lũy kế",en:"P&L YTD"},
+    kpi_tax:{vi:"Thuế ước còn phải nộp",en:"Est. tax payable"},
+    est_note:{vi:"* Số liệu thuế VAT, TNCN và BHXH là ƯỚC TÍNH tự động từ dữ liệu hóa đơn – chứng từ, mang tính tham khảo. Số nộp chính thức căn cứ tờ khai do ACCA lập và xác nhận.",en:"* VAT, PIT and social-insurance figures are automatic ESTIMATES from invoice data, for reference only. Official amounts follow the returns prepared and confirmed by ACCA."},
+    cred_h:{vi:"Kết nối dữ liệu tự động",en:"Automatic data connections"},
+    cred_secnote:{vi:"Thông tin đăng nhập bạn cung cấp được gửi mã hóa và lưu trong kho bảo mật riêng của ACCA (không lưu trên bảng tính). Dùng để hệ thống tự tải hóa đơn – chứng từ hằng ngày, giúp báo cáo của bạn luôn cập nhật.",en:"Credentials you provide are sent encrypted and stored in ACCA's dedicated secure vault (never in a spreadsheet). They let the system fetch your invoices daily so your reports stay up to date."},
+    cred_modal_sub:{vi:"Nhập thông tin đăng nhập của cổng này. Dữ liệu được mã hóa trước khi gửi.",en:"Enter the credentials for this portal. Data is encrypted before sending."},
+    cred_user:{vi:"Tài khoản / MST đăng nhập",en:"Account / login tax code"},
+    cred_pass:{vi:"Mật khẩu",en:"Password"},
+    cred_modal_note:{vi:"ACCA cam kết chỉ dùng để tải dữ liệu kế toán của doanh nghiệp bạn, không dùng cho mục đích khác.",en:"ACCA will only use this to fetch your company's accounting data, nothing else."},
+    cred_save:{vi:"Lưu & kết nối",en:"Save & connect"},
+    connect:{vi:"Kết nối",en:"Connect"},update:{vi:"Cập nhật",en:"Update"},
+    st_linked:{vi:"Đã kết nối",en:"Connected"},st_none:{vi:"Chưa kết nối",en:"Not connected"},
+    back_home:{vi:"Về trang chủ",en:"Back to home"},
+    updated:{vi:"Cập nhật",en:"Updated"},
+    err_login:{vi:"Email hoặc mật khẩu chưa đúng.",en:"Wrong email or password."},
+    err_net:{vi:"Không kết nối được máy chủ. Thử lại sau.",en:"Cannot reach the server. Try again later."},
+    saved_ok:{vi:"Đã lưu & kết nối.",en:"Saved & connected."}
+  };
+  var CRED_DEFS = [
+    {key:"hoadondientu", name:{vi:"Hóa đơn điện tử (GDT)",en:"E-invoice (GDT)"}, desc:{vi:"hoadondientu.gdt.gov.vn — tải hóa đơn đầu ra/đầu vào.",en:"hoadondientu.gdt.gov.vn — fetch output/input invoices."}},
+    {key:"thuedientu", name:{vi:"Thuế điện tử (eTax)",en:"E-tax (eTax)"}, desc:{vi:"thuedientu.gdt.gov.vn — tờ khai, nghĩa vụ thuế.",en:"thuedientu.gdt.gov.vn — returns & tax obligations."}},
+    {key:"bhxh", name:{vi:"BHXH điện tử",en:"Social insurance"}, desc:{vi:"Cổng BHXH — số lao động & mức đóng.",en:"Social-insurance portal — headcount & contributions."}},
+    {key:"invoice_soft", name:{vi:"Phần mềm xuất hóa đơn",en:"Invoicing software"}, desc:{vi:"Viettel/VNPT/MISA… — kết nối qua API để lưu trữ hóa đơn.",en:"Viettel/VNPT/MISA… — connect via API to archive invoices."}}
+  ];
+
+  var lang = localStorage.getItem("acca_portal_lang") || "vi";
+  function t(k){ var o=I18N[k]; return o ? (o[lang]||o.vi) : k; }
+  function applyLang(l){
+    lang=l; document.documentElement.lang=l; document.documentElement.setAttribute("data-lang",l);
+    localStorage.setItem("acca_portal_lang",l);
+    document.querySelectorAll("[data-i18n]").forEach(function(n){ n.textContent=t(n.getAttribute("data-i18n")); });
+    $("#langSel").value=l;
+    if(STATE.client) renderDash(); // re-render numbers/labels
+  }
+
+  /* ---------- money ---------- */
+  var RATE={vi:1,en:25500};
+  function money(vnd){
+    if(vnd==null||isNaN(vnd)) return "—";
+    if(lang==="en"){ return "$"+Math.round(vnd/RATE.en).toLocaleString("en-US"); }
+    return Math.round(vnd).toLocaleString("vi-VN")+" ₫";
+  }
+  var MONTHS_VI=["","Th01","Th02","Th03","Th04","Th05","Th06","Th07","Th08","Th09","Th10","Th11","Th12"];
+
+  /* ---------- state ---------- */
+  var STATE={ token:null, client:null };
+
+  /* ---------- backend call ---------- */
+  function api(action, payload){
+    if(!CONFIG.BACKEND_URL){ return Promise.reject({demo:true}); }
+    var body=Object.assign({action:action}, payload||{});
+    return fetch(CONFIG.BACKEND_URL, {
+      method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify(body)
+    }).then(function(r){return r.json();});
+  }
+
+  /* ---------- DEMO data ---------- */
+  function demoClient(){
+    var now=new Date(); var y=now.getFullYear(); var m=now.getMonth()+1;
+    var rows=[]; var seedR=[180,210,240,205,260,300,285,320,340,310,0,0];
+    for(var i=1;i<=m;i++){
+      var rev=(seedR[i-1]||220)*1e6; var exp=Math.round(rev*(0.72+((i%3)*0.03)));
+      var pl=rev-exp; var vat=Math.round((rev-exp)*0.1); if(vat<0)vat=Math.round(rev*0.02);
+      var pit=Math.round(rev*0.006); var bhxh=Math.round(28e6+ (i%4)*2e6);
+      rows.push({m:i,rev:rev,exp:exp,pl:pl,vat:vat,pit:pit,bhxh:bhxh});
+    }
+    return {
+      name:"CÔNG TY TNHH DEMO ABC", mst:"0312345678", period:"Năm "+y,
+      year:y, updated:now.toISOString().slice(0,10),
+      months:rows,
+      credentials:{hoadondientu:true, thuedientu:false, bhxh:true, invoice_soft:false}
+    };
+  }
+
+  /* ---------- reminders (VN tax deadlines) ---------- */
+  function buildReminders(){
+    var now=new Date(); var Y=now.getFullYear(); var list=[];
+    function push(name_vi,name_en,desc_vi,desc_en,date){ list.push({vi:name_vi,en:name_en,dvi:desc_vi,den:desc_en,date:date}); }
+    // monthly VAT/PIT return + payment: 20th of next month
+    var vd=new Date(now.getFullYear(),now.getMonth()+1,20);
+    push("Tờ khai & nộp thuế GTGT, TNCN tháng","Monthly VAT & PIT return + payment",
+         "Khai theo tháng: chậm nhất ngày 20 tháng sau.","Monthly filers: by the 20th of next month.", vd);
+    // BHXH: last day of current month
+    var bd=new Date(now.getFullYear(),now.getMonth()+1,0);
+    push("Đóng BHXH, BHYT, BHTN","Social, health & unemployment insurance",
+         "Đóng hằng tháng, chậm nhất ngày cuối tháng.","Monthly, by the last day of the month.", bd);
+    // Quarterly VAT/PIT: last day of first month of next quarter
+    var q=Math.floor(now.getMonth()/3); var nqm=(q+1)*3; var qd=new Date(now.getFullYear(),nqm+1,0);
+    push("Tờ khai & nộp thuế GTGT, TNCN quý","Quarterly VAT & PIT return + payment",
+         "Khai theo quý: chậm nhất ngày cuối tháng đầu quý sau.","Quarterly filers: last day of first month of next quarter.", qd);
+    // License fee: 30/01 next year
+    push("Lệ phí môn bài","Business license fee","Nộp chậm nhất 30/01 hằng năm.","By Jan 30 each year.", new Date(Y+1,0,30));
+    // CIT finalization + financial statements: 31/03 next year
+    push("Quyết toán thuế TNDN & Báo cáo tài chính năm","Annual CIT finalization & financial statements",
+         "Chậm nhất ngày cuối tháng 3 năm sau.","By end of March next year.", new Date(Y+1,2,31));
+    // PIT finalization (org): 31/03 next year
+    push("Quyết toán thuế TNCN","PIT finalization","Tổ chức: 31/03; cá nhân tự quyết toán: 30/04.","Org: Mar 31; individuals: Apr 30.", new Date(Y+1,2,31));
+    list.sort(function(a,b){return a.date-b.date;});
+    return list;
+  }
+  function daysBetween(d){ var now=new Date(); now.setHours(0,0,0,0); var x=new Date(d); x.setHours(0,0,0,0); return Math.round((x-now)/864e5); }
+
+  /* ---------- render ---------- */
+  function renderKPIs(c){
+    var rev=0,exp=0,vat=0,pit=0; c.months.forEach(function(r){rev+=r.rev;exp+=r.exp;vat+=Math.max(r.vat,0);pit+=r.pit;});
+    var pl=rev-exp; var taxDue=vat+pit;
+    var box=$("#kpis"); box.innerHTML="";
+    [
+      {lbl:t("kpi_rev"),val:money(rev),cls:""},
+      {lbl:t("kpi_exp"),val:money(exp),cls:""},
+      {lbl:t("kpi_pl"),val:money(pl),cls:pl>=0?"pos":"neg"},
+      {lbl:t("kpi_tax"),val:money(taxDue),cls:""}
+    ].forEach(function(k){
+      var d=el("div","kpi"); d.appendChild(el("div","lbl",k.lbl));
+      d.appendChild(el("div","val "+k.cls,k.val)); box.appendChild(d);
+    });
+  }
+  function renderTable(c){
+    var tb=$("#plTable tbody"); tb.innerHTML="";
+    var tR=0,tE=0,tP=0,tV=0,tI=0,tB=0;
+    c.months.forEach(function(r){
+      tR+=r.rev;tE+=r.exp;tP+=r.pl;tV+=r.vat;tI+=r.pit;tB+=r.bhxh;
+      var tr=el("tr");
+      tr.innerHTML="<td>"+(lang==="en"?("M"+r.m):MONTHS_VI[r.m])+"</td>"+
+        "<td class='num'>"+money(r.rev)+"</td>"+
+        "<td class='num'>"+money(r.exp)+"</td>"+
+        "<td class='num "+(r.pl>=0?"pos":"neg")+"'>"+money(r.pl)+"</td>"+
+        "<td class='num'>"+money(r.vat)+"</td>"+
+        "<td class='num'>"+money(r.pit)+"</td>"+
+        "<td class='num'>"+money(r.bhxh)+"</td>";
+      tb.appendChild(tr);
+    });
+    var tot=el("tr","tot");
+    tot.innerHTML="<td>"+(lang==="en"?"Total":"Tổng")+"</td>"+
+      "<td class='num'>"+money(tR)+"</td><td class='num'>"+money(tE)+"</td>"+
+      "<td class='num "+(tP>=0?"pos":"neg")+"'>"+money(tP)+"</td>"+
+      "<td class='num'>"+money(tV)+"</td><td class='num'>"+money(tI)+"</td><td class='num'>"+money(tB)+"</td>";
+    tb.appendChild(tot);
+    $("#plYear").textContent=c.period||"";
+  }
+  function renderReminders(){
+    var box=$("#remList"); box.innerHTML="";
+    buildReminders().slice(0,6).forEach(function(r){
+      var dd=daysBetween(r.date); var cls=dd<0?"due":(dd<=10?"soon":"ok");
+      var when=dd<0?(lang==="en"?("Overdue "+(-dd)+"d"):("Quá hạn "+(-dd)+" ngày"))
+             :dd===0?(lang==="en"?"Today":"Hôm nay")
+             :(lang==="en"?("in "+dd+"d"):("còn "+dd+" ngày"));
+      var row=el("div","rem");
+      row.innerHTML="<span class='dot "+cls+"'></span>"+
+        "<div class='r-main'><b>"+(lang==="en"?r.en:r.vi)+"</b><span>"+(lang==="en"?r.den:r.dvi)+"</span></div>"+
+        "<div class='r-when'><b>"+r.date.toLocaleDateString(lang==="en"?"en-GB":"vi-VN")+"</b>"+
+        "<span class='cd "+cls+"'>"+when+"</span></div>";
+      box.appendChild(row);
+    });
+  }
+  function renderCreds(c){
+    var box=$("#credGrid"); box.innerHTML="";
+    CRED_DEFS.forEach(function(d){
+      var linked=c.credentials && c.credentials[d.key];
+      var card=el("div","cred");
+      card.innerHTML="<h3>"+d.name[lang]+"<span class='st "+(linked?"linked":"none")+"'>"+(linked?t("st_linked"):t("st_none"))+"</span></h3>"+
+        "<p>"+d.desc[lang]+"</p>";
+      var b=el("button","btn "+(linked?"btn-ghost":"btn-primary")+" btn-sm",linked?t("update"):t("connect"));
+      b.onclick=function(){ openCred(d); };
+      card.appendChild(b); box.appendChild(card);
+    });
+  }
+  function renderDash(){
+    var c=STATE.client; if(!c) return;
+    $("#coName").textContent=c.name; $("#coMst").textContent=c.mst; $("#coPeriod").textContent=c.period||"";
+    $("#updatedPill").textContent=t("updated")+": "+(c.updated||"—");
+    renderKPIs(c); renderTable(c); renderReminders(); renderCreds(c);
+  }
+
+  /* ---------- credential modal ---------- */
+  var curCred=null;
+  function openCred(d){ curCred=d; $("#credTitle").textContent=d.name[lang]; $("#credUser").value=""; $("#credPass").value=""; $("#credMsg").className="msg"; $("#credModal").classList.add("on"); }
+  function closeCred(){ $("#credModal").classList.remove("on"); }
+  $("#credClose").onclick=closeCred;
+  $("#credModal").addEventListener("click",function(e){ if(e.target===this) closeCred(); });
+  $("#credForm").addEventListener("submit",function(e){
+    e.preventDefault(); var msg=$("#credMsg");
+    var payload={service:curCred.key, username:$("#credUser").value, secret:$("#credPass").value, token:STATE.token};
+    api("save_credential",payload).then(function(res){
+      if(res && res.ok){ msg.className="msg ok"; msg.textContent=t("saved_ok");
+        STATE.client.credentials[curCred.key]=true; renderCreds(STATE.client);
+        setTimeout(closeCred,700);
+      } else { msg.className="msg err"; msg.textContent=(res&&res.error)||t("err_net"); }
+    }).catch(function(err){
+      if(err&&err.demo){ // demo: pretend success locally, DO NOT store anywhere
+        msg.className="msg ok"; msg.textContent=t("saved_ok")+" (demo)";
+        STATE.client.credentials[curCred.key]=true; renderCreds(STATE.client); setTimeout(closeCred,700);
+      } else { msg.className="msg err"; msg.textContent=t("err_net"); }
+    });
+  });
+
+  /* ---------- login / logout ---------- */
+  function showDash(client){
+    STATE.client=client;
+    $("#loginView").hidden=true; $("#dashView").hidden=false; $("#logoutBtn").hidden=false;
+    renderDash();
+    window.scrollTo(0,0);
+  }
+  function doLogout(){
+    STATE.token=null; STATE.client=null; sessionStorage.removeItem("acca_portal_tok");
+    $("#dashView").hidden=true; $("#loginView").hidden=false; $("#logoutBtn").hidden=true;
+    $("#loginForm").reset(); $("#loginMsg").className="msg";
+  }
+  $("#logoutBtn").onclick=doLogout;
+
+  $("#loginForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    var email=$("#email").value.trim(), pass=$("#pass").value, msg=$("#loginMsg"), btn=$("#loginBtn");
+    msg.className="msg"; btn.disabled=true;
+    api("login",{email:email,password:pass}).then(function(res){
+      btn.disabled=false;
+      if(res && res.ok && res.client){ STATE.token=res.token||null; sessionStorage.setItem("acca_portal_tok",STATE.token||""); showDash(res.client); }
+      else { msg.className="msg err"; msg.textContent=(res&&res.error)||t("err_login"); }
+    }).catch(function(err){
+      btn.disabled=false;
+      if(err&&err.demo){
+        if(email.toLowerCase()===CONFIG.DEMO_EMAIL && pass===CONFIG.DEMO_PASS){ showDash(demoClient()); }
+        else { msg.className="msg err"; msg.textContent=t("err_login")+"  (demo: "+CONFIG.DEMO_EMAIL+" / "+CONFIG.DEMO_PASS+")"; }
+      } else { msg.className="msg err"; msg.textContent=t("err_net"); }
+    });
+  });
+
+  /* ---------- theme ---------- */
+  (function(){
+    var saved=localStorage.getItem("acca_theme");
+    if(saved) document.documentElement.setAttribute("data-theme",saved);
+    $("#themeBtn").onclick=function(){
+      var cur=document.documentElement.getAttribute("data-theme");
+      var mq=window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var next = cur ? (cur==="dark"?"light":"dark") : (mq?"light":"dark");
+      document.documentElement.setAttribute("data-theme",next); localStorage.setItem("acca_theme",next);
+    };
+  })();
+
+  /* ---------- init ---------- */
+  $("#langSel").addEventListener("change",function(){ applyLang(this.value); });
+  $("#yr").textContent=new Date().getFullYear();
+  applyLang(lang);
+})();
+</script>
+</body>
+</html>
