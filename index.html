@@ -149,6 +149,16 @@
   .why b{font-size:1.08rem;display:block;margin-bottom:7px;font-weight:700}
   .why p{font-size:.9rem;opacity:.9}
 
+  #banggia{background:var(--surface-2)}
+  .calc{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:start}
+  .calc-form{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;gap:16px}
+  .calc-result{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;position:sticky;top:84px;box-shadow:var(--shadow)}
+  .cr-label{font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .cr-amount{margin-top:10px;font-size:1rem;color:var(--ink)}
+  .cr-amount b{font-size:2rem;font-weight:800;color:var(--primary);display:inline-block;margin:0 4px;font-variant-numeric:tabular-nums}
+  .cr-note{font-size:.8rem;color:var(--muted);margin-top:14px}
+  .calc-result .btn-primary{margin-top:16px;width:100%;justify-content:center}
+  @media(max-width:760px){.calc{grid-template-columns:1fr}.calc-result{position:static}}
   .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
   .info-list{display:flex;flex-direction:column;gap:18px;margin-top:24px}
   .info{display:flex;gap:14px;align-items:flex-start}
@@ -205,6 +215,7 @@
     </a>
     <nav class="nav-links">
       <a href="#dichvu" data-i18n="nav_services">Dịch vụ</a>
+      <a href="#banggia" data-i18n="nav_pricing">Bảng giá</a>
       <a href="#quytrinh" data-i18n="nav_process">Quy trình</a>
       <a href="#vaisao" data-i18n="nav_why">Vì sao chọn ACCA</a>
       <a href="#lienhe" data-i18n="nav_contact">Liên hệ</a>
@@ -344,6 +355,55 @@
     </div>
   </section>
 
+  <section id="banggia">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow" data-i18n="nav_pricing">Bảng giá</span>
+        <h2 data-i18n="pricing_h2">Ước tính chi phí kế toán trong 30 giây</h2>
+        <p data-i18n="pricing_p">Chọn thông tin doanh nghiệp — hệ thống báo giá tạm tính ngay, minh bạch, không cần để lại thông tin.</p>
+      </div>
+      <div class="calc">
+        <div class="calc-form">
+          <div class="field">
+            <label for="pcType" data-i18n="pc_type_label">Loại hình doanh nghiệp</label>
+            <select id="pcType">
+              <option value="new" data-i18n="pc_type_new">Chưa phát sinh doanh thu</option>
+              <option value="trade" data-i18n="pc_type_trade">Thương mại – Dịch vụ</option>
+              <option value="manu" data-i18n="pc_type_manu">Sản xuất – Xây dựng</option>
+              <option value="fdi" data-i18n="pc_type_fdi">Doanh nghiệp FDI (vốn nước ngoài)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="pcInv" data-i18n="pc_inv_label">Số hóa đơn – chứng từ / tháng</label>
+            <select id="pcInv">
+              <option value="0" data-i18n="pc_inv_0">Chưa phát sinh</option>
+              <option value="15" data-i18n="pc_inv_15">1 – 15</option>
+              <option value="30" data-i18n="pc_inv_30">16 – 30</option>
+              <option value="50" data-i18n="pc_inv_50">31 – 50</option>
+              <option value="100" data-i18n="pc_inv_100">51 – 100</option>
+              <option value="200" data-i18n="pc_inv_over">Trên 100</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="pcEmp" data-i18n="pc_emp_label">Số lượng nhân viên</label>
+            <select id="pcEmp">
+              <option value="5" data-i18n="pc_emp_5">Dưới 5</option>
+              <option value="15" data-i18n="pc_emp_15">5 – 15</option>
+              <option value="30" data-i18n="pc_emp_30">16 – 30</option>
+              <option value="40" data-i18n="pc_emp_over">Trên 30</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-result">
+          <div class="cr-label" data-i18n="pc_result_label">Chi phí kế toán tạm tính</div>
+          <div class="cr-amount"><span data-i18n="pc_from">Từ</span> <b id="pcAmount">800.000 VNĐ</b><span data-i18n="svc1_pb">/tháng</span></div>
+          <p class="cr-note" data-i18n="pc_note">* Giá tham khảo tự động. Liên hệ để nhận báo giá chính xác theo hồ sơ thực tế.</p>
+          <a class="btn btn-primary" href="#lienhe" data-i18n="pc_contact_btn">Nhận báo giá chính xác →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="lienhe">
     <div class="wrap">
       <div class="contact-grid">
@@ -454,6 +514,30 @@
     nav_why:{vi:"Vì sao chọn ACCA",en:"Why ACCA",zh:"为何选择 ACCA",ko:"ACCA 선택 이유",ja:"ACCAが選ばれる理由",fr:"Pourquoi ACCA",ru:"Почему ACCA",de:"Warum ACCA"},
     nav_contact:{vi:"Liên hệ",en:"Contact",zh:"联系",ko:"문의",ja:"お問い合わせ",fr:"Contact",ru:"Контакты",de:"Kontakt"},
     nav_cta:{vi:"Nhận tư vấn miễn phí",en:"Free consultation",zh:"免费咨询",ko:"무료 상담",ja:"無料相談",fr:"Consultation gratuite",ru:"Бесплатная консультация",de:"Kostenlose Beratung"},
+    nav_pricing:{vi:"Bảng giá",en:"Pricing",zh:"价格",ko:"가격",ja:"料金",fr:"Tarifs",ru:"Цены",de:"Preise"},
+    pricing_h2:{vi:"Ước tính chi phí kế toán trong 30 giây",en:"Estimate your accounting cost in 30 seconds",zh:"30 秒估算您的会计费用",ko:"30초 만에 회계 비용 견적",ja:"30秒で会計コストを試算",fr:"Estimez votre coût comptable en 30 secondes",ru:"Оцените стоимость бухгалтерии за 30 секунд",de:"Buchhaltungskosten in 30 Sekunden schätzen"},
+    pricing_p:{vi:"Chọn thông tin doanh nghiệp — hệ thống báo giá tạm tính ngay, minh bạch, không cần để lại thông tin.",en:"Select your business details — get an instant, transparent estimate. No sign-up needed.",zh:"选择企业信息，即刻获得透明的费用估算，无需留下联系方式。",ko:"기업 정보를 선택하면 즉시 투명한 견적을 확인할 수 있습니다. 정보 입력 불필요.",ja:"企業情報を選ぶと、その場で透明な概算が表示されます。登録不要。",fr:"Sélectionnez les infos de votre entreprise — estimation instantanée et transparente, sans inscription.",ru:"Выберите данные компании — мгновенная прозрачная оценка, без регистрации.",de:"Wählen Sie Ihre Unternehmensdaten — sofortige, transparente Schätzung, ohne Anmeldung."},
+    pc_type_label:{vi:"Loại hình doanh nghiệp",en:"Business type",zh:"企业类型",ko:"기업 유형",ja:"事業形態",fr:"Type d'entreprise",ru:"Тип бизнеса",de:"Unternehmensart"},
+    pc_type_new:{vi:"Chưa phát sinh doanh thu",en:"No revenue yet",zh:"尚未产生营收",ko:"매출 발생 전",ja:"売上未発生",fr:"Pas encore de revenus",ru:"Без выручки",de:"Noch kein Umsatz"},
+    pc_type_trade:{vi:"Thương mại – Dịch vụ",en:"Trade – Services",zh:"贸易 – 服务",ko:"상업 – 서비스",ja:"商業・サービス",fr:"Commerce – Services",ru:"Торговля – Услуги",de:"Handel – Dienstl."},
+    pc_type_manu:{vi:"Sản xuất – Xây dựng",en:"Manufacturing – Construction",zh:"生产 – 建筑",ko:"제조 – 건설",ja:"製造・建設",fr:"Production – Construction",ru:"Производство – Строительство",de:"Produktion – Bau"},
+    pc_type_fdi:{vi:"Doanh nghiệp FDI (vốn nước ngoài)",en:"FDI (foreign-invested)",zh:"外资企业 (FDI)",ko:"FDI (외국인투자)",ja:"外資企業 (FDI)",fr:"Entreprise FDI (capitaux étrangers)",ru:"Компания с иностр. капиталом (FDI)",de:"FDI (ausländisch investiert)"},
+    pc_inv_label:{vi:"Số hóa đơn – chứng từ / tháng",en:"Invoices – documents / month",zh:"每月发票 – 凭证数量",ko:"월 인보이스·전표 수",ja:"月間の請求書・伝票数",fr:"Factures – pièces / mois",ru:"Счета – документы / мес",de:"Rechnungen – Belege / Monat"},
+    pc_inv_0:{vi:"Chưa phát sinh",en:"None yet",zh:"暂无",ko:"없음",ja:"なし",fr:"Aucune",ru:"Нет",de:"Keine"},
+    pc_inv_15:{vi:"1 – 15",en:"1 – 15",zh:"1 – 15",ko:"1 – 15",ja:"1 – 15",fr:"1 – 15",ru:"1 – 15",de:"1 – 15"},
+    pc_inv_30:{vi:"16 – 30",en:"16 – 30",zh:"16 – 30",ko:"16 – 30",ja:"16 – 30",fr:"16 – 30",ru:"16 – 30",de:"16 – 30"},
+    pc_inv_50:{vi:"31 – 50",en:"31 – 50",zh:"31 – 50",ko:"31 – 50",ja:"31 – 50",fr:"31 – 50",ru:"31 – 50",de:"31 – 50"},
+    pc_inv_100:{vi:"51 – 100",en:"51 – 100",zh:"51 – 100",ko:"51 – 100",ja:"51 – 100",fr:"51 – 100",ru:"51 – 100",de:"51 – 100"},
+    pc_inv_over:{vi:"Trên 100",en:"Over 100",zh:"100 以上",ko:"100 초과",ja:"100超",fr:"Plus de 100",ru:"Более 100",de:"Über 100"},
+    pc_emp_label:{vi:"Số lượng nhân viên",en:"Number of employees",zh:"员工人数",ko:"직원 수",ja:"従業員数",fr:"Nombre d'employés",ru:"Число сотрудников",de:"Mitarbeiterzahl"},
+    pc_emp_5:{vi:"Dưới 5",en:"Under 5",zh:"5 人以下",ko:"5명 미만",ja:"5人未満",fr:"Moins de 5",ru:"До 5",de:"Unter 5"},
+    pc_emp_15:{vi:"5 – 15",en:"5 – 15",zh:"5 – 15",ko:"5 – 15",ja:"5 – 15",fr:"5 – 15",ru:"5 – 15",de:"5 – 15"},
+    pc_emp_30:{vi:"16 – 30",en:"16 – 30",zh:"16 – 30",ko:"16 – 30",ja:"16 – 30",fr:"16 – 30",ru:"16 – 30",de:"16 – 30"},
+    pc_emp_over:{vi:"Trên 30",en:"Over 30",zh:"30 人以上",ko:"30명 초과",ja:"30人超",fr:"Plus de 30",ru:"Более 30",de:"Über 30"},
+    pc_result_label:{vi:"Chi phí kế toán tạm tính",en:"Estimated accounting cost",zh:"会计费用估算",ko:"예상 회계 비용",ja:"会計コスト概算",fr:"Coût comptable estimé",ru:"Ориентировочная стоимость",de:"Geschätzte Buchhaltungskosten"},
+    pc_from:{vi:"Từ",en:"From",zh:"约",ko:"약",ja:"約",fr:"À partir de",ru:"от",de:"Ab"},
+    pc_note:{vi:"* Giá tham khảo tự động. Liên hệ để nhận báo giá chính xác theo hồ sơ thực tế.",en:"* Automated estimate. Contact us for an exact quote based on your actual records.",zh:"* 自动估算，具体报价请联系我们根据实际情况确定。",ko:"* 자동 추정치입니다. 실제 자료 기준 정확한 견적은 문의해 주세요.",ja:"* 自動概算です。実際の資料に基づく正確な見積もりはお問い合わせください。",fr:"* Estimation automatique. Contactez-nous pour un devis exact selon vos données réelles.",ru:"* Автоматическая оценка. Свяжитесь с нами для точного расчёта по вашим данным.",de:"* Automatische Schätzung. Kontaktieren Sie uns für ein genaues Angebot."},
+    pc_contact_btn:{vi:"Nhận báo giá chính xác →",en:"Get an exact quote →",zh:"获取精确报价 →",ko:"정확한 견적 받기 →",ja:"正確な見積もりを取得 →",fr:"Obtenir un devis exact →",ru:"Получить точный расчёт →",de:"Genaues Angebot erhalten →"},
     hero_h1:{
       vi:"Kế toán &amp; thuế <em>trọn gói</em> cho doanh nghiệp trong và ngoài nước tại Việt Nam",
       en:"<em>All-in-one</em> accounting &amp; tax for local &amp; foreign businesses in Vietnam",
@@ -592,6 +676,7 @@
       });
       try{localStorage.setItem("acca-lang",lang);}catch(e){}
       sel.value=lang;
+      try{recalc();}catch(e){}
     }
     var saved="vi";
     try{saved=localStorage.getItem("acca-lang")||"vi";}catch(e){}
@@ -599,6 +684,34 @@
     if(saved!=="vi")applyLang(saved); else sel.value="vi";
 
     document.getElementById("yr").textContent=new Date().getFullYear();
+
+    // Price calculator
+    var RATE={vi:1,en:25500,zh:3560,ko:18.7,ja:170,fr:27600,ru:280,de:27600};
+    function fmtMoney(vnd,lang){
+      var v;
+      if(lang==="vi"||!RATE[lang]) return vnd.toLocaleString("vi-VN")+" VNĐ";
+      v=vnd/RATE[lang];
+      if(lang==="en") return "$"+Math.round(v).toLocaleString("en-US");
+      if(lang==="fr") return Math.round(v).toLocaleString("fr-FR")+" €";
+      if(lang==="de") return Math.round(v).toLocaleString("de-DE")+" €";
+      if(lang==="zh") return Math.round(v).toLocaleString("en-US")+" 元";
+      if(lang==="ja") return "¥"+(Math.round(v/100)*100).toLocaleString("ja-JP");
+      if(lang==="ko") return (Math.round(v/1000)*1000).toLocaleString("ko-KR")+"원";
+      if(lang==="ru") return (Math.round(v/10)*10).toLocaleString("ru-RU")+" ₽";
+      return vnd.toLocaleString("vi-VN")+" VNĐ";
+    }
+    function recalc(){
+      var t=document.getElementById("pcType"),inv=document.getElementById("pcInv"),emp=document.getElementById("pcEmp"),out=document.getElementById("pcAmount");
+      if(!t||!inv||!emp||!out) return;
+      var base={0:500000,15:800000,30:1200000,50:1800000,100:2800000,200:4000000}[inv.value]||800000;
+      var mult={new:1,trade:1,manu:1.3,fdi:1.6}[t.value]||1;
+      var empAdd={5:0,15:300000,30:700000,40:1200000}[emp.value]||0;
+      var vnd=Math.round((base*mult+empAdd)/10000)*10000;
+      var lang=document.documentElement.getAttribute("data-lang")||"vi";
+      out.textContent=fmtMoney(vnd,lang);
+    }
+    ["pcType","pcInv","pcEmp"].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener("change",recalc);});
+    recalc();
 
     try{
       if(window.QRCode){
