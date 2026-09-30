@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="vi" data-lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ACCA Consulting Vietnam — Kế toán · Thuế · Thành lập doanh nghiệp</title>
+<meta name="description" content="ACCA Consulting Vietnam: dịch vụ kế toán trọn gói, khai báo thuế, thành lập doanh nghiệp và rà soát sổ sách cho doanh nghiệp vừa và nhỏ. MST 0316119996.">
+<meta property="og:title" content="ACCA Consulting Vietnam">
+<meta property="og:description" content="Kế toán & thuế trọn gói cho doanh nghiệp vừa và nhỏ.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,700&family=Noto+Sans+SC:wght@400;600;700&family=Noto+Sans+KR:wght@400;600;700&family=Noto+Sans+JP:wght@400;600;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --bg:#F7F4EC;--surface:#FFFFFF;--surface-2:#F1ECE0;
+    --ink:#182b24;--muted:#54655d;--line:#e2dccd;
+    --primary:#0E4D3C;--primary-600:#0b5f49;--primary-050:#e6efe9;
+    --gold:#B4842A;--gold-soft:#f3e6c8;--good:#1f7a52;
+    --shadow:0 1px 2px rgba(16,40,30,.05),0 12px 30px -18px rgba(16,40,30,.35);
+    --radius:16px;color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+    --bg:#0e1613;--surface:#16221d;--surface-2:#1c2a24;
+    --ink:#eae4d6;--muted:#a3b1a8;--line:#2a3a32;
+    --primary:#4bbf97;--primary-600:#5fd0a8;--primary-050:#17281f;
+    --gold:#d9ad55;--gold-soft:#2b2a1c;--good:#4bbf97;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -22px rgba(0,0,0,.7);color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0e1613;--surface:#16221d;--surface-2:#1c2a24;
+    --ink:#eae4d6;--muted:#a3b1a8;--line:#2a3a32;
+    --primary:#4bbf97;--primary-600:#5fd0a8;--primary-050:#17281f;
+    --gold:#d9ad55;--gold-soft:#2b2a1c;--good:#4bbf97;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -22px rgba(0,0,0,.7);color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  :root[data-lang="zh"] body{font-family:"Be Vietnam Pro","Noto Sans SC",system-ui,sans-serif}
+  :root[data-lang="ko"] body{font-family:"Be Vietnam Pro","Noto Sans KR",system-ui,sans-serif}
+  :root[data-lang="ja"] body{font-family:"Be Vietnam Pro","Noto Sans JP",system-ui,sans-serif}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+  h1,h2,h3{font-family:inherit;line-height:1.15;text-wrap:balance;margin:0;font-weight:700;letter-spacing:-.01em}
+  p{margin:0}
+  .lead,.sec-head p,.svc li,.why p,.step p,.checkline p,.foot-about p,.hero-card .sub{text-wrap:pretty}
+  a{color:inherit}
+  .wrap{width:100%;max-width:1120px;margin-inline:auto;padding-inline:20px}
+  .eyebrow{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--gold)}
+
+  header.site{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;gap:16px;height:66px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:.02em;text-decoration:none}
+  .mark{width:38px;height:38px;border-radius:10px;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:700;font-size:1.15rem;flex:none}
+  :root[data-theme="dark"] .mark{color:#0e1613}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mark{color:#0e1613}}
+  .brand small{display:block;font-weight:500;font-size:.72rem;color:var(--muted);letter-spacing:.02em}
+  .nav-links{display:flex;gap:22px;margin-left:auto;font-size:.92rem;font-weight:500}
+  .nav-links a{text-decoration:none;color:var(--muted)}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-cta{display:inline-flex;align-items:center;gap:7px;background:var(--primary);color:#fff;padding:9px 15px;border-radius:10px;text-decoration:none;font-weight:600;font-size:.88rem}
+  :root[data-theme="dark"] .nav-cta{color:#0e1613}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nav-cta{color:#0e1613}}
+  .nav-cta:hover{background:var(--primary-600)}
+  .nav-tools{display:flex;align-items:center;gap:8px;margin-left:6px}
+  .lang-sel{border:1px solid var(--line);background:var(--surface);color:var(--ink);height:38px;border-radius:10px;cursor:pointer;font:inherit;font-size:.85rem;font-weight:600;padding:0 8px}
+  .theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:1rem;flex:none}
+  @media(max-width:860px){.nav-links{display:none}.nav-tools{margin-left:auto}}
+  @media(max-width:620px){
+    .nav{gap:8px;height:60px}
+    .nav-cta{display:none}
+    .brand{font-size:.9rem;gap:9px;min-width:0}
+    .brand>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brand small{font-size:.66rem}
+    .mark{width:34px;height:34px;font-size:1.05rem}
+  }
+
+  .hero{padding-block:64px 40px;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+  .hero h1{font-size:clamp(2rem,4.8vw,3.2rem);font-weight:800;letter-spacing:-.02em}
+  .hero h1 em{font-style:italic;color:var(--primary)}
+  .hero .lead{margin-top:20px;font-size:1.1rem;color:var(--muted);max-width:36em}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:13px 22px;border-radius:12px;font-weight:600;text-decoration:none;font-size:.98rem;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:var(--primary);color:#fff}
+  :root[data-theme="dark"] .btn-primary{color:#0e1613}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn-primary{color:#0e1613}}
+  .btn-primary:hover{background:var(--primary-600)}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--primary);color:var(--primary)}
+  .hero-trust{display:flex;gap:26px;margin-top:34px;flex-wrap:wrap}
+  .hero-trust div{display:flex;flex-direction:column}
+  .hero-trust b{font-size:1.7rem;color:var(--ink);font-variant-numeric:tabular-nums;font-weight:800}
+  .hero-trust span{font-size:.82rem;color:var(--muted)}
+
+  .hero-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:26px}
+  .hero-card h3{font-size:1.05rem;margin-bottom:4px}
+  .hero-card .sub{font-size:.85rem;color:var(--muted);margin-bottom:18px}
+  .checkline{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+  .checkline:first-of-type{border-top:none}
+  .checkline .tick{width:24px;height:24px;border-radius:50%;background:var(--primary-050);color:var(--primary);display:grid;place-items:center;flex:none;font-size:.85rem;font-weight:700;margin-top:1px}
+  .checkline b{font-weight:600;font-size:.95rem}
+  .checkline p{font-size:.83rem;color:var(--muted)}
+  .badge-strip{margin-top:20px;padding-top:16px;border-top:1px dashed var(--line);font-size:.8rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+
+  section{padding-block:60px}
+  .sec-head{max-width:46rem;margin-bottom:38px}
+  .sec-head h2{font-size:clamp(1.7rem,3.4vw,2.4rem);margin-top:10px}
+  .sec-head p{color:var(--muted);margin-top:12px;font-size:1.02rem}
+
+  #dichvu{background:var(--surface-2)}
+  .svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .svc{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;display:flex;flex-direction:column;gap:14px}
+  .svc .ic{width:48px;height:48px;border-radius:12px;background:var(--primary-050);color:var(--primary);display:grid;place-items:center}
+  .svc .ic svg{width:26px;height:26px}
+  .svc h3{font-size:1.2rem}
+  .svc ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+  .svc li{position:relative;padding-left:24px;font-size:.92rem;color:var(--muted)}
+  .svc li::before{content:"";position:absolute;left:2px;top:.55em;width:9px;height:9px;border-radius:2px;background:var(--gold);transform:rotate(45deg)}
+  .svc .price{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);font-size:.9rem;color:var(--ink)}
+  .svc .price b{color:var(--primary);font-size:1.1rem;font-weight:800}
+
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px}
+  .step .n{font-size:1.05rem;font-weight:800;color:#fff;background:var(--primary);width:36px;height:36px;border-radius:10px;display:grid;place-items:center;margin-bottom:14px;font-variant-numeric:tabular-nums}
+  :root[data-theme="dark"] .step .n{color:#0e1613}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .step .n{color:#0e1613}}
+  .step h3{font-size:1.02rem;margin-bottom:6px}
+  .step p{font-size:.88rem;color:var(--muted)}
+
+  #vaisao{background:var(--primary);color:#fff}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #vaisao{background:var(--surface-2);color:var(--ink)}}
+  :root[data-theme="dark"] #vaisao{background:var(--surface-2);color:var(--ink)}
+  #vaisao .eyebrow{color:var(--gold-soft)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #vaisao .eyebrow{color:var(--gold)}}
+  :root[data-theme="dark"] #vaisao .eyebrow{color:var(--gold)}
+  #vaisao .sec-head p{color:rgba(255,255,255,.82)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #vaisao .sec-head p{color:var(--muted)}}
+  :root[data-theme="dark"] #vaisao .sec-head p{color:var(--muted)}
+  .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .why{padding:22px;border-radius:var(--radius);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .why{background:var(--surface);border-color:var(--line)}}
+  :root[data-theme="dark"] .why{background:var(--surface);border-color:var(--line)}
+  .why b{font-size:1.08rem;display:block;margin-bottom:7px;font-weight:700}
+  .why p{font-size:.9rem;opacity:.9}
+
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+  .info-list{display:flex;flex-direction:column;gap:18px;margin-top:24px}
+  .info{display:flex;gap:14px;align-items:flex-start}
+  .info .ic{width:42px;height:42px;border-radius:11px;background:var(--primary-050);color:var(--primary);display:grid;place-items:center;flex:none}
+  .info .ic svg{width:20px;height:20px}
+  .info .k{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .info .v{font-weight:600;font-size:1rem;word-break:break-word}
+  .info .v.select{user-select:all}
+  .zalo-card{margin-top:22px;display:flex;gap:16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+  .zalo-qr{width:112px;height:112px;background:#fff;border-radius:10px;padding:6px;flex:none;display:grid;place-items:center}
+  .zalo-qr img,.zalo-qr canvas{display:block;width:100%!important;height:100%!important}
+  .zalo-card .zt b{font-size:1rem;display:block}
+  .zalo-card .zt p{font-size:.85rem;color:var(--muted);margin-top:3px}
+  .map-wrap{margin-top:22px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+  .map-wrap iframe{display:block;width:100%;height:240px;border:0}
+  form{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:.85rem;font-weight:600;margin-bottom:7px}
+  .field input,.field select,.field textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:var(--bg);color:var(--ink);font:inherit;font-size:.95rem}
+  .field textarea{resize:vertical;min-height:96px}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:var(--primary)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  form .btn-primary{width:100%;justify-content:center;margin-top:6px;border:none;font-size:1rem}
+  .form-note{font-size:.78rem;color:var(--muted);margin-top:12px;text-align:center}
+  .form-ok{background:var(--primary-050);border:1px solid var(--primary);color:var(--primary);border-radius:12px;padding:14px 16px;font-size:.92rem;font-weight:600;margin-bottom:16px}
+
+  footer{background:var(--surface-2);border-top:1px solid var(--line);padding-block:40px 30px;margin-top:10px}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:30px}
+  .foot-grid h4{font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 14px}
+  .foot-grid a{display:block;color:var(--ink);text-decoration:none;font-size:.92rem;margin-bottom:9px;opacity:.85}
+  .foot-grid a:hover{opacity:1;color:var(--primary)}
+  .foot-about p{font-size:.9rem;color:var(--muted);margin-top:12px;max-width:34ch}
+  .legal{margin-top:30px;padding-top:20px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+
+  @media(max-width:900px){
+    .hero-grid,.contact-grid{grid-template-columns:1fr;gap:34px}
+    .svc-grid,.why-grid,.steps,.foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:560px){
+    .svc-grid,.why-grid,.steps,.foot-grid,.row2{grid-template-columns:1fr}
+    .hero{padding-block:44px 30px}
+    section{padding-block:46px}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <span class="mark">A</span>
+      <span>ACCA Consulting Vietnam<small data-i18n="brand_sub">Kế toán · Thuế · Doanh nghiệp</small></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#dichvu" data-i18n="nav_services">Dịch vụ</a>
+      <a href="#quytrinh" data-i18n="nav_process">Quy trình</a>
+      <a href="#vaisao" data-i18n="nav_why">Vì sao chọn ACCA</a>
+      <a href="#lienhe" data-i18n="nav_contact">Liên hệ</a>
+    </nav>
+    <a class="nav-cta" href="#lienhe" data-i18n="nav_cta">Nhận tư vấn miễn phí</a>
+    <div class="nav-tools">
+      <select class="lang-sel" id="langSel" aria-label="Language">
+        <option value="vi">🇻🇳 VI</option>
+        <option value="en">🇬🇧 EN</option>
+        <option value="zh">🇨🇳 中文</option>
+        <option value="ko">🇰🇷 한국어</option>
+        <option value="ja">🇯🇵 日本語</option>
+        <option value="fr">🇫🇷 FR</option>
+        <option value="ru">🇷🇺 RU</option>
+        <option value="de">🇩🇪 DE</option>
+      </select>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">ACCA Consulting Vietnam</span>
+        <h1 style="margin-top:12px" data-i18n-html="hero_h1">Kế toán &amp; thuế <em>trọn gói</em> cho doanh nghiệp trong nước và quốc tế</h1>
+        <p class="lead" data-i18n="hero_lead">Chúng tôi lo toàn bộ sổ sách, tờ khai thuế và thủ tục pháp lý cho doanh nghiệp ở mọi quy mô — trong nước và quốc tế — để bạn yên tâm tập trung phát triển kinh doanh.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#lienhe" data-i18n="hero_cta1">Nhận báo giá theo quy mô →</a>
+          <a class="btn btn-ghost" href="#dichvu" data-i18n="hero_cta2">Xem dịch vụ</a>
+        </div>
+        <div class="hero-trust">
+          <div><b>10+</b><span data-i18n="trust1">năm kinh nghiệm</span></div>
+          <div><b>300+</b><span data-i18n="trust2">doanh nghiệp đồng hành</span></div>
+          <div><b>100%</b><span data-i18n="trust3">tờ khai đúng hạn</span></div>
+        </div>
+      </div>
+      <aside class="hero-card">
+        <h3 data-i18n="card_title">Gói kế toán được chọn nhiều nhất</h3>
+        <p class="sub" data-i18n="card_sub">Phù hợp doanh nghiệp trong nước & quốc tế, mọi quy mô</p>
+        <div class="checkline"><span class="tick">✓</span><div><b data-i18n="card1_b">Tiết kiệm chi phí nhân sự kế toán</b><p data-i18n="card1_p">Không cần tuyển kế toán nội bộ — tiết kiệm lương, bảo hiểm và đào tạo.</p></div></div>
+        <div class="checkline"><span class="tick">✓</span><div><b data-i18n="card2_b">Kê khai & nộp thuế đúng hạn</b><p data-i18n="card2_p">GTGT, TNCN, TNDN, báo cáo tài chính năm.</p></div></div>
+        <div class="checkline"><span class="tick">✓</span><div><b data-i18n="card3_b">Báo cáo minh bạch hàng tháng</b><p data-i18n="card3_p">Quý doanh nghiệp luôn nắm được tình hình sổ sách của mình.</p></div></div>
+        <div class="badge-strip"><span>🔒</span> <span data-i18n="card_badge">Bảo mật thông tin theo hợp đồng dịch vụ</span></div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="dichvu">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow" data-i18n="nav_services">Dịch vụ</span>
+        <h2 data-i18n="svc_h2">Bốn dịch vụ cốt lõi, một đầu mối lo trọn</h2>
+        <p data-i18n="svc_p">Từ lúc mở công ty đến khi vận hành ổn định, ACCA đồng hành ở mọi khâu kế toán và pháp lý.</p>
+      </div>
+      <div class="svc-grid">
+        <article class="svc">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/></svg></div>
+          <h3 data-i18n="svc1_h">Dịch vụ kế toán trọn gói</h3>
+          <ul>
+            <li data-i18n="svc1_1">Ghi sổ, hạch toán chứng từ hàng tháng</li>
+            <li data-i18n="svc1_2">Lập báo cáo tài chính, sổ sách chuẩn quy định</li>
+            <li data-i18n="svc1_3">Chuyên viên giàu kinh nghiệm theo sát hồ sơ</li>
+            <li data-i18n="svc1_4">Tư vấn tối ưu chi phí hợp lý, hợp lệ</li>
+          </ul>
+          <div class="price"><span data-i18n="svc1_pa">Chỉ từ</span> <b>800.000đ</b><span data-i18n="svc1_pb">/tháng</span></div>
+        </article>
+        <article class="svc">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l3 4v14H5V7z"/><path d="M9 12h6M9 16h6"/></svg></div>
+          <h3 data-i18n="svc2_h">Khai báo thuế</h3>
+          <ul>
+            <li data-i18n="svc2_1">Kê khai thuế GTGT, TNCN, TNDN định kỳ</li>
+            <li data-i18n="svc2_2">Quyết toán thuế cuối năm</li>
+            <li data-i18n="svc2_3">Rà soát trước khi nộp, tránh bị truy thu & phạt</li>
+            <li data-i18n="svc2_4">Nộp qua chữ ký số, đúng hạn 100%</li>
+          </ul>
+          <div class="price"><span data-i18n="svc2_pa">Trọn gói theo</span> <b data-i18n="svc2_pb">số lượng hóa đơn</b></div>
+        </article>
+        <article class="svc">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V8l6-4 6 4v13"/><path d="M10 12h4M10 16h4"/></svg></div>
+          <h3 data-i18n="svc3_h">Thành lập doanh nghiệp</h3>
+          <ul>
+            <li data-i18n="svc3_1">Tư vấn loại hình, ngành nghề, vốn điều lệ</li>
+            <li data-i18n="svc3_2">Soạn hồ sơ & nộp xin giấy phép</li>
+            <li data-i18n="svc3_3">Khắc dấu, mở mã số thuế, chữ ký số</li>
+            <li data-i18n="svc3_4">Nhận giấy phép trong 3–5 ngày làm việc</li>
+          </ul>
+          <div class="price"><span data-i18n="svc3_pa">Nhận giấy phép trong</span> <b data-i18n="svc3_pb">3–5 ngày</b></div>
+        </article>
+        <article class="svc">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M8.5 11h5M11 8.5v5"/></svg></div>
+          <h3 data-i18n="svc4_h">Rà soát sổ sách</h3>
+          <ul>
+            <li data-i18n="svc4_1">Soát lại sổ sách, hóa đơn, chứng từ các năm</li>
+            <li data-i18n="svc4_2">Phát hiện rủi ro trước thanh — kiểm tra thuế</li>
+            <li data-i18n="svc4_3">Chuẩn hóa, dọn sổ để yên tâm quyết toán</li>
+            <li data-i18n="svc4_4">Báo cáo đánh giá & đề xuất khắc phục</li>
+          </ul>
+          <div class="price"><span data-i18n="svc4_pa">Kiểm tra sơ bộ</span> <b data-i18n="svc4_pb">miễn phí</b></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="quytrinh">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow" data-i18n="proc_eyebrow">Quy trình làm việc</span>
+        <h2 data-i18n="proc_h2">Bắt đầu hợp tác chỉ trong 4 bước</h2>
+        <p data-i18n="proc_p">Minh bạch, rõ ràng, có hợp đồng — Quý doanh nghiệp biết chính xác mình nhận được gì.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><h3 data-i18n="step1_h">Tư vấn miễn phí</h3><p data-i18n="step1_p">Trao đổi hiện trạng, quy mô và nhu cầu của doanh nghiệp.</p></div>
+        <div class="step"><div class="n">2</div><h3 data-i18n="step2_h">Báo giá & hợp đồng</h3><p data-i18n="step2_p">Báo giá minh bạch theo quy mô, ký hợp đồng dịch vụ rõ ràng.</p></div>
+        <div class="step"><div class="n">3</div><h3 data-i18n="step3_h">Tiếp nhận & xử lý</h3><p data-i18n="step3_p">Nhận chứng từ, hạch toán, kê khai và lập báo cáo định kỳ.</p></div>
+        <div class="step"><div class="n">4</div><h3 data-i18n="step4_h">Báo cáo & đồng hành</h3><p data-i18n="step4_p">Cập nhật tình hình hàng tháng, hỗ trợ giải trình khi cần.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="vaisao">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow" data-i18n="nav_why">Vì sao chọn ACCA</span>
+        <h2 data-i18n="why_h2">Đối tác kế toán đáng tin cho doanh nghiệp trong nước & quốc tế</h2>
+        <p data-i18n="why_p">Không chỉ làm sổ sách — chúng tôi bảo vệ doanh nghiệp trước rủi ro thuế.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why"><b data-i18n="why1_b">Đội ngũ chuyên môn cao</b><p data-i18n="why1_p">Kế toán trưởng và chuyên viên thuế nhiều năm kinh nghiệm với đủ loại hình doanh nghiệp, kể cả doanh nghiệp FDI có vốn nước ngoài.</p></div>
+        <div class="why"><b data-i18n="why2_b">Cam kết đúng hạn</b><p data-i18n="why2_p">Mọi tờ khai và báo cáo nộp đúng thời hạn, chủ động nhắc lịch — không để phát sinh phạt chậm nộp.</p></div>
+        <div class="why"><b data-i18n="why3_b">Chi phí minh bạch</b><p data-i18n="why3_p">Báo giá theo quy mô thực tế, không phí ẩn. Quý doanh nghiệp biết trước mình trả cho những gì.</p></div>
+        <div class="why"><b data-i18n="why4_b">Bảo mật tuyệt đối</b><p data-i18n="why4_p">Thông tin tài chính được cam kết bảo mật bằng hợp đồng, chỉ phục vụ công việc của doanh nghiệp.</p></div>
+        <div class="why"><b data-i18n="why5_b">Đồng hành lâu dài</b><p data-i18n="why5_p">Không chỉ làm cho xong tháng — chúng tôi tư vấn để doanh nghiệp ngày càng chuẩn và tối ưu.</p></div>
+        <div class="why"><b data-i18n="why6_b">Giải trình khi thanh tra</b><p data-i18n="why6_p">Hỗ trợ chuẩn bị hồ sơ và làm việc cùng cơ quan thuế khi có kiểm tra, thanh tra.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="lienhe">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div>
+          <span class="eyebrow" data-i18n="nav_contact">Liên hệ</span>
+          <h2 style="font-size:clamp(1.7rem,3.4vw,2.4rem);margin-top:10px" data-i18n="contact_h2">Nhận tư vấn & báo giá miễn phí</h2>
+          <p style="color:var(--muted);margin-top:12px" data-i18n="contact_p">Để lại thông tin, chuyên viên của ACCA sẽ liên hệ lại trong giờ làm việc để tư vấn giải pháp phù hợp nhất cho doanh nghiệp của bạn.</p>
+          <div class="info-list">
+            <div class="info">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.4 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2Z"/></svg></div>
+              <div><div class="k">Hotline / Zalo</div><div class="v select">0938 847 699</div></div>
+            </div>
+            <div class="info">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m4 6 8 6 8-6"/></svg></div>
+              <div><div class="k">Email</div><div class="v select">info@accavn.com</div></div>
+            </div>
+            <div class="info">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+              <div><div class="k" data-i18n="office_k">Văn phòng</div><div class="v">232 Nguyễn Lương Bằng, Phường Tân Mỹ, TP. Hồ Chí Minh</div></div>
+            </div>
+          </div>
+
+          <div class="zalo-card">
+            <div class="zalo-qr" id="zaloqr"></div>
+            <div class="zt">
+              <b data-i18n="zalo_b">Chat nhanh qua Zalo</b>
+              <p data-i18n="zalo_p">Dùng camera điện thoại quét mã QR để nhắn tin tư vấn ngay.</p>
+              <a class="v select" href="https://zalo.me/0938847699" target="_blank" rel="noopener" style="font-size:.9rem;color:var(--primary);font-weight:600">zalo.me/0938847699</a>
+            </div>
+          </div>
+
+          <div class="map-wrap">
+            <iframe title="ACCA Consulting Vietnam" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=10.7164087,106.7292779&z=17&output=embed"></iframe>
+          </div>
+        </div>
+
+        <form id="leadForm" novalidate>
+          <div id="okMsg" class="form-ok" hidden data-i18n="ok_msg">✓ Đã ghi nhận thông tin. ACCA sẽ liên hệ lại với Quý doanh nghiệp sớm nhất!</div>
+          <div class="field">
+            <label for="ten" data-i18n="f_name">Họ và tên *</label>
+            <input id="ten" name="ten" type="text" autocomplete="name" required placeholder="Nguyễn Văn A" data-i18n-ph="f_name_ph">
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="sdt" data-i18n="f_phone">Số điện thoại *</label>
+              <input id="sdt" name="sdt" type="tel" inputmode="tel" autocomplete="tel" required placeholder="09xx xxx xxx" data-i18n-ph="f_phone_ph">
+            </div>
+            <div class="field">
+              <label for="cty" data-i18n="f_company">Tên công ty</label>
+              <input id="cty" name="cty" type="text" autocomplete="organization" placeholder="(nếu có)" data-i18n-ph="f_company_ph">
+            </div>
+          </div>
+          <div class="field">
+            <label for="dv" data-i18n="f_service">Dịch vụ quan tâm</label>
+            <select id="dv" name="dv">
+              <option data-i18n="svc1_h">Dịch vụ kế toán trọn gói</option>
+              <option data-i18n="svc2_h">Khai báo thuế</option>
+              <option data-i18n="svc3_h">Thành lập doanh nghiệp</option>
+              <option data-i18n="svc4_h">Rà soát sổ sách</option>
+              <option data-i18n="f_service_other">Tư vấn tổng thể</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="note" data-i18n="f_note">Nội dung cần tư vấn</label>
+            <textarea id="note" name="note" placeholder="Mô tả ngắn nhu cầu của doanh nghiệp..." data-i18n-ph="f_note_ph"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" data-i18n="f_submit">Gửi yêu cầu tư vấn</button>
+          <p class="form-note" data-i18n="f_note2">Thông tin của bạn được bảo mật, chỉ dùng để liên hệ tư vấn.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-about">
+        <a class="brand" href="#top" style="text-decoration:none">
+          <span class="mark">A</span>
+          <span>ACCA Consulting Vietnam<small data-i18n="brand_sub">Kế toán · Thuế · Doanh nghiệp</small></span>
+        </a>
+        <p data-i18n="foot_about">Đối tác kế toán & thuế đồng hành cùng doanh nghiệp mọi quy mô, trong nước và quốc tế.</p>
+      </div>
+      <div>
+        <h4 data-i18n="nav_services">Dịch vụ</h4>
+        <a href="#dichvu" data-i18n="svc1_h">Kế toán trọn gói</a>
+        <a href="#dichvu" data-i18n="svc2_h">Khai báo thuế</a>
+        <a href="#dichvu" data-i18n="svc3_h">Thành lập doanh nghiệp</a>
+        <a href="#dichvu" data-i18n="svc4_h">Rà soát sổ sách</a>
+      </div>
+      <div>
+        <h4 data-i18n="nav_contact">Liên hệ</h4>
+        <a href="#lienhe" data-i18n="nav_cta">Nhận tư vấn miễn phí</a>
+        <a href="#lienhe" style="user-select:all">info@accavn.com</a>
+        <a href="#quytrinh" data-i18n="proc_eyebrow">Quy trình làm việc</a>
+      </div>
+    </div>
+    <div class="legal">© <span id="yr"></span> ACCA Consulting Vietnam · MST 0316119996</div>
+  </div>
+</footer>
+
+<script>
+  var I18N={
+    brand_sub:{vi:"Kế toán · Thuế · Doanh nghiệp",en:"Accounting · Tax · Business",zh:"会计 · 税务 · 企业",ko:"회계 · 세무 · 기업",ja:"会計・税務・法人",fr:"Comptabilité · Fiscalité · Entreprise",ru:"Бухгалтерия · Налоги · Бизнес",de:"Buchhaltung · Steuern · Unternehmen"},
+    nav_services:{vi:"Dịch vụ",en:"Services",zh:"服务",ko:"서비스",ja:"サービス",fr:"Services",ru:"Услуги",de:"Leistungen"},
+    nav_process:{vi:"Quy trình",en:"Process",zh:"流程",ko:"진행 과정",ja:"流れ",fr:"Processus",ru:"Процесс",de:"Ablauf"},
+    nav_why:{vi:"Vì sao chọn ACCA",en:"Why ACCA",zh:"为何选择 ACCA",ko:"ACCA 선택 이유",ja:"ACCAが選ばれる理由",fr:"Pourquoi ACCA",ru:"Почему ACCA",de:"Warum ACCA"},
+    nav_contact:{vi:"Liên hệ",en:"Contact",zh:"联系",ko:"문의",ja:"お問い合わせ",fr:"Contact",ru:"Контакты",de:"Kontakt"},
+    nav_cta:{vi:"Nhận tư vấn miễn phí",en:"Free consultation",zh:"免费咨询",ko:"무료 상담",ja:"無料相談",fr:"Consultation gratuite",ru:"Бесплатная консультация",de:"Kostenlose Beratung"},
+    hero_h1:{
+      vi:"Kế toán &amp; thuế <em>trọn gói</em> cho doanh nghiệp trong nước và quốc tế",
+      en:"<em>All-in-one</em> accounting &amp; tax for local &amp; international businesses",
+      zh:"为境内外企业提供<em>一站式</em>会计与税务服务",
+      ko:"국내외 기업을 위한 <em>올인원</em> 회계 &amp; 세무",
+      ja:"国内外の企業のための<em>ワンストップ</em>会計・税務",
+      fr:"Comptabilité &amp; fiscalité <em>tout-en-un</em> pour entreprises locales &amp; internationales",
+      ru:"<em>Комплексный</em> бухгалтерский и налоговый учёт для местных и международных компаний",
+      de:"<em>All-in-one</em> Buchhaltung &amp; Steuern für lokale &amp; internationale Unternehmen"
+    },
+    hero_lead:{
+      vi:"Chúng tôi lo toàn bộ sổ sách, tờ khai thuế và thủ tục pháp lý cho doanh nghiệp ở mọi quy mô — trong nước và quốc tế — để bạn yên tâm tập trung phát triển kinh doanh.",
+      en:"We handle all bookkeeping, tax filings and legal procedures for businesses of every size — local and international — so you can focus on growth.",
+      zh:"我们为各种规模的境内外企业处理全部账簿、纳税申报与法律手续，让您专注业务发展。",
+      ko:"국내외 모든 규모의 기업을 위해 장부·세무 신고·법적 절차를 전담하여, 사업 성장에 집중하실 수 있게 합니다.",
+      ja:"国内外・あらゆる規模の企業の帳簿・税務申告・法的手続きを代行し、事業成長に専念いただけます。",
+      fr:"Nous gérons toute la comptabilité, les déclarations fiscales et les démarches juridiques pour les entreprises de toutes tailles — locales et internationales — afin que vous vous concentriez sur votre croissance.",
+      ru:"Мы ведём весь учёт, налоговую отчётность и юридические процедуры для компаний любого размера — местных и международных — чтобы вы сосредоточились на росте.",
+      de:"Wir übernehmen die gesamte Buchhaltung, Steuererklärungen und rechtlichen Formalitäten für Unternehmen jeder Größe — lokal und international — damit Sie sich auf Ihr Wachstum konzentrieren können."
+    },
+    hero_cta1:{vi:"Nhận báo giá theo quy mô →",en:"Get a quote for your size →",zh:"按规模获取报价 →",ko:"규모별 견적 받기 →",ja:"規模に応じた見積もり →",fr:"Obtenir un devis adapté →",ru:"Получить расчёт по масштабу →",de:"Angebot nach Größe erhalten →"},
+    hero_cta2:{vi:"Xem dịch vụ",en:"View services",zh:"查看服务",ko:"서비스 보기",ja:"サービスを見る",fr:"Voir les services",ru:"Наши услуги",de:"Leistungen ansehen"},
+    trust1:{vi:"năm kinh nghiệm",en:"years of experience",zh:"年经验",ko:"년 경력",ja:"年の実績",fr:"ans d'expérience",ru:"лет опыта",de:"Jahre Erfahrung"},
+    trust2:{vi:"doanh nghiệp đồng hành",en:"businesses served",zh:"家企业信赖",ko:"개 기업 동행",ja:"社の支援実績",fr:"entreprises accompagnées",ru:"компаний с нами",de:"betreute Unternehmen"},
+    trust3:{vi:"tờ khai đúng hạn",en:"filings on time",zh:"申报准时率",ko:"신고 기한 준수",ja:"期限内申告",fr:"déclarations à temps",ru:"деклараций в срок",de:"fristgerechte Meldungen"},
+    card_title:{vi:"Gói kế toán được chọn nhiều nhất",en:"Most popular accounting package",zh:"最受欢迎的会计套餐",ko:"가장 인기 있는 회계 패키지",ja:"人気No.1の会計プラン",fr:"Forfait comptable le plus choisi",ru:"Самый popular пакет учёта",de:"Beliebtestes Buchhaltungspaket"},
+    card_sub:{vi:"Phù hợp doanh nghiệp trong nước & quốc tế, mọi quy mô",en:"For local & international businesses of all sizes",zh:"适合各种规模的境内外企业",ko:"모든 규모의 국내외 기업에 적합",ja:"国内外・あらゆる規模の企業に最適",fr:"Pour entreprises locales & internationales, toutes tailles",ru:"Для местных и международных компаний любого размера",de:"Für lokale & internationale Unternehmen jeder Größe"},
+    card1_b:{vi:"Tiết kiệm chi phí nhân sự kế toán",en:"Save on in-house accounting costs",zh:"节省会计人力成本",ko:"내부 회계 인력 비용 절감",ja:"経理人件費を削減",fr:"Économisez sur la comptabilité interne",ru:"Экономия на штатной бухгалтерии",de:"Sparen bei internen Buchhaltungskosten"},
+    card1_p:{vi:"Không cần tuyển kế toán nội bộ — tiết kiệm lương, bảo hiểm và đào tạo.",en:"No need to hire in-house staff — save on salary, insurance and training.",zh:"无需自聘会计——节省薪资、保险与培训成本。",ko:"내부 직원 채용 불필요 — 급여·보험·교육비 절감.",ja:"社内採用が不要 — 給与・保険・研修費を節約。",fr:"Pas besoin d'embaucher — économisez salaire, assurance et formation.",ru:"Не нужно нанимать штат — экономия на зарплате, страховке и обучении.",de:"Keine Festanstellung nötig — spart Gehalt, Versicherung und Schulung."},
+    card2_b:{vi:"Kê khai & nộp thuế đúng hạn",en:"Filing & payment on time",zh:"按时申报与缴税",ko:"기한 내 신고·납부",ja:"期限内の申告・納税",fr:"Déclaration & paiement à temps",ru:"Отчётность и уплата в срок",de:"Fristgerechte Meldung & Zahlung"},
+    card2_p:{vi:"GTGT, TNCN, TNDN, báo cáo tài chính năm.",en:"VAT, PIT, CIT and annual financial statements.",zh:"增值税、个人所得税、企业所得税及年度财务报表。",ko:"부가세, 개인소득세, 법인세 및 연간 재무제표.",ja:"付加価値税・個人所得税・法人税・年次財務諸表。",fr:"TVA, IRPP, IS et états financiers annuels.",ru:"НДС, НДФЛ, налог на прибыль и годовая отчётность.",de:"USt, ESt, KSt und Jahresabschluss."},
+    card3_b:{vi:"Báo cáo minh bạch hàng tháng",en:"Transparent monthly reports",zh:"每月透明报告",ko:"투명한 월간 보고",ja:"毎月の透明なレポート",fr:"Rapports mensuels transparents",ru:"Прозрачные ежемесячные отчёты",de:"Transparente Monatsberichte"},
+    card3_p:{vi:"Quý doanh nghiệp luôn nắm được tình hình sổ sách của mình.",en:"Your business always stays on top of its books.",zh:"让贵公司随时掌握账务状况。",ko:"귀사가 언제나 장부 현황을 파악할 수 있습니다.",ja:"貴社が常に帳簿状況を把握できます。",fr:"Votre entreprise garde toujours le contrôle de sa comptabilité.",ru:"Ваш бизнес всегда в курсе состояния учёта.",de:"Ihr Unternehmen behält stets den Überblick über die Bücher."},
+    card_badge:{vi:"Bảo mật thông tin theo hợp đồng dịch vụ",en:"Information secured under service contract",zh:"依服务合同保障信息安全",ko:"서비스 계약에 따른 정보 보안",ja:"サービス契約に基づく情報保護",fr:"Informations sécurisées par contrat de service",ru:"Защита данных по договору",de:"Datenschutz laut Dienstvertrag"},
+    svc_h2:{vi:"Bốn dịch vụ cốt lõi, một đầu mối lo trọn",en:"Four core services, one point of contact",zh:"四项核心服务，一站式对接",ko:"네 가지 핵심 서비스, 하나의 창구",ja:"4つの中核サービスを窓口ひとつで",fr:"Quatre services clés, un seul interlocuteur",ru:"Четыре ключевые услуги — один контакт",de:"Vier Kernleistungen, ein Ansprechpartner"},
+    svc_p:{vi:"Từ lúc mở công ty đến khi vận hành ổn định, ACCA đồng hành ở mọi khâu kế toán và pháp lý.",en:"From company setup to stable operations, ACCA supports every accounting and legal step.",zh:"从公司设立到稳定运营，ACCA 全程协助会计与法律事务。",ko:"회사 설립부터 안정적 운영까지, ACCA가 회계·법률 전 과정을 함께합니다.",ja:"会社設立から安定運営まで、ACCAが会計・法務のすべてをサポートします。",fr:"De la création à l'exploitation stable, ACCA accompagne chaque étape comptable et juridique.",ru:"От регистрации до стабильной работы ACCA сопровождает на каждом этапе учёта и права.",de:"Von der Gründung bis zum stabilen Betrieb begleitet ACCA jeden buchhalterischen und rechtlichen Schritt."},
+    svc1_h:{vi:"Dịch vụ kế toán trọn gói",en:"Full-service accounting",zh:"全套会计服务",ko:"종합 회계 서비스",ja:"会計まるごと代行",fr:"Comptabilité tout-en-un",ru:"Полное бухгалтерское обслуживание",de:"Komplett-Buchhaltung"},
+    svc1_1:{vi:"Ghi sổ, hạch toán chứng từ hàng tháng",en:"Monthly bookkeeping & document posting",zh:"每月记账与凭证核算",ko:"매월 장부 기장 및 전표 처리",ja:"毎月の記帳・伝票処理",fr:"Tenue de livres & saisie mensuelle",ru:"Ежемесячное ведение учёта",de:"Monatliche Buchführung & Belegerfassung"},
+    svc1_2:{vi:"Lập báo cáo tài chính, sổ sách chuẩn quy định",en:"Financial statements & compliant books",zh:"编制合规的财务报表与账簿",ko:"규정에 맞는 재무제표·장부 작성",ja:"規定に沿った財務諸表・帳簿の作成",fr:"États financiers & livres conformes",ru:"Отчётность и учёт по нормам",de:"Abschlüsse & vorschriftskonforme Bücher"},
+    svc1_3:{vi:"Chuyên viên giàu kinh nghiệm theo sát hồ sơ",en:"Experienced specialists dedicated to your files",zh:"经验丰富的专员专责跟进",ko:"경험 많은 전담 전문가 배정",ja:"経験豊富な専任担当者が対応",fr:"Des spécialistes expérimentés dédiés à vos dossiers",ru:"Опытные специалисты ведут ваши документы",de:"Erfahrene Fachkräfte betreuen Ihre Unterlagen"},
+    svc1_4:{vi:"Tư vấn tối ưu chi phí hợp lý, hợp lệ",en:"Advice to optimise valid, legitimate costs",zh:"合理合规的成本优化建议",ko:"합법·적정 비용 최적화 자문",ja:"適正・合法な費用最適化の助言",fr:"Conseils pour optimiser des coûts valides",ru:"Оптимизация обоснованных расходов",de:"Beratung zur Optimierung zulässiger Kosten"},
+    svc1_pa:{vi:"Chỉ từ",en:"From only",zh:"仅需",ko:"단",ja:"月額",fr:"À partir de",ru:"от",de:"Ab nur"},
+    svc1_pb:{vi:"/tháng",en:"/month",zh:"/月",ko:"/월",ja:"〜/月",fr:"/mois",ru:"/мес",de:"/Monat"},
+    svc2_h:{vi:"Khai báo thuế",en:"Tax declaration",zh:"税务申报",ko:"세무 신고",ja:"税務申告",fr:"Déclarations fiscales",ru:"Налоговая отчётность",de:"Steuererklärung"},
+    svc2_1:{vi:"Kê khai thuế GTGT, TNCN, TNDN định kỳ",en:"Periodic VAT, PIT, CIT filings",zh:"定期申报增值税、个税、企业所得税",ko:"부가세·개인소득세·법인세 정기 신고",ja:"付加価値税・所得税・法人税の定期申告",fr:"Déclarations périodiques TVA, IRPP, IS",ru:"Периодические НДС, НДФЛ, налог на прибыль",de:"Regelmäßige USt-, ESt-, KSt-Meldungen"},
+    svc2_2:{vi:"Quyết toán thuế cuối năm",en:"Year-end tax finalisation",zh:"年终税务汇算清缴",ko:"연말 세무 확정",ja:"年末の税務確定",fr:"Régularisation fiscale de fin d'année",ru:"Годовой перерасчёт налогов",de:"Steuerabschluss zum Jahresende"},
+    svc2_3:{vi:"Rà soát trước khi nộp, tránh bị truy thu & phạt",en:"Pre-filing review to avoid arrears & penalties",zh:"申报前审核，避免补税与罚款",ko:"신고 전 검토로 추징·벌금 예방",ja:"申告前チェックで追徴・罰則を回避",fr:"Vérification avant dépôt pour éviter redressements & pénalités",ru:"Проверка перед сдачей во избежание доначислений и штрафов",de:"Prüfung vor Abgabe gegen Nachzahlungen & Strafen"},
+    svc2_4:{vi:"Nộp qua chữ ký số, đúng hạn 100%",en:"Submitted via digital signature, 100% on time",zh:"通过电子签名提交，100% 准时",ko:"전자서명으로 100% 기한 내 제출",ja:"電子署名で提出、100%期限内",fr:"Dépôt par signature électronique, 100 % à temps",ru:"Подача через ЭЦП, 100% в срок",de:"Einreichung per E-Signatur, 100 % pünktlich"},
+    svc2_pa:{vi:"Trọn gói theo",en:"Package based on",zh:"套餐依据",ko:"패키지 기준",ja:"パッケージは",fr:"Forfait selon",ru:"Пакет по",de:"Paket nach"},
+    svc2_pb:{vi:"số lượng hóa đơn",en:"invoice volume",zh:"发票数量",ko:"인보이스 수량",ja:"請求書の件数",fr:"volume de factures",ru:"количеству счетов",de:"Rechnungsvolumen"},
+    svc3_h:{vi:"Thành lập doanh nghiệp",en:"Company formation",zh:"公司注册",ko:"법인 설립",ja:"会社設立",fr:"Création d'entreprise",ru:"Регистрация компании",de:"Firmengründung"},
+    svc3_1:{vi:"Tư vấn loại hình, ngành nghề, vốn điều lệ",en:"Advice on entity type, business lines, charter capital",zh:"就企业类型、经营范围、注册资本提供咨询",ko:"법인 형태·업종·자본금 자문",ja:"法人形態・事業内容・資本金の助言",fr:"Conseil sur la forme, l'activité, le capital social",ru:"Консультация по форме, видам деятельности, уставному капиталу",de:"Beratung zu Rechtsform, Branche, Stammkapital"},
+    svc3_2:{vi:"Soạn hồ sơ & nộp xin giấy phép",en:"Prepare & file the licence application",zh:"编制材料并申请营业执照",ko:"서류 작성 및 인허가 신청",ja:"書類作成・許可申請",fr:"Préparation & dépôt de la demande de licence",ru:"Подготовка и подача документов на лицензию",de:"Unterlagen erstellen & Lizenz beantragen"},
+    svc3_3:{vi:"Khắc dấu, mở mã số thuế, chữ ký số",en:"Company seal, tax code, digital signature",zh:"刻制公章、办理税号、电子签名",ko:"법인 인감·세금코드·전자서명 발급",ja:"社印・税番号・電子署名の取得",fr:"Cachet, code fiscal, signature électronique",ru:"Печать, ИНН, электронная подпись",de:"Firmenstempel, Steuernummer, E-Signatur"},
+    svc3_4:{vi:"Nhận giấy phép trong 3–5 ngày làm việc",en:"Licence in 3–5 working days",zh:"3–5 个工作日内取得执照",ko:"영업일 기준 3~5일 내 발급",ja:"営業日3〜5日で許可取得",fr:"Licence en 3 à 5 jours ouvrés",ru:"Лицензия за 3–5 рабочих дней",de:"Lizenz in 3–5 Werktagen"},
+    svc3_pa:{vi:"Nhận giấy phép trong",en:"Licence within",zh:"取得执照仅需",ko:"인허가 소요",ja:"許可取得まで",fr:"Licence en",ru:"Лицензия за",de:"Lizenz in"},
+    svc3_pb:{vi:"3–5 ngày",en:"3–5 days",zh:"3–5 天",ko:"3~5일",ja:"3〜5日",fr:"3–5 jours",ru:"3–5 дней",de:"3–5 Tagen"},
+    svc4_h:{vi:"Rà soát sổ sách",en:"Books review",zh:"账务审阅",ko:"장부 검토",ja:"帳簿レビュー",fr:"Revue comptable",ru:"Ревизия учёта",de:"Buchprüfung"},
+    svc4_1:{vi:"Soát lại sổ sách, hóa đơn, chứng từ các năm",en:"Review books, invoices & documents across years",zh:"审阅历年账簿、发票与凭证",ko:"연도별 장부·인보이스·전표 검토",ja:"過年度の帳簿・請求書・伝票を点検",fr:"Revue des livres, factures & pièces sur plusieurs années",ru:"Проверка книг, счетов и документов за годы",de:"Prüfung von Büchern, Rechnungen & Belegen über Jahre"},
+    svc4_2:{vi:"Phát hiện rủi ro trước thanh — kiểm tra thuế",en:"Detect risks before tax audits & inspections",zh:"在税务稽查前发现风险",ko:"세무 조사 전 리스크 발견",ja:"税務調査前にリスクを発見",fr:"Détecter les risques avant les contrôles fiscaux",ru:"Выявление рисков до налоговых проверок",de:"Risiken vor Steuerprüfungen erkennen"},
+    svc4_3:{vi:"Chuẩn hóa, dọn sổ để yên tâm quyết toán",en:"Clean up & standardise for confident finalisation",zh:"规范整理账务，安心汇算",ko:"정리·표준화로 안심 결산",ja:"整理・標準化で安心の決算",fr:"Nettoyer & standardiser pour une clôture sereine",ru:"Приведение в порядок для уверенного закрытия",de:"Bereinigen & standardisieren für sicheren Abschluss"},
+    svc4_4:{vi:"Báo cáo đánh giá & đề xuất khắc phục",en:"Assessment report & remediation proposals",zh:"评估报告与整改建议",ko:"평가 보고 및 개선 제안",ja:"評価レポートと改善提案",fr:"Rapport d'évaluation & recommandations",ru:"Отчёт с оценкой и рекомендациями",de:"Bewertungsbericht & Korrekturvorschläge"},
+    svc4_pa:{vi:"Kiểm tra sơ bộ",en:"Preliminary check",zh:"初步检查",ko:"사전 점검",ja:"予備チェック",fr:"Vérification préliminaire",ru:"Предварительная проверка",de:"Erstprüfung"},
+    svc4_pb:{vi:"miễn phí",en:"free",zh:"免费",ko:"무료",ja:"無料",fr:"gratuite",ru:"бесплатно",de:"kostenlos"},
+    proc_eyebrow:{vi:"Quy trình làm việc",en:"How we work",zh:"合作流程",ko:"업무 진행",ja:"業務の流れ",fr:"Notre méthode",ru:"Как мы работаем",de:"So arbeiten wir"},
+    proc_h2:{vi:"Bắt đầu hợp tác chỉ trong 4 bước",en:"Start working together in just 4 steps",zh:"仅需 4 步即可开始合作",ko:"단 4단계로 협업 시작",ja:"わずか4ステップで開始",fr:"Commençons en 4 étapes",ru:"Начните сотрудничество за 4 шага",de:"In nur 4 Schritten starten"},
+    proc_p:{vi:"Minh bạch, rõ ràng, có hợp đồng — Quý doanh nghiệp biết chính xác mình nhận được gì.",en:"Transparent, clear and contract-based — you know exactly what you get.",zh:"透明清晰、合同保障——贵公司清楚知道能获得什么。",ko:"투명하고 명확하며 계약 기반 — 무엇을 받는지 정확히 아십니다.",ja:"透明・明確・契約ベース。何を得られるか明確です。",fr:"Transparent, clair et contractuel — vous savez exactement ce que vous obtenez.",ru:"Прозрачно, ясно и по договору — вы точно знаете, что получаете.",de:"Transparent, klar und vertraglich — Sie wissen genau, was Sie erhalten."},
+    step1_h:{vi:"Tư vấn miễn phí",en:"Free consultation",zh:"免费咨询",ko:"무료 상담",ja:"無料相談",fr:"Consultation gratuite",ru:"Бесплатная консультация",de:"Kostenlose Beratung"},
+    step1_p:{vi:"Trao đổi hiện trạng, quy mô và nhu cầu của doanh nghiệp.",en:"We discuss your current status, size and needs.",zh:"了解贵公司的现状、规模与需求。",ko:"현황·규모·니즈를 함께 논의합니다.",ja:"現状・規模・ニーズをヒアリングします。",fr:"Nous discutons de votre situation, taille et besoins.",ru:"Обсуждаем ваше положение, масштаб и задачи.",de:"Wir besprechen Ihren Status, Größe und Bedarf."},
+    step2_h:{vi:"Báo giá & hợp đồng",en:"Quote & contract",zh:"报价与合同",ko:"견적 및 계약",ja:"見積もり・契約",fr:"Devis & contrat",ru:"Расчёт и договор",de:"Angebot & Vertrag"},
+    step2_p:{vi:"Báo giá minh bạch theo quy mô, ký hợp đồng dịch vụ rõ ràng.",en:"Transparent quote by size and a clear service contract.",zh:"按规模透明报价，签订清晰的服务合同。",ko:"규모별 투명 견적과 명확한 서비스 계약.",ja:"規模別の透明な見積もりと明確な契約。",fr:"Devis transparent selon la taille et contrat clair.",ru:"Прозрачный расчёт по масштабу и понятный договор.",de:"Transparentes Angebot nach Größe und klarer Vertrag."},
+    step3_h:{vi:"Tiếp nhận & xử lý",en:"Handover & processing",zh:"交接与处理",ko:"인수 및 처리",ja:"引き継ぎ・処理",fr:"Prise en charge & traitement",ru:"Передача и обработка",de:"Übergabe & Bearbeitung"},
+    step3_p:{vi:"Nhận chứng từ, hạch toán, kê khai và lập báo cáo định kỳ.",en:"We receive documents, post entries, file taxes and report periodically.",zh:"接收凭证、记账、申报并定期出具报告。",ko:"전표 수령·기장·신고 및 정기 보고를 수행합니다.",ja:"証憑受領・記帳・申告・定期報告を実施。",fr:"Nous recevons les pièces, saisissons, déclarons et rapportons régulièrement.",ru:"Принимаем документы, ведём учёт, сдаём отчётность.",de:"Wir erfassen Belege, buchen, melden und berichten regelmäßig."},
+    step4_h:{vi:"Báo cáo & đồng hành",en:"Report & support",zh:"报告与陪伴",ko:"보고 및 동행",ja:"報告・伴走支援",fr:"Rapport & accompagnement",ru:"Отчёты и поддержка",de:"Bericht & Begleitung"},
+    step4_p:{vi:"Cập nhật tình hình hàng tháng, hỗ trợ giải trình khi cần.",en:"Monthly updates and explanation support whenever needed.",zh:"每月更新情况，需要时协助说明。",ko:"매월 현황 업데이트와 필요 시 소명 지원.",ja:"毎月の状況更新と必要時の説明支援。",fr:"Mises à jour mensuelles et aide aux justifications si besoin.",ru:"Ежемесячные обновления и помощь с пояснениями.",de:"Monatliche Updates und Unterstützung bei Nachweisen."},
+    why_h2:{vi:"Đối tác kế toán đáng tin cho doanh nghiệp trong nước & quốc tế",en:"A trusted accounting partner for local & international businesses",zh:"境内外企业信赖的会计伙伴",ko:"국내외 기업이 신뢰하는 회계 파트너",ja:"国内外の企業に信頼される会計パートナー",fr:"Un partenaire comptable de confiance, local & international",ru:"Надёжный бухгалтерский партнёр для местных и международных компаний",de:"Ein vertrauenswürdiger Buchhaltungspartner — lokal & international"},
+    why_p:{vi:"Không chỉ làm sổ sách — chúng tôi bảo vệ doanh nghiệp trước rủi ro thuế.",en:"Beyond bookkeeping — we protect your business from tax risks.",zh:"不止于记账——我们守护企业免受税务风险。",ko:"단순 기장을 넘어, 세무 리스크로부터 기업을 지킵니다.",ja:"記帳にとどまらず、税務リスクから企業を守ります。",fr:"Au-delà de la comptabilité — nous protégeons votre entreprise des risques fiscaux.",ru:"Не только учёт — мы защищаем бизнес от налоговых рисков.",de:"Mehr als Buchhaltung — wir schützen Ihr Unternehmen vor Steuerrisiken."},
+    why1_b:{vi:"Đội ngũ chuyên môn cao",en:"Highly qualified team",zh:"高素质团队",ko:"전문성 높은 팀",ja:"高い専門性のチーム",fr:"Équipe hautement qualifiée",ru:"Высококвалифицированная команда",de:"Hochqualifiziertes Team"},
+    why1_p:{vi:"Kế toán trưởng và chuyên viên thuế nhiều năm kinh nghiệm với đủ loại hình doanh nghiệp, kể cả doanh nghiệp FDI có vốn nước ngoài.",en:"Chief accountants and tax specialists with years of experience across all business types, including foreign-invested (FDI) companies.",zh:"总会计师与税务专员拥有多年经验，覆盖各类企业，包括外资(FDI)企业。",ko:"다양한 업종과 외국인투자(FDI) 기업까지 다룬 수년 경력의 수석 회계사·세무 전문가.",ja:"外資(FDI)企業を含むあらゆる業種で長年の経験を持つ主任会計士・税務専門家。",fr:"Chefs comptables et fiscalistes expérimentés, tous secteurs, y compris les entreprises à capitaux étrangers (IDE).",ru:"Главбухи и налоговые специалисты с многолетним опытом во всех отраслях, включая компании с иностранными инвестициями (FDI).",de:"Hauptbuchhalter und Steuerexperten mit langjähriger Erfahrung in allen Branchen, auch bei ausländisch investierten (FDI) Unternehmen."},
+    why2_b:{vi:"Cam kết đúng hạn",en:"On-time commitment",zh:"准时承诺",ko:"기한 준수 약속",ja:"期限厳守の約束",fr:"Engagement de ponctualité",ru:"Гарантия сроков",de:"Termintreue"},
+    why2_p:{vi:"Mọi tờ khai và báo cáo nộp đúng thời hạn, chủ động nhắc lịch — không để phát sinh phạt chậm nộp.",en:"Every filing and report submitted on time, with proactive reminders — no late-filing penalties.",zh:"所有申报与报告按时提交并主动提醒——杜绝逾期罚款。",ko:"모든 신고·보고를 기한 내 제출하고 선제적으로 안내 — 지연 벌금 없음.",ja:"すべての申告・報告を期限内に提出し、事前にリマインド。遅延罰則なし。",fr:"Chaque déclaration à temps, avec rappels proactifs — aucune pénalité de retard.",ru:"Все отчёты в срок с напоминаниями — без штрафов за просрочку.",de:"Alle Meldungen pünktlich, mit proaktiven Erinnerungen — keine Verspätungsstrafen."},
+    why3_b:{vi:"Chi phí minh bạch",en:"Transparent pricing",zh:"价格透明",ko:"투명한 비용",ja:"明瞭な料金",fr:"Tarifs transparents",ru:"Прозрачные цены",de:"Transparente Preise"},
+    why3_p:{vi:"Báo giá theo quy mô thực tế, không phí ẩn. Quý doanh nghiệp biết trước mình trả cho những gì.",en:"Quotes based on real size, no hidden fees. You know upfront what you pay for.",zh:"按实际规模报价，无隐藏费用。您事先清楚为何付费。",ko:"실제 규모 기반 견적, 숨은 비용 없음. 무엇에 지불하는지 미리 압니다.",ja:"実際の規模に基づく見積もり、隠れた費用なし。何に払うか事前に明確。",fr:"Devis selon la taille réelle, sans frais cachés. Vous savez d'avance ce que vous payez.",ru:"Расчёт по реальному масштабу, без скрытых платежей. Вы заранее знаете, за что платите.",de:"Angebote nach realer Größe, keine versteckten Kosten. Sie wissen vorab, wofür Sie zahlen."},
+    why4_b:{vi:"Bảo mật tuyệt đối",en:"Absolute confidentiality",zh:"绝对保密",ko:"철저한 기밀 유지",ja:"徹底した機密保持",fr:"Confidentialité absolue",ru:"Полная конфиденциальность",de:"Absolute Vertraulichkeit"},
+    why4_p:{vi:"Thông tin tài chính được cam kết bảo mật bằng hợp đồng, chỉ phục vụ công việc của doanh nghiệp.",en:"Financial data is contractually confidential, used only for your business.",zh:"财务信息以合同保障保密，仅用于贵公司业务。",ko:"재무 정보는 계약으로 기밀 보장되며 귀사 업무에만 사용됩니다.",ja:"財務情報は契約で機密保持され、貴社業務のみに使用します。",fr:"Données financières confidentielles par contrat, utilisées uniquement pour votre activité.",ru:"Финансовые данные конфиденциальны по договору и используются только для вашего бизнеса.",de:"Finanzdaten sind vertraglich vertraulich und nur für Ihr Unternehmen bestimmt."},
+    why5_b:{vi:"Đồng hành lâu dài",en:"Long-term partnership",zh:"长期陪伴",ko:"장기 파트너십",ja:"長期パートナーシップ",fr:"Partenariat durable",ru:"Долгосрочное партнёрство",de:"Langfristige Partnerschaft"},
+    why5_p:{vi:"Không chỉ làm cho xong tháng — chúng tôi tư vấn để doanh nghiệp ngày càng chuẩn và tối ưu.",en:"Not just monthly work — we advise so your business gets more compliant and optimised over time.",zh:"不只是完成当月工作——我们持续建议，让企业日益规范与优化。",ko:"단순 월 업무를 넘어, 기업이 점점 더 규정에 맞고 최적화되도록 자문합니다.",ja:"月次作業だけでなく、企業がより適正・最適になるよう助言します。",fr:"Pas seulement le travail mensuel — nous conseillons pour une conformité et une optimisation continues.",ru:"Не просто ежемесячная работа — консультируем для роста соответствия и оптимизации.",de:"Nicht nur Monatsarbeit — wir beraten für mehr Compliance und Optimierung."},
+    why6_b:{vi:"Giải trình khi thanh tra",en:"Support during inspections",zh:"稽查时协助说明",ko:"조사 시 소명 지원",ja:"調査時の説明支援",fr:"Assistance lors des contrôles",ru:"Поддержка при проверках",de:"Unterstützung bei Prüfungen"},
+    why6_p:{vi:"Hỗ trợ chuẩn bị hồ sơ và làm việc cùng cơ quan thuế khi có kiểm tra, thanh tra.",en:"We help prepare files and work with tax authorities during audits and inspections.",zh:"协助准备资料并在稽查时与税务机关沟通。",ko:"조사·감사 시 서류 준비 및 세무 당국 대응을 지원합니다.",ja:"調査・監査時の書類準備と税務当局対応を支援します。",fr:"Nous aidons à préparer les dossiers et à traiter avec l'administration lors des contrôles.",ru:"Помогаем готовить документы и работать с налоговой при проверках.",de:"Wir helfen bei Unterlagen und im Austausch mit dem Finanzamt bei Prüfungen."},
+    contact_h2:{vi:"Nhận tư vấn & báo giá miễn phí",en:"Get a free consultation & quote",zh:"获取免费咨询与报价",ko:"무료 상담 & 견적 받기",ja:"無料相談・お見積もり",fr:"Consultation & devis gratuits",ru:"Бесплатная консультация и расчёт",de:"Kostenlose Beratung & Angebot"},
+    contact_p:{vi:"Để lại thông tin, chuyên viên của ACCA sẽ liên hệ lại trong giờ làm việc để tư vấn giải pháp phù hợp nhất cho doanh nghiệp của bạn.",en:"Leave your details and an ACCA specialist will contact you during business hours to advise the best solution for your business.",zh:"留下您的信息，ACCA 专员将在工作时间与您联系，为贵公司提供最合适的方案。",ko:"정보를 남겨 주시면 ACCA 전문가가 영업시간 내 연락드려 최적의 솔루션을 안내합니다.",ja:"情報をご記入いただければ、ACCAの専門家が営業時間内にご連絡し最適な提案をします。",fr:"Laissez vos coordonnées ; un spécialiste ACCA vous contactera aux heures ouvrables pour la meilleure solution.",ru:"Оставьте данные — специалист ACCA свяжется в рабочее время и предложит лучшее решение.",de:"Hinterlassen Sie Ihre Daten; ein ACCA-Experte meldet sich während der Geschäftszeiten mit der besten Lösung."},
+    office_k:{vi:"Văn phòng",en:"Office",zh:"办公室",ko:"사무실",ja:"事務所",fr:"Bureau",ru:"Офис",de:"Büro"},
+    zalo_b:{vi:"Chat nhanh qua Zalo",en:"Quick chat on Zalo",zh:"通过 Zalo 快速沟通",ko:"Zalo로 빠른 채팅",ja:"Zaloですぐチャット",fr:"Discuter vite sur Zalo",ru:"Быстрый чат в Zalo",de:"Schneller Chat über Zalo"},
+    zalo_p:{vi:"Dùng camera điện thoại quét mã QR để nhắn tin tư vấn ngay.",en:"Scan the QR with your phone camera to message us right away.",zh:"用手机摄像头扫描二维码，立即咨询。",ko:"휴대폰 카메라로 QR을 스캔해 바로 문의하세요.",ja:"スマホのカメラでQRを読み取り、すぐにご相談を。",fr:"Scannez le QR avec votre téléphone pour nous écrire tout de suite.",ru:"Отсканируйте QR камерой телефона и напишите нам сразу.",de:"QR mit der Handykamera scannen und sofort schreiben."},
+    ok_msg:{vi:"✓ Đã ghi nhận thông tin. ACCA sẽ liên hệ lại với Quý doanh nghiệp sớm nhất!",en:"✓ Your request has been received. ACCA will contact you shortly!",zh:"✓ 已收到您的信息，ACCA 将尽快与您联系！",ko:"✓ 요청이 접수되었습니다. ACCA가 곧 연락드리겠습니다!",ja:"✓ 受け付けました。ACCAより追ってご連絡します！",fr:"✓ Votre demande a été reçue. ACCA vous contactera bientôt !",ru:"✓ Заявка получена. ACCA скоро свяжется с вами!",de:"✓ Ihre Anfrage ist eingegangen. ACCA meldet sich in Kürze!"},
+    f_name:{vi:"Họ và tên *",en:"Full name *",zh:"姓名 *",ko:"이름 *",ja:"お名前 *",fr:"Nom complet *",ru:"Имя и фамилия *",de:"Vollständiger Name *"},
+    f_name_ph:{vi:"Nguyễn Văn A",en:"Your full name",zh:"您的姓名",ko:"성함",ja:"お名前",fr:"Votre nom",ru:"Ваше имя",de:"Ihr Name"},
+    f_phone:{vi:"Số điện thoại *",en:"Phone number *",zh:"电话号码 *",ko:"전화번호 *",ja:"電話番号 *",fr:"Téléphone *",ru:"Телефон *",de:"Telefonnummer *"},
+    f_phone_ph:{vi:"09xx xxx xxx",en:"09xx xxx xxx",zh:"09xx xxx xxx",ko:"09xx xxx xxx",ja:"09xx xxx xxx",fr:"09xx xxx xxx",ru:"09xx xxx xxx",de:"09xx xxx xxx"},
+    f_company:{vi:"Tên công ty",en:"Company name",zh:"公司名称",ko:"회사명",ja:"会社名",fr:"Nom de l'entreprise",ru:"Название компании",de:"Firmenname"},
+    f_company_ph:{vi:"(nếu có)",en:"(optional)",zh:"（选填）",ko:"(선택)",ja:"(任意)",fr:"(facultatif)",ru:"(необязательно)",de:"(optional)"},
+    f_service:{vi:"Dịch vụ quan tâm",en:"Service of interest",zh:"感兴趣的服务",ko:"관심 서비스",ja:"ご関心のサービス",fr:"Service souhaité",ru:"Интересующая услуга",de:"Gewünschte Leistung"},
+    f_service_other:{vi:"Tư vấn tổng thể",en:"General consulting",zh:"综合咨询",ko:"종합 컨설팅",ja:"総合コンサルティング",fr:"Conseil général",ru:"Общая консультация",de:"Allgemeine Beratung"},
+    f_note:{vi:"Nội dung cần tư vấn",en:"What can we help with?",zh:"咨询内容",ko:"문의 내용",ja:"ご相談内容",fr:"Votre besoin",ru:"Чем помочь?",de:"Ihr Anliegen"},
+    f_note_ph:{vi:"Mô tả ngắn nhu cầu của doanh nghiệp...",en:"Briefly describe your needs...",zh:"简要描述您的需求……",ko:"필요 사항을 간단히 적어 주세요...",ja:"ご要望を簡単にご記入ください...",fr:"Décrivez brièvement vos besoins...",ru:"Кратко опишите ваши задачи...",de:"Beschreiben Sie kurz Ihr Anliegen..."},
+    f_submit:{vi:"Gửi yêu cầu tư vấn",en:"Send consultation request",zh:"提交咨询请求",ko:"상담 요청 보내기",ja:"相談を送信",fr:"Envoyer la demande",ru:"Отправить заявку",de:"Anfrage senden"},
+    f_note2:{vi:"Thông tin của bạn được bảo mật, chỉ dùng để liên hệ tư vấn.",en:"Your information is kept confidential and used only to contact you.",zh:"您的信息将被保密，仅用于联系咨询。",ko:"입력하신 정보는 상담 연락 용도로만 사용되며 안전하게 보호됩니다.",ja:"ご入力情報は相談連絡のみに使用し、厳重に保護します。",fr:"Vos informations restent confidentielles et servent uniquement à vous contacter.",ru:"Ваши данные конфиденциальны и используются только для связи.",de:"Ihre Daten bleiben vertraulich und dienen nur der Kontaktaufnahme."},
+    foot_about:{vi:"Đối tác kế toán & thuế đồng hành cùng doanh nghiệp mọi quy mô, trong nước và quốc tế.",en:"An accounting & tax partner for businesses of all sizes, local and international.",zh:"为各种规模的境内外企业提供会计与税务服务的伙伴。",ko:"모든 규모의 국내외 기업을 위한 회계·세무 파트너.",ja:"国内外・あらゆる規模の企業のための会計・税務パートナー。",fr:"Partenaire comptable & fiscal pour entreprises de toutes tailles, locales et internationales.",ru:"Бухгалтерский и налоговый партнёр для компаний любого размера, местных и международных.",de:"Buchhaltungs- & Steuerpartner für Unternehmen jeder Größe, lokal und international."}
+  };
+
+  (function(){
+    var root=document.documentElement;
+    var tbtn=document.getElementById("themeBtn");
+    try{var s=localStorage.getItem("acca-theme");if(s)root.setAttribute("data-theme",s);}catch(e){}
+    tbtn.addEventListener("click",function(){
+      var cur=root.getAttribute("data-theme");
+      var next=cur==="dark"?"light":cur==="light"?"dark":(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"light":"dark");
+      root.setAttribute("data-theme",next);
+      try{localStorage.setItem("acca-theme",next);}catch(e){}
+    });
+
+    var sel=document.getElementById("langSel");
+    function applyLang(lang){
+      if(!lang)lang="vi";
+      root.setAttribute("data-lang",lang);
+      root.setAttribute("lang",lang);
+      document.querySelectorAll("[data-i18n]").forEach(function(el){
+        var k=el.getAttribute("data-i18n");if(I18N[k]&&I18N[k][lang]!=null)el.textContent=I18N[k][lang];
+      });
+      document.querySelectorAll("[data-i18n-html]").forEach(function(el){
+        var k=el.getAttribute("data-i18n-html");if(I18N[k]&&I18N[k][lang]!=null)el.innerHTML=I18N[k][lang];
+      });
+      document.querySelectorAll("[data-i18n-ph]").forEach(function(el){
+        var k=el.getAttribute("data-i18n-ph");if(I18N[k]&&I18N[k][lang]!=null)el.setAttribute("placeholder",I18N[k][lang]);
+      });
+      try{localStorage.setItem("acca-lang",lang);}catch(e){}
+      sel.value=lang;
+    }
+    var saved="vi";
+    try{saved=localStorage.getItem("acca-lang")||"vi";}catch(e){}
+    sel.addEventListener("change",function(){applyLang(sel.value);});
+    if(saved!=="vi")applyLang(saved); else sel.value="vi";
+
+    document.getElementById("yr").textContent=new Date().getFullYear();
+
+    try{
+      if(window.QRCode){
+        new QRCode(document.getElementById("zaloqr"),{text:"https://zalo.me/0938847699",width:100,height:100,colorDark:"#0E4D3C",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});
+      }
+    }catch(e){}
+
+    document.getElementById("leadForm").addEventListener("submit",function(e){
+      e.preventDefault();
+      var ten=document.getElementById("ten"),sdt=document.getElementById("sdt");
+      if(!ten.value.trim()){ten.focus();return;}
+      if(!sdt.value.trim()){sdt.focus();return;}
+      var ok=document.getElementById("okMsg");ok.hidden=false;ok.scrollIntoView({behavior:"smooth",block:"center"});
+      this.reset();
+    });
+  })();
+</script>
+</body>
+</html>
