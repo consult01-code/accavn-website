@@ -59,6 +59,7 @@
   :root[data-theme="dark"] .mark{color:#0e1613}
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mark{color:#0e1613}}
   .brand small{display:block;font-weight:500;font-size:.72rem;color:var(--muted);letter-spacing:.02em}
+  .brand>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .nav-links{display:flex;gap:22px;margin-left:auto;font-size:.92rem;font-weight:500}
   .nav-links a{text-decoration:none;color:var(--muted)}
   .nav-links a:hover{color:var(--ink)}
@@ -69,7 +70,7 @@
   .nav-tools{display:flex;align-items:center;gap:8px;margin-left:6px}
   .lang-sel{border:1px solid var(--line);background:var(--surface);color:var(--ink);height:38px;border-radius:10px;cursor:pointer;font:inherit;font-size:.85rem;font-weight:600;padding:0 8px}
   .theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:1rem;flex:none}
-  @media(max-width:860px){.nav-links{display:none}.nav-tools{margin-left:auto}}
+  @media(max-width:1000px){.nav-links{display:none}.nav-tools{margin-left:auto}}
   @media(max-width:620px){
     .nav{gap:8px;height:60px}
     .nav-cta{display:none}
