@@ -190,7 +190,7 @@ label input,label select{color:var(--fg);font-size:.9rem}
       <a href="#hethong" data-v="hethong">Hệ thống</a>
     </nav>
     <div class="backup-warn" id="backup-warn" hidden></div>
-    <div class="who" id="who" hidden><a href="../portal.html" class="link">← Tình hình kinh doanh</a><span style="flex-basis:100%"></span><span class="muted">Tài khoản:</span> <b id="who-email"></b><button class="link" data-act="logout">Đăng xuất</button></div>
+    <div class="who" id="who" hidden><a href="../portal.html?mode=chudn" class="link" id="who-back" hidden>← Thông tin hoạt động kinh doanh</a><span style="flex-basis:100%"></span><span class="muted">Tài khoản:</span> <b id="who-email"></b><button class="link" data-act="logout">Đăng xuất</button></div>
     <div class="mode"><div id="sync"></div><div id="mode"><span class="dot"></span>Đang mở dữ liệu…</div></div>
   </aside>
   <main id="main"></main>
@@ -362,8 +362,9 @@ function showLogin(msg){
 }
 async function loadAccount(){
   const r=await api('smart_load',{token:AUTH.token});
-  if(!r.ok){if(r.expired){try{sessionStorage.removeItem(TOKEN_KEY);}catch(e){}AUTH.token='';showLogin(r.error);return false;}throw new Error(r.error==='Unknown action'?'máy chủ chưa được cập nhật phần ACCA Smart (cần thêm SmartACCA.gs và triển khai lại Apps Script)':(r.error||'Không tải được sổ sách'));}
+  if(!r.ok){if(r.expired){try{sessionStorage.removeItem(TOKEN_KEY);}catch(e){}AUTH.token='';showLogin(r.error);return false;}if(r.noAccess){showLogin(r.error);return false;}throw new Error(r.error==='Unknown action'?'máy chủ chưa được cập nhật phần ACCA Smart (cần thêm SmartACCA.gs và triển khai lại Apps Script)':(r.error||'Không tải được sổ sách'));}
   AUTH.email=r.email;AUTH.name=r.name||'';AUTH.rev=r.rev||0;
+  const back=$('#who-back');if(back)back.hidden=!(r.access||[]).includes('chudn');
   KV=(r.data&&r.data.kv&&typeof r.data.kv==='object')?r.data.kv:{};
   SYNC.state='idle';$('#auth').hidden=true;
   $('#who').hidden=false;$('#who-email').textContent=AUTH.email;
@@ -373,7 +374,7 @@ async function boot(){
   render();
   if(DEMO){KV={};$('#auth').hidden=true;startBooks();renderSync();return;}
   try{AUTH.token=sessionStorage.getItem(TOKEN_KEY)||'';}catch(e){}
-  if(!AUTH.token){showLogin('');return;}
+  if(!AUTH.token){location.replace('../portal.html?mode=ketoan');return;}
   $('#mode').innerHTML='<span class="dot"></span>Đang tải sổ sách…';
   try{await loadAccount();}catch(e){showLogin('Không kết nối được máy chủ: '+e.message);}
 }
@@ -1141,7 +1142,7 @@ document.addEventListener('click',async e=>{
     case 'csv':exportCSV();break;
     case 'goto-ledger':ui.ledgerAcc=b.dataset.acc;sub.tonghop='sc';pref.set('sub2',sub);view='tonghop';location.hash='tonghop';render();break;
     case 'demo':loadDemo();break;
-    case 'logout':if(['pending','saving'].includes(SYNC.state)){toast('Đang lưu, vui lòng đợi vài giây rồi đăng xuất.');break;}try{sessionStorage.removeItem(TOKEN_KEY);}catch(err){}location.href='../portal.html';break;
+    case 'logout':if(['pending','saving'].includes(SYNC.state)){toast('Đang lưu, vui lòng đợi vài giây rồi đăng xuất.');break;}try{sessionStorage.removeItem(TOKEN_KEY);}catch(err){}location.href='../portal.html?mode=ketoan';break;
     case 'sync-retry':syncNow();break;
     case 'sync-force':syncNow(true);break;
     case 'sync-reload':try{await loadAccount();toast('Đã tải bản mới nhất từ máy chủ');}catch(err){toast(err.message);}break;
@@ -1192,7 +1193,7 @@ document.addEventListener('focusout',e=>{const el=e.target;if(el.closest&&el.clo
 document.addEventListener('submit',async e=>{
   e.preventDefault();const f=e.target;
   if(f.id==='auth-form'){const btn=$('#auth-btn');btn.disabled=true;$('#auth-msg').textContent='';
-    try{const r=await api('login',{email:$('#auth-email').value.trim(),password:$('#auth-pass').value});
+    try{const r=await api('login',{email:$('#auth-email').value.trim(),password:$('#auth-pass').value,mode:'ketoan'});
       if(!r.ok){$('#auth-msg').textContent=r.error||'Đăng nhập không thành công.';}
       else{const pending=AUTH.token===''&&Object.keys(KV).length&&SYNC.state==='error';AUTH.token=r.token;try{sessionStorage.setItem(TOKEN_KEY,r.token);}catch(err){}
         $('#auth-pass').value='';
