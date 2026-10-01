@@ -280,7 +280,10 @@
   .nav-tools{display:flex;align-items:center;gap:8px;margin-left:6px}
   .lang-sel{border:1px solid var(--line);background:var(--surface);color:var(--ink);height:38px;border-radius:10px;cursor:pointer;font:inherit;font-size:.85rem;font-weight:600;padding:0 8px}
   .theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:1rem;flex:none}
-  @media(max-width:1000px){.nav-links{display:none}.nav-tools{margin-left:auto}}
+  .nav-links a,.nav-cta{white-space:nowrap}
+  .wrap.nav{max-width:1280px}
+  @media(max-width:1360px){.nav-links{gap:14px;font-size:.88rem}}
+  @media(max-width:1200px){.nav-links{display:none}.nav-tools{margin-left:auto}}
   @media(max-width:620px){
     .nav{gap:8px;height:60px}
     .nav-cta{display:none}
@@ -335,6 +338,35 @@
   .svc .price{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);font-size:.9rem;color:var(--ink)}
   .svc .price b{color:var(--primary);font-size:1.1rem;font-weight:800}
 
+  /* Phần mềm kế toán */
+  #phanmem{background:var(--surface-2)}
+  .pm-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:44px;align-items:center}
+  .pm-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+  .pm-list li{position:relative;padding-left:24px;color:var(--ink);font-size:.98rem}
+  .pm-list li::before{content:"";position:absolute;left:2px;top:.55em;width:9px;height:9px;border-radius:2px;background:var(--gold);transform:rotate(45deg)}
+  .pm-note{margin-top:12px;font-size:.84rem;color:var(--muted)}
+  .pm-shot{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;font-size:.8rem;box-shadow:0 24px 60px -28px rgba(14,77,60,.45);min-width:0}
+  .pm-bar{display:flex;gap:6px;padding:9px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+  .pm-bar i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+  .pm-in{display:grid;grid-template-columns:116px minmax(0,1fr)}
+  .pm-side{border-right:1px solid var(--line);padding:10px 8px;display:flex;flex-direction:column;gap:2px}
+  .pm-side span{padding:5px 8px;border-radius:6px;color:var(--muted)}
+  .pm-side span.on{background:var(--primary-050);color:var(--primary);font-weight:600}
+  .pm-main{padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+  .pm-flow{display:flex;gap:6px;align-items:center}
+  .pm-flow>span{color:var(--line)}
+  .pm-st{flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;font-weight:500;font-size:.72rem;min-width:0}
+  .pm-st b{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;background:var(--primary-050);color:var(--primary);font-size:.7rem}
+  .pm-st.r b{background:var(--surface-2);color:var(--muted)}
+  .pm-tbl{overflow-x:auto}
+  .pm-tbl table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  .pm-tbl th,.pm-tbl td{padding:5px 6px;border-bottom:1px solid var(--line);white-space:nowrap;text-align:right}
+  .pm-tbl th:first-child,.pm-tbl td:first-child{text-align:left}
+  .pm-tbl th{font-size:.64rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--surface-2)}
+  .pm-tbl tr.t td{font-weight:700;background:var(--surface-2)}
+  .pm-ok{font-size:.72rem;font-weight:600;color:var(--primary)}
+  @media(max-width:900px){.pm-grid{grid-template-columns:1fr}}
+  @media(max-width:560px){.pm-in{grid-template-columns:1fr}.pm-side{display:none}}
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
   .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px}
   .step .n{font-size:1.05rem;font-weight:800;color:#fff;background:var(--primary);width:36px;height:36px;border-radius:10px;display:grid;place-items:center;margin-bottom:14px;font-variant-numeric:tabular-nums}
@@ -436,9 +468,8 @@
     <nav class="nav-links">
       <a href="#dichvu" data-i18n="nav_services">Dịch vụ</a>
       <a href="#banggia" data-i18n="nav_pricing">Bảng giá</a>
-      <a href="#quytrinh" data-i18n="nav_process">Quy trình</a>
       <a href="#vaisao" data-i18n="nav_why">Vì sao chọn ACCA</a>
-      <a href="#lienhe" data-i18n="nav_contact">Liên hệ</a>
+      <a href="pmketoan/" data-i18n="nav_software">Phần mềm kế toán</a>
       <a href="portal.html" data-i18n="nav_portal">Cổng khách hàng</a>
     </nav>
     <a class="nav-cta" href="#lienhe" data-i18n="nav_cta">Nhận tư vấn miễn phí</a>
@@ -625,6 +656,42 @@
     </div>
   </section>
 
+  <section id="phanmem">
+    <div class="wrap pm-grid">
+      <div>
+        <div class="sec-head" style="margin-bottom:22px">
+          <span class="eyebrow" data-i18n="nav_software">Phần mềm kế toán</span>
+          <h2 data-i18n="pm_h2">Tự làm sổ sách với phần mềm kế toán online</h2>
+          <p data-i18n="pm_p">Ghi phiếu thu chi, hóa đơn mua bán; sổ nhật ký chung, sổ cái, công nợ, báo cáo tài chính và tờ khai 01/GTGT tự lên. Chạy ngay trên trình duyệt, không cần cài đặt.</p>
+        </div>
+        <ul class="pm-list">
+          <li data-i18n="pm_li1">Theo Thông tư 99/2025 và 133/2016</li>
+          <li data-i18n="pm_li2">Phân hệ Quỹ, Ngân hàng, Mua hàng, Bán hàng, Thuế, Tổng hợp</li>
+          <li data-i18n="pm_li3">Tự cảnh báo quỹ âm, hóa đơn từ 5 triệu trả tiền mặt, số dư lệch</li>
+          <li data-i18n="pm_li4">Dữ liệu lưu trên máy của bạn, sao lưu ra tệp bất cứ lúc nào</li>
+        </ul>
+        <div class="hero-cta" style="margin-top:24px">
+          <a class="btn btn-primary" href="pmketoan/?demo=1#tongquan" data-i18n="pm_btn_demo">Dùng thử với dữ liệu mẫu</a>
+          <a class="btn btn-ghost" href="pmketoan/" data-i18n="pm_btn_open">Vào phần mềm</a>
+        </div>
+        <p class="pm-note" data-i18n="pm_note">Giao diện phần mềm hiện bằng tiếng Việt.</p>
+      </div>
+      <figure class="pm-shot" aria-hidden="true">
+        <div class="pm-bar"><i></i><i></i><i></i></div>
+        <div class="pm-in">
+          <div class="pm-side"><span>Tổng quan</span><span>Quỹ</span><span>Ngân hàng</span><span>Mua hàng</span><span class="on">Bán hàng</span><span>Thuế</span><span>Tổng hợp</span><span>Báo cáo</span></div>
+          <div class="pm-main">
+            <div class="pm-flow"><div class="pm-st"><b>HĐ</b>Bán hàng</div><span>→</span><div class="pm-st"><b>PT</b>Thu tiền mặt</div><span>→</span><div class="pm-st"><b>BC</b>Thu qua NH</div><span>→</span><div class="pm-st r"><b>131</b>Công nợ</div></div>
+            <div class="pm-tbl"><table><thead><tr><th>Đối tượng</th><th>PS Nợ</th><th>PS Có</th><th>Dư Nợ CK</th></tr></thead>
+            <tbody><tr><td>KH001</td><td>64.800.000</td><td>100.000.000</td><td>44.800.000</td></tr><tr><td>KH002</td><td>27.000.000</td><td></td><td>27.000.000</td></tr>
+            <tr class="t"><td>Cộng</td><td>91.800.000</td><td>100.000.000</td><td>71.800.000</td></tr></tbody></table></div>
+            <span class="pm-ok">✓ Nợ = Có · số liệu ví dụ</span>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
   <section id="faq">
     <div class="wrap">
       <div class="sec-head">
@@ -757,6 +824,7 @@
         <a href="mailto:info@accavn.com">info@accavn.com</a>
         <a href="tel:+84938847699">+84 938 847 699</a>
         <a href="portal.html" data-i18n="nav_portal">Cổng khách hàng</a>
+        <a href="pmketoan/" data-i18n="nav_software">Phần mềm kế toán</a>
         <a href="#quytrinh" data-i18n="proc_eyebrow">Quy trình làm việc</a>
         <a href="#faq" data-i18n="faq_eyebrow">Câu hỏi thường gặp</a>
         <a href="blog/">Blog</a>
@@ -768,6 +836,16 @@
 
 <script>
   var I18N={
+    nav_software:{"vi": "Phần mềm kế toán", "en": "Accounting software", "zh": "会计软件", "ko": "회계 소프트웨어", "ja": "会計ソフト", "fr": "Logiciel comptable", "ru": "Бухгалтерская программа", "de": "Buchhaltungssoftware"},
+    pm_h2:{"vi": "Tự làm sổ sách với phần mềm kế toán online", "en": "Keep your own books with our online accounting software", "zh": "使用在线会计软件自行记账", "ko": "온라인 회계 소프트웨어로 직접 장부 관리", "ja": "オンライン会計ソフトで自社の帳簿を管理", "fr": "Tenez vos comptes avec notre logiciel comptable en ligne", "ru": "Ведите учёт сами в нашей онлайн-бухгалтерии", "de": "Führen Sie Ihre Bücher selbst mit unserer Online-Buchhaltung"},
+    pm_p:{"vi": "Ghi phiếu thu chi, hóa đơn mua bán; sổ nhật ký chung, sổ cái, công nợ, báo cáo tài chính và tờ khai 01/GTGT tự lên. Chạy ngay trên trình duyệt, không cần cài đặt.", "en": "Record receipts, payments and invoices; the general journal, ledgers, receivables and payables, financial statements and the 01/GTGT VAT return are built automatically. Runs in your browser, nothing to install.", "zh": "录入收付款凭证和购销发票，日记账、总账、往来账、财务报表和 01/GTGT 增值税申报表自动生成。浏览器中直接运行，无需安装。", "ko": "입출금 전표와 매입·매출 송장을 입력하면 분개장, 원장, 채권·채무, 재무제표, 01/GTGT 부가세 신고서가 자동으로 작성됩니다. 설치 없이 브라우저에서 바로 실행됩니다.", "ja": "入出金伝票と売買の請求書を入力すると、仕訳帳、総勘定元帳、債権債務、財務諸表、01/GTGT 付加価値税申告書が自動で作成されます。ブラウザですぐに使え、インストール不要です。", "fr": "Saisissez encaissements, décaissements et factures : journal, grand livre, comptes clients et fournisseurs, états financiers et déclaration de TVA 01/GTGT sont produits automatiquement. Dans le navigateur, sans installation.", "ru": "Вводите приходные и расходные ордера, счета покупок и продаж — журнал, главная книга, расчёты с контрагентами, финансовая отчётность и декларация НДС 01/GTGT формируются автоматически. Работает в браузере, без установки.", "de": "Erfassen Sie Ein- und Auszahlungen sowie Rechnungen – Journal, Hauptbuch, Debitoren und Kreditoren, Jahresabschluss und die USt-Erklärung 01/GTGT entstehen automatisch. Läuft im Browser, ohne Installation."},
+    pm_li1:{"vi": "Theo Thông tư 99/2025 và 133/2016", "en": "Follows Circular 99/2025 and 133/2016", "zh": "符合第 99/2025 号和第 133/2016 号通知", "ko": "통지 99/2025 및 133/2016 기준", "ja": "通達 99/2025・133/2016 準拠", "fr": "Conforme aux circulaires 99/2025 et 133/2016", "ru": "По циркулярам 99/2025 и 133/2016", "de": "Nach Rundschreiben 99/2025 und 133/2016"},
+    pm_li2:{"vi": "Phân hệ Quỹ, Ngân hàng, Mua hàng, Bán hàng, Thuế, Tổng hợp", "en": "Cash, Bank, Purchasing, Sales, Tax and General ledger modules", "zh": "现金、银行、采购、销售、税务、总账模块", "ko": "현금·은행·구매·판매·세무·총계정 모듈", "ja": "現金・銀行・購買・販売・税務・総合の各モジュール", "fr": "Modules Caisse, Banque, Achats, Ventes, TVA et Comptabilité générale", "ru": "Модули: касса, банк, закупки, продажи, налоги, сводный учёт", "de": "Module Kasse, Bank, Einkauf, Verkauf, Steuern und Hauptbuch"},
+    pm_li3:{"vi": "Tự cảnh báo quỹ âm, hóa đơn từ 5 triệu trả tiền mặt, số dư lệch", "en": "Flags negative cash, cash-paid invoices from 5 million VND and unbalanced opening balances", "zh": "自动提示现金为负、500 万越南盾以上发票现金支付、期初余额不平", "ko": "현금 마이너스, 500만 동 이상 현금 결제 송장, 기초잔액 불일치를 자동 경고", "ja": "現金残高のマイナス、500万ドン以上の現金払い請求書、期首残高の不一致を自動で警告", "fr": "Alerte sur caisse négative, factures de 5 millions VND ou plus payées en espèces, soldes d'ouverture déséquilibrés", "ru": "Предупреждает об отрицательном остатке кассы, оплате наличными счетов от 5 млн донгов, несбалансированных входящих остатках", "de": "Warnt bei negativem Kassenbestand, bar bezahlten Rechnungen ab 5 Mio. VND und unausgeglichenen Eröffnungssalden"},
+    pm_li4:{"vi": "Dữ liệu lưu trên máy của bạn, sao lưu ra tệp bất cứ lúc nào", "en": "Data stays on your device; back it up to a file any time", "zh": "数据保存在您的设备上，随时可备份为文件", "ko": "데이터는 사용자 기기에 저장되며 언제든 파일로 백업 가능", "ja": "データはお使いの端末に保存され、いつでもファイルにバックアップ可能", "fr": "Vos données restent sur votre appareil ; sauvegarde en fichier à tout moment", "ru": "Данные хранятся на вашем устройстве, резервную копию можно сохранить в файл в любой момент", "de": "Daten bleiben auf Ihrem Gerät; jederzeit als Datei sichern"},
+    pm_btn_demo:{"vi": "Dùng thử với dữ liệu mẫu", "en": "Try with sample data", "zh": "使用示例数据试用", "ko": "샘플 데이터로 체험", "ja": "サンプルデータで試す", "fr": "Essayer avec des données d'exemple", "ru": "Попробовать на демо-данных", "de": "Mit Beispieldaten testen"},
+    pm_btn_open:{"vi": "Vào phần mềm", "en": "Open the software", "zh": "进入软件", "ko": "소프트웨어 열기", "ja": "ソフトを開く", "fr": "Ouvrir le logiciel", "ru": "Открыть программу", "de": "Software öffnen"},
+    pm_note:{"vi": "Giao diện phần mềm hiện bằng tiếng Việt.", "en": "The software interface is currently in Vietnamese.", "zh": "软件界面目前为越南语。", "ko": "소프트웨어 화면은 현재 베트남어로 제공됩니다.", "ja": "ソフトの画面は現在ベトナム語のみです。", "fr": "L'interface du logiciel est pour l'instant en vietnamien.", "ru": "Интерфейс программы пока на вьетнамском языке.", "de": "Die Oberfläche der Software ist derzeit auf Vietnamesisch."},
     faq1_q:{"vi": "Dịch vụ kế toán trọn gói của ACCA gồm những gì?", "en": "What does ACCA's full-service accounting package include?", "zh": "ACCA 的全包会计服务包括哪些内容？", "ko": "ACCA 회계 일괄 대행 서비스에는 무엇이 포함되나요?", "ja": "ACCAの会計フルサービスには何が含まれますか？", "fr": "Que comprend l'offre de comptabilité complète d'ACCA ?", "ru": "Что входит в комплексное бухгалтерское обслуживание ACCA?", "de": "Was umfasst das Buchhaltungs-Komplettpaket von ACCA?"},
     faq1_a:{"vi": "Ghi sổ và hạch toán chứng từ hàng tháng; kê khai thuế GTGT, TNCN, TNDN; lập báo cáo tài chính và quyết toán thuế cuối năm; báo cáo tình hình sổ sách định kỳ và tư vấn tối ưu chi phí hợp lý, hợp lệ.", "en": "Monthly bookkeeping and voucher processing; VAT, personal income tax and corporate income tax filings; annual financial statements and year-end tax finalization; regular reporting on your books and advice on legitimate cost optimization.", "zh": "每月记账与凭证处理；增值税、个人所得税、企业所得税申报；编制年度财务报表及年终税务汇算；定期汇报账务状况，并就合法合规的成本优化提供建议。", "ko": "월별 장부 기장 및 증빙 처리, 부가세·개인소득세·법인세 신고, 연간 재무제표 작성 및 연말 세무 정산, 정기적인 장부 현황 보고와 합법적인 비용 최적화 자문이 포함됩니다.", "ja": "毎月の記帳・証憑処理、付加価値税・個人所得税・法人所得税の申告、年次決算書の作成と年末の税務確定申告、帳簿状況の定期報告、適法なコスト最適化のアドバイスが含まれます。", "fr": "Tenue de la comptabilité et traitement des pièces chaque mois ; déclarations de TVA, d'impôt sur le revenu et d'impôt sur les sociétés ; états financiers annuels et liquidation fiscale de fin d'année ; reporting régulier et conseils d'optimisation des coûts en toute conformité.", "ru": "Ежемесячный учёт и обработка документов; декларации по НДС, НДФЛ и налогу на прибыль; годовая финансовая отчётность и итоговые налоговые расчёты; регулярные отчёты о состоянии учёта и советы по законной оптимизации расходов.", "de": "Monatliche Buchführung und Belegverarbeitung; Umsatzsteuer-, Lohnsteuer- und Körperschaftsteuererklärungen; Jahresabschluss und steuerliche Jahresabrechnung; regelmäßige Berichte zu Ihrer Buchhaltung sowie Beratung zur rechtskonformen Kostenoptimierung."},
     faq2_q:{"vi": "Chi phí dịch vụ kế toán bao nhiêu một tháng?", "en": "How much do accounting services cost per month?", "zh": "会计服务每月费用是多少？", "ko": "회계 서비스 비용은 월 얼마인가요?", "ja": "会計サービスの月額費用はいくらですか？", "fr": "Combien coûte la comptabilité par mois ?", "ru": "Сколько стоит бухгалтерское обслуживание в месяц?", "de": "Was kostet die Buchhaltung pro Monat?"},
