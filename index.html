@@ -283,7 +283,8 @@
   .nav-links a,.nav-cta{white-space:nowrap}
   .wrap.nav{max-width:1280px}
   @media(max-width:1360px){.nav-links{gap:14px;font-size:.88rem}}
-  @media(max-width:1200px){.nav-links{display:none}.nav-tools{margin-left:auto}}
+  .nav-blog{display:none;align-items:center;height:38px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);text-decoration:none;font-weight:600;font-size:.85rem;white-space:nowrap}
+  @media(max-width:1200px){.nav-links{display:none}.nav-tools{margin-left:auto}.nav-blog{display:inline-flex}}
   @media(max-width:620px){
     .nav{gap:8px;height:60px}
     .nav-cta{display:none}
@@ -424,6 +425,17 @@
   .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:var(--primary)}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   form .btn-primary{width:100%;justify-content:center;margin-top:6px;border:none;font-size:1rem}
+  #blog{background:var(--surface-2)}
+  .blog-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+  .bcard{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s}
+  .bcard:hover{border-color:var(--primary);transform:translateY(-2px)}
+  .bcard img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+  .bcard div{padding:16px 18px 18px}
+  .bcard .bt{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--gold)}
+  .bcard b{display:block;font-size:1.05rem;line-height:1.4;margin:6px 0}
+  .bcard p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.55}
+  .blog-more{margin-top:24px;text-align:center}
+  @media(max-width:900px){.blog-grid{grid-template-columns:1fr}}
   #faq{background:var(--bg)}
   .faq-list{display:flex;flex-direction:column;gap:12px;max-width:52rem}
   .faq-list details{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:0 22px}
@@ -468,12 +480,14 @@
     <nav class="nav-links">
       <a href="#dichvu" data-i18n="nav_services">Dịch vụ</a>
       <a href="#banggia" data-i18n="nav_pricing">Bảng giá</a>
+      <a href="blog/" data-i18n="nav_blog">Blog</a>
       <a href="#vaisao" data-i18n="nav_why">Vì sao chọn ACCA</a>
       <a href="pmketoan/" data-i18n="nav_software">Phần mềm kế toán</a>
       <a href="portal.html" data-i18n="nav_portal">Cổng khách hàng</a>
     </nav>
     <a class="nav-cta" href="#lienhe" data-i18n="nav_cta">Nhận tư vấn miễn phí</a>
     <div class="nav-tools">
+      <a class="nav-blog" href="blog/" data-i18n="nav_blog">Blog</a>
       <select class="lang-sel" id="langSel" aria-label="Language">
         <option value="vi">🇻🇳 VI</option>
         <option value="en">🇬🇧 EN</option>
@@ -692,6 +706,22 @@
     </div>
   </section>
 
+  <section id="blog">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow" data-i18n="nav_blog">Blog</span>
+        <h2 data-i18n="blog_h2">Kiến thức kế toán – thuế cho chủ doanh nghiệp</h2>
+        <p data-i18n="blog_p">20 bài viết thực tế về dịch vụ kế toán, thuế, thành lập công ty và doanh nghiệp FDI, cập nhật 2026.</p>
+      </div>
+      <div class="blog-grid">
+        <a class="bcard" href="blog/dich-vu-ke-toan-gia-re.html"><img src="blog/img/dich-vu-ke-toan-gia-re.svg" width="1600" height="900" loading="lazy" alt=""><div><span class="bt">Bảng giá</span><b>Dịch vụ kế toán giá rẻ: rẻ bao nhiêu là hợp lý và 6 rủi ro cần tránh</b><p>Bảng giá minh bạch từ 390.000đ/tháng và cách phân biệt giá rẻ đúng nghĩa với giá rẻ cắt việc.</p></div></a>
+        <a class="bcard" href="blog/lich-nop-to-khai-thue-2026.html"><img src="blog/img/lich-nop-to-khai-thue-2026.svg" width="1600" height="900" loading="lazy" alt=""><div><span class="bt">Thuế</span><b>Lịch nộp tờ khai thuế 2026 đầy đủ cho doanh nghiệp</b><p>Hạn khai GTGT, TNCN, tạm nộp TNDN, quyết toán năm — bảng tra nhanh và checklist.</p></div></a>
+        <a class="bcard" href="blog/thu-tuc-thanh-lap-cong-ty.html"><img src="blog/img/thu-tuc-thanh-lap-cong-ty.svg" width="1600" height="900" loading="lazy" alt=""><div><span class="bt">Thành lập DN</span><b>Thủ tục thành lập công ty TNHH 2026 từ A–Z</b><p>Hồ sơ cần có, 6 bước nộp trực tuyến và việc cần làm ngay sau khi có giấy phép.</p></div></a>
+      </div>
+      <div class="blog-more"><a class="btn btn-primary" href="blog/" data-i18n="blog_more">Xem tất cả bài viết →</a></div>
+    </div>
+  </section>
+
   <section id="faq">
     <div class="wrap">
       <div class="sec-head">
@@ -836,6 +866,9 @@
 
 <script>
   var I18N={
+    blog_h2:{"vi": "Kiến thức kế toán – thuế cho chủ doanh nghiệp", "en": "Accounting & tax insights for business owners", "zh": "企业主的会计与税务知识", "ko": "사업주를 위한 회계·세무 지식", "ja": "経営者のための会計・税務ナレッジ", "fr": "Comptabilité et fiscalité : l'essentiel pour les dirigeants", "ru": "Бухгалтерия и налоги: полезное для владельцев бизнеса", "de": "Buchhaltung & Steuern: Wissen für Unternehmer"},
+    blog_p:{"vi": "20 bài viết thực tế về dịch vụ kế toán, thuế, thành lập công ty và doanh nghiệp FDI, cập nhật 2026.", "en": "20 practical articles on accounting, tax, company setup and FDI in Vietnam, updated 2026 (mostly in Vietnamese).", "zh": "20 篇关于会计、税务、公司注册和外资企业的实用文章，2026 年更新（以越南语为主）。", "ko": "회계·세무·회사 설립·FDI에 관한 실용 기사 20편, 2026년 업데이트 (주로 베트남어).", "ja": "会計・税務・会社設立・FDIに関する実用記事20本、2026年更新（主にベトナム語）。", "fr": "20 articles pratiques sur la comptabilité, la fiscalité, la création d'entreprise et les IDE, mis à jour en 2026 (surtout en vietnamien).", "ru": "20 практических статей о бухгалтерии, налогах, регистрации компаний и ПИИ, обновлено в 2026 г. (в основном на вьетнамском).", "de": "20 Praxisartikel zu Buchhaltung, Steuern, Firmengründung und FDI, aktualisiert 2026 (überwiegend auf Vietnamesisch)."},
+    blog_more:{"vi": "Xem tất cả bài viết →", "en": "View all articles →", "zh": "查看全部文章 →", "ko": "모든 글 보기 →", "ja": "すべての記事を見る →", "fr": "Voir tous les articles →", "ru": "Все статьи →", "de": "Alle Artikel ansehen →"},
     nav_blog:{"vi": "Blog", "en": "Blog", "zh": "博客", "ko": "블로그", "ja": "ブログ", "fr": "Blog", "ru": "Блог", "de": "Blog"},
     pm_eyebrow:{"vi": "Phần mềm kế toán ACCA Smart", "en": "ACCA Smart accounting software", "zh": "ACCA Smart 会计软件", "ko": "ACCA Smart 회계 소프트웨어", "ja": "ACCA Smart 会計ソフト", "fr": "Logiciel comptable ACCA Smart", "ru": "Бухгалтерская программа ACCA Smart", "de": "Buchhaltungssoftware ACCA Smart"},
     nav_software:{"vi": "Phần mềm kế toán", "en": "Accounting software", "zh": "会计软件", "ko": "회계 소프트웨어", "ja": "会計ソフト", "fr": "Logiciel comptable", "ru": "Бухгалтерская программа", "de": "Buchhaltungssoftware"},
