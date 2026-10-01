@@ -83,8 +83,15 @@
   .msg.ok{display:block;background:var(--primary-050);color:var(--primary)}
   .login-foot{margin-top:18px;font-size:.82rem;color:var(--muted);text-align:center}
   .login-foot a{color:var(--primary);font-weight:600;text-decoration:none}
-  .pm-gate{display:block;margin-top:16px;padding:12px 14px;border:1px dashed var(--line);border-radius:12px;text-align:center;font-size:.88rem;color:var(--muted);text-decoration:none}
-  .pm-gate b{color:var(--primary)}
+  .modes{border:0;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:8px}
+  .modes legend{font-size:.85rem;font-weight:600;margin-bottom:8px;padding:0}
+  .mode-opt{display:flex;gap:11px;align-items:flex-start;padding:12px 13px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;background:var(--bg)}
+  .mode-opt input{margin-top:4px;accent-color:var(--primary);flex:none}
+  .mode-opt span{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .mode-opt b{font-size:.95rem}
+  .mode-opt small{font-size:.8rem;color:var(--muted);line-height:1.4}
+  .mode-opt:has(input:checked){border-color:var(--primary);background:var(--primary-050)}
+  .mode-opt:has(input:focus-visible){outline:2px solid var(--primary);outline-offset:2px}
   .hub{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;border-bottom:1px solid var(--line)}
   .hub a,.hub span{display:inline-flex;flex-direction:column;padding:10px 16px;border-bottom:3px solid transparent;margin-bottom:-1px;text-decoration:none;color:var(--muted);font-weight:600}
   .hub .on{color:var(--primary);border-bottom-color:var(--primary)}
@@ -186,7 +193,14 @@
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </div>
       <h1 data-i18n="login_h">Cổng khách hàng</h1>
-      <p class="sub" data-i18n="login_sub">Đăng nhập để xem tình hình kinh doanh, thuế và nhắc hạn nộp của doanh nghiệp bạn.</p>
+      <p class="sub" data-i18n="login_sub">Chọn dịch vụ trong gói của bạn, rồi đăng nhập bằng tài khoản ACCA cấp.</p>
+      <fieldset class="modes">
+        <legend data-i18n="mode_legend">Chọn dịch vụ</legend>
+        <label class="mode-opt"><input type="radio" name="mode" value="ketoan" id="modeKetoan">
+          <span><b data-i18n="mode1_t">Phần mềm kế toán ACCA Smart</b><small data-i18n="mode1_s">Dành cho kế toán: ghi chứng từ, sổ sách, báo cáo, tờ khai</small></span></label>
+        <label class="mode-opt"><input type="radio" name="mode" value="chudn" id="modeChudn">
+          <span><b data-i18n="mode2_t">Thông tin hoạt động kinh doanh</b><small data-i18n="mode2_s">Dành cho chủ doanh nghiệp: doanh thu, lãi lỗ, thuế, nhắc hạn nộp</small></span></label>
+      </fieldset>
       <form id="loginForm" autocomplete="on">
         <div class="field">
           <label for="email" data-i18n="email_lbl">Email đăng nhập</label>
@@ -203,7 +217,6 @@
         <span data-i18n="login_help">Chưa có tài khoản?</span>
         <a href="./#lienhe" data-i18n="login_contact">Liên hệ ACCA để được cấp</a>
       </div>
-      <div class="pm-gate"><span data-i18n="pm_gate_t">Một tài khoản dùng cho cả:</span> <b data-i18n="pm_gate_b">Tình hình kinh doanh · Phần mềm kế toán ACCA Smart</b></div>
     </div>
   </div>
 </main>
@@ -212,8 +225,8 @@
 <main id="dashView" hidden>
   <div class="wrap dash">
     <nav class="hub" aria-label="Dịch vụ trong Cổng khách hàng">
-      <span class="on" aria-current="page" data-i18n="hub_overview">Tình hình kinh doanh</span>
-      <a href="pmketoan/"><span style="padding:0;border:0;margin:0;color:inherit" data-i18n="hub_software">Phần mềm kế toán ACCA Smart</span><small data-i18n="hub_software_sub">Ghi chứng từ, xem sổ sách, báo cáo và tờ khai</small></a>
+      <span class="on" aria-current="page" data-i18n="hub_overview">Thông tin hoạt động kinh doanh</span>
+      <a href="pmketoan/" id="hubSoftware" hidden><span style="padding:0;border:0;margin:0;color:inherit" data-i18n="hub_software">Phần mềm kế toán ACCA Smart</span><small data-i18n="hub_software_sub">Ghi chứng từ, xem sổ sách, báo cáo và tờ khai</small></a>
     </nav>
     <div class="dash-head">
       <div class="co">
@@ -306,14 +319,18 @@
 
   /* ---------- i18n (VI/EN) ---------- */
   var I18N = {
-    pm_gate_t:{vi:"Một tài khoản dùng cho cả:",en:"One account for both:"},
-    pm_gate_b:{vi:"Tình hình kinh doanh · Phần mềm kế toán ACCA Smart",en:"Business overview · ACCA Smart accounting software"},
-    hub_overview:{vi:"Tình hình kinh doanh",en:"Business overview"},
+    mode_legend:{vi:"Chọn dịch vụ theo gói của bạn",en:"Choose the service in your plan"},
+    mode1_t:{vi:"Phần mềm kế toán ACCA Smart",en:"ACCA Smart accounting software"},
+    mode1_s:{vi:"Dành cho kế toán: ghi chứng từ, sổ sách, báo cáo, tờ khai",en:"For accountants: vouchers, ledgers, reports, returns"},
+    mode2_t:{vi:"Thông tin hoạt động kinh doanh",en:"Business performance"},
+    mode2_s:{vi:"Dành cho chủ doanh nghiệp: doanh thu, lãi lỗ, thuế, nhắc hạn nộp",en:"For business owners: revenue, profit, taxes, deadlines"},
+    err_mode:{vi:"Vui lòng chọn dịch vụ trước khi đăng nhập.",en:"Please choose a service before signing in."},
+    hub_overview:{vi:"Thông tin hoạt động kinh doanh",en:"Business performance"},
     hub_software:{vi:"Phần mềm kế toán ACCA Smart",en:"ACCA Smart accounting software"},
     hub_software_sub:{vi:"Ghi chứng từ, xem sổ sách, báo cáo và tờ khai",en:"Record vouchers, view ledgers, reports and returns"},
     brand_sub:{vi:"Cổng khách hàng",en:"Client portal"},
     login_h:{vi:"Cổng khách hàng",en:"Client portal"},
-    login_sub:{vi:"Đăng nhập để xem tình hình kinh doanh, thuế và nhắc hạn nộp của doanh nghiệp bạn.",en:"Sign in to view your company's business status, taxes and filing reminders."},
+    login_sub:{vi:"Chọn dịch vụ trong gói của bạn, rồi đăng nhập bằng tài khoản ACCA cấp.",en:"Choose the service in your plan, then sign in with the account ACCA issued to you."},
     email_lbl:{vi:"Email đăng nhập",en:"Login email"},
     pass_lbl:{vi:"Mật khẩu",en:"Password"},
     login_btn:{vi:"Đăng nhập",en:"Sign in"},
@@ -537,12 +554,19 @@
     $("#loginForm").reset(); $("#loginMsg").className="msg";
   }
   $("#logoutBtn").onclick=doLogout;
+  // Chế độ đăng nhập: 1 = phần mềm kế toán, 2 = thông tin kinh doanh (theo gói dịch vụ)
+  function pickedMode(){ var r=document.querySelector('input[name="mode"]:checked'); return r?r.value:""; }
+  function setAccess(acc){ var a=acc||[]; $("#hubSoftware").hidden=a.indexOf("ketoan")<0; }
+  (function(){
+    var m=new URLSearchParams(location.search).get("mode"); if(m!=="ketoan"&&m!=="chudn"){ try{m=localStorage.getItem("acca_portal_mode");}catch(e){} }
+    var el=m==="ketoan"?$("#modeKetoan"):m==="chudn"?$("#modeChudn"):null; if(el) el.checked=true;
+  })();
   // Giữ đăng nhập khi quay lại từ phần mềm kế toán (cùng phiên trình duyệt)
   (function(){
     var tok=""; try{tok=sessionStorage.getItem("acca_portal_tok")||"";}catch(e){}
-    if(!tok||!CONFIG.BACKEND_URL) return;
+    if(!tok||!CONFIG.BACKEND_URL||pickedMode()==="ketoan") return;
     api("dashboard",{token:tok}).then(function(res){
-      if(res&&res.ok&&res.client){ STATE.token=tok; showDash(res.client); }
+      if(res&&res.ok&&res.client){ STATE.token=tok; setAccess(res.access); showDash(res.client); }
       else { try{sessionStorage.removeItem("acca_portal_tok");}catch(e){} }
     }).catch(function(){});
   })();
@@ -550,10 +574,16 @@
   $("#loginForm").addEventListener("submit",function(e){
     e.preventDefault();
     var email=$("#email").value.trim(), pass=$("#pass").value, msg=$("#loginMsg"), btn=$("#loginBtn");
+    var mode=pickedMode();
+    if(!mode){ msg.className="msg err"; msg.textContent=t("err_mode"); return; }
+    try{localStorage.setItem("acca_portal_mode",mode);}catch(e){}
     msg.className="msg"; btn.disabled=true;
-    api("login",{email:email,password:pass}).then(function(res){
+    api("login",{email:email,password:pass,mode:mode}).then(function(res){
       btn.disabled=false;
-      if(res && res.ok && res.client){ STATE.token=res.token||null; sessionStorage.setItem("acca_portal_tok",STATE.token||""); showDash(res.client); }
+      if(res && res.ok && res.client){
+        STATE.token=res.token||null; sessionStorage.setItem("acca_portal_tok",STATE.token||""); setAccess(res.access);
+        if(mode==="ketoan"){ location.href="pmketoan/"; return; }
+        showDash(res.client); }
       else { msg.className="msg err"; msg.textContent=(res&&res.error)||t("err_login"); }
     }).catch(function(err){
       btn.disabled=false;
