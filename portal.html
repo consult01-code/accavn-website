@@ -694,9 +694,10 @@
   (function(){ var m=""; try{m=sessionStorage.getItem("acca_portal_msg")||""; sessionStorage.removeItem("acca_portal_msg");}catch(e){}
     if(m){ var el=$("#loginMsg"); el.className="msg err"; el.textContent=m; } })();
   var CUR_PAY=null;
-  // Nội dung chuyển khoản: TÊN-SĐT-MÃ (tên, SĐT lấy từ ô người mua điền; mã gói viết ngắn)
+  // Nội dung chuyển khoản: TÊN-SĐT-MÃ-TÊN GÓI, mã có tiền tố PM- (phần mềm) hoặc KH- (khóa học)
   var PAY_CODE={chudn:"BIZ",accounting:"ACC",cash:"CASH",document:"DOC",tax:"TAX",hr:"HR",insurance:"BHXH",manage:"MNG",sales:"SALE",crm:"CRM",finance:"FIN",training:"TRAIN",meeting:"MEET",brand:"BRAND",mba:"MBA",consulting:"CONS",law:"LAW",project:"PROJ",task:"TASK"};
-  function payCode(p){ return PAY_CODE[p.code]||p.code.toUpperCase(); }
+  // Tiền tố loại sản phẩm: PM- = phần mềm, KH- = khóa học (dùng khi mở bán khóa học)
+  function payCode(p){ return (p.kind==="course"?"KH-":"PM-")+(PAY_CODE[p.code]||p.code.toUpperCase()); }
   function payShort(p){ return p.name.replace(/^ACCA Smart-/,"").normalize("NFD").replace(/[^A-Za-z ]/g,"").toUpperCase(); }
   function payContent(p){
     var name=String($("#payName").value||"").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[đĐ]/g,"D").replace(/[^A-Za-z ]/g,"").replace(/\s+/g," ").trim().toUpperCase().slice(0,22)||"TEN";
