@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Phần mềm kế toán ACCA Smart</title>
+<title>ACCA Smart-Accounting – Phần mềm kế toán online</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -175,7 +175,7 @@ label input,label select{color:var(--fg);font-size:.9rem}
 <body>
 <div class="app">
   <aside class="rail">
-    <div class="brand"><b><a href="../" title="Về trang accavn.com">ACCA Smart</a></b><span id="co-name">Chưa đặt tên doanh nghiệp</span></div>
+    <div class="brand"><b><a href="../" title="Về trang accavn.com">ACCA Smart-Accounting</a></b><span id="co-name">Chưa đặt tên doanh nghiệp</span></div>
     <div class="book"><label for="book-sel">Dữ liệu kế toán</label><select id="book-sel"></select></div>
     <nav id="nav" aria-label="Phân hệ">
       <a href="#tongquan" data-v="tongquan">Tổng quan</a>
@@ -190,25 +190,14 @@ label input,label select{color:var(--fg);font-size:.9rem}
       <a href="#hethong" data-v="hethong">Hệ thống</a>
     </nav>
     <div class="backup-warn" id="backup-warn" hidden></div>
-    <div class="who" id="who" hidden><a href="../portal.html?mode=chudn" class="link" id="who-back" hidden>← Thông tin hoạt động kinh doanh</a><span style="flex-basis:100%"></span><span class="muted">Tài khoản:</span> <b id="who-email"></b><button class="link" data-act="logout">Đăng xuất</button></div>
+    <div class="who" id="who" hidden><a href="../portal.html" class="link" id="who-back" hidden>← Tất cả dịch vụ ACCA Smart</a><span style="flex-basis:100%"></span><span class="muted">Tài khoản:</span> <b id="who-email"></b><button class="link" data-act="logout">Đăng xuất</button></div>
     <div class="mode"><div id="sync"></div><div id="mode"><span class="dot"></span>Đang mở dữ liệu…</div></div>
   </aside>
   <main id="main"></main>
 </div>
 <div id="modal" class="modal" hidden></div>
 <div id="toast" class="toast" hidden></div>
-<div id="auth" class="auth" hidden>
-  <form class="auth-card" id="auth-form" autocomplete="on">
-    <a class="auth-brand" href="../">ACCA Smart</a>
-    <h1>Phần mềm kế toán ACCA Smart</h1>
-    <p class="muted">Đăng nhập bằng tài khoản Cổng khách hàng ACCA. Một tài khoản dùng chung cho Tình hình kinh doanh và phần mềm kế toán; sổ sách của mỗi tài khoản được lưu riêng trên máy chủ ACCA.</p>
-    <label for="auth-email">Email đăng nhập<input id="auth-email" type="email" autocomplete="username" required></label>
-    <label for="auth-pass">Mật khẩu<input id="auth-pass" type="password" autocomplete="current-password" required></label>
-    <button class="btn primary" type="submit" id="auth-btn">Đăng nhập</button>
-    <p class="err" id="auth-msg" role="alert"></p>
-    <p class="auth-foot">Chưa có tài khoản? <a href="../#lienhe">Liên hệ ACCA để được cấp</a><br><a href="?demo=1#tongquan">Xem bản dùng thử với dữ liệu mẫu</a> (không lưu dữ liệu)</p>
-  </form>
-</div>
+<div id="auth" hidden></div>
 <datalist id="dl-acc"></datalist>
 <datalist id="dl-partner"></datalist>
 <input type="file" id="file-import" accept=".json,application/json" hidden>
@@ -357,14 +346,16 @@ function renderSync(){
 }
 window.addEventListener('beforeunload',e=>{if(!DEMO&&['pending','saving','error','conflict'].includes(SYNC.state)){e.preventDefault();e.returnValue='';}});
 function showLogin(msg){
-  const A=$('#auth');A.hidden=false;$('#auth-msg').textContent=msg||'';
-  setTimeout(()=>{const f=$('#auth-email');if(f&&!f.value)f.focus();else{const p=$('#auth-pass');if(p)p.focus();}},30);
+  // Không còn màn đăng nhập riêng: quay về Cổng khách hàng
+  try{sessionStorage.removeItem(TOKEN_KEY);}catch(e){}
+  if(msg)try{sessionStorage.setItem('acca_portal_msg',msg);}catch(e){}
+  location.replace('../portal.html?mode=ketoan');
 }
 async function loadAccount(){
   const r=await api('smart_load',{token:AUTH.token});
   if(!r.ok){if(r.expired){try{sessionStorage.removeItem(TOKEN_KEY);}catch(e){}AUTH.token='';showLogin(r.error);return false;}if(r.noAccess){showLogin(r.error);return false;}throw new Error(r.error==='Unknown action'?'máy chủ chưa được cập nhật phần ACCA Smart (cần thêm SmartACCA.gs và triển khai lại Apps Script)':(r.error||'Không tải được sổ sách'));}
   AUTH.email=r.email;AUTH.name=r.name||'';AUTH.rev=r.rev||0;
-  const back=$('#who-back');if(back)back.hidden=!(r.access||[]).includes('chudn');
+  const back=$('#who-back');if(back)back.hidden=false;
   KV=(r.data&&r.data.kv&&typeof r.data.kv==='object')?r.data.kv:{};
   SYNC.state='idle';$('#auth').hidden=true;
   $('#who').hidden=false;$('#who-email').textContent=AUTH.email;
@@ -583,7 +574,7 @@ function render(){
   try{body=MODS[view]?vModule():({tongquan:vOverview,baocao:vReports,danhmuc:vCatalog,hethong:vSettings})[view]();}
   catch(e){console.error(e);body=`<div class="alert red"><b>Lỗi hiển thị</b>${esc(e.message)}</div>`;}
   const showPer=view!=='danhmuc'&&view!=='hethong';
-  $('#main').innerHTML=`<header class="topbar"><div class="t"><span class="eyebrow">${showPer?esc(r.label):esc(st.name||'Phần mềm kế toán ACCA Smart')}</span><h1>${VIEWS[view]}</h1></div>${showPer?periodHTML():''}</header>${body}`;
+  $('#main').innerHTML=`<header class="topbar"><div class="t"><span class="eyebrow">${showPer?esc(r.label):esc(st.name||'ACCA Smart-Accounting')}</span><h1>${VIEWS[view]}</h1></div>${showPer?periodHTML():''}</header>${body}`;
 }
 
 /* ================= TỔNG QUAN ================= */
