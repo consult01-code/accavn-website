@@ -92,6 +92,37 @@
   .mode-opt small{font-size:.8rem;color:var(--muted);line-height:1.4}
   .mode-opt:has(input:checked){border-color:var(--primary);background:var(--primary-050)}
   .mode-opt:has(input:focus-visible){outline:2px solid var(--primary);outline-offset:2px}
+  .svc-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+  .svc-head h1{font-size:1.35rem}.svc-head small{color:var(--muted);font-size:.85rem}
+  .svc-lead{color:var(--muted);font-size:.92rem;margin:8px 0 20px;max-width:62ch}
+  .svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-bottom:30px}
+  .svc-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:8px;min-width:0;box-shadow:var(--shadow)}
+  .svc-card.locked{background:var(--surface-2);box-shadow:none}
+  .svc-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .svc-ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:var(--primary-050);color:var(--primary);font-weight:800;font-size:.8rem}
+  .svc-card.locked .svc-ic{background:var(--surface);color:var(--muted)}
+  .svc-st{font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .svc-st.on{background:var(--primary-050);color:var(--primary)}
+  .svc-st.off{background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+  .svc-st.soon{background:var(--gold-soft);color:var(--gold)}
+  .svc-card b{font-size:1.02rem;line-height:1.3}
+  .svc-card p{font-size:.85rem;color:var(--muted);margin:0;flex:1}
+  .svc-card .btn{width:100%;margin-top:4px}
+  .back-btn{margin-bottom:16px}
+  #payModal{overflow-y:auto;place-items:start center}
+  .modal.pay{max-width:520px;margin-block:4vh}
+  .pay-eyebrow{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-weight:700}
+  .pay-sub{color:var(--muted);font-size:.88rem;margin:4px 0 14px}
+  .pay-soon{background:var(--gold-soft);color:var(--ink);font-size:.84rem;padding:10px 12px;border-radius:10px;margin-bottom:14px}
+  .pay-total{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:14px}
+  .pay-total b{font-size:1.4rem;color:var(--primary);font-variant-numeric:tabular-nums}
+  .pay-box{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}
+  .pay-box img{width:200px;height:200px;border-radius:12px;border:1px solid var(--line);background:#fff;max-width:100%}
+  .pay-box dl{margin:0;flex:1 1 200px;min-width:0;font-size:.86rem}
+  .pay-box dt{color:var(--muted);font-size:.76rem;margin-top:8px}.pay-box dt:first-child{margin-top:0}
+  .pay-box dd{margin:2px 0 0;overflow-wrap:anywhere}
+  .cp{border:1px solid var(--line);background:var(--surface);color:var(--primary);font-size:.72rem;font-weight:600;border-radius:7px;padding:2px 8px;cursor:pointer;margin-left:4px}
+  .pay-note{font-size:.8rem;color:var(--muted);margin:0 0 14px}
   .hub{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;border-bottom:1px solid var(--line)}
   .hub a,.hub span{display:inline-flex;flex-direction:column;padding:10px 16px;border-bottom:3px solid transparent;margin-bottom:-1px;text-decoration:none;color:var(--muted);font-weight:600}
   .hub .on{color:var(--primary);border-bottom-color:var(--primary)}
@@ -194,13 +225,6 @@
       </div>
       <h1 data-i18n="login_h">Cổng khách hàng</h1>
       <p class="sub" data-i18n="login_sub">Chọn dịch vụ trong gói của bạn, rồi đăng nhập bằng tài khoản ACCA cấp.</p>
-      <fieldset class="modes">
-        <legend data-i18n="mode_legend">Chọn dịch vụ</legend>
-        <label class="mode-opt"><input type="radio" name="mode" value="ketoan" id="modeKetoan">
-          <span><b data-i18n="mode1_t">Phần mềm kế toán ACCA Smart</b><small data-i18n="mode1_s">Dành cho kế toán: ghi chứng từ, sổ sách, báo cáo, tờ khai</small></span></label>
-        <label class="mode-opt"><input type="radio" name="mode" value="chudn" id="modeChudn">
-          <span><b data-i18n="mode2_t">Thông tin hoạt động kinh doanh</b><small data-i18n="mode2_s">Dành cho chủ doanh nghiệp: doanh thu, lãi lỗ, thuế, nhắc hạn nộp</small></span></label>
-      </fieldset>
       <form id="loginForm" autocomplete="on">
         <div class="field">
           <label for="email" data-i18n="email_lbl">Email đăng nhập</label>
@@ -224,10 +248,16 @@
 <!-- DASHBOARD -->
 <main id="dashView" hidden>
   <div class="wrap dash">
-    <nav class="hub" aria-label="Dịch vụ trong Cổng khách hàng">
-      <span class="on" aria-current="page" data-i18n="hub_overview">Thông tin hoạt động kinh doanh</span>
-      <a href="pmketoan/" id="hubSoftware" hidden><span style="padding:0;border:0;margin:0;color:inherit" data-i18n="hub_software">Phần mềm kế toán ACCA Smart</span><small data-i18n="hub_software_sub">Ghi chứng từ, xem sổ sách, báo cáo và tờ khai</small></a>
-    </nav>
+    <section id="svcView">
+      <div class="svc-head">
+        <div><h1 id="svcCo">—</h1><small id="svcEmail"></small></div>
+        <span class="pill" data-i18n="svc_pill">ACCA Smart Suite</span>
+      </div>
+      <p class="svc-lead" data-i18n="svc_lead">Dịch vụ đã kích hoạt mở được ngay. Dịch vụ chưa kích hoạt bấm Unlock để xem giá và thanh toán.</p>
+      <div class="svc-grid" id="svcGrid"></div>
+    </section>
+    <div id="bizView" hidden>
+    <button class="btn btn-ghost btn-sm back-btn" type="button" id="bizBack" data-i18n="svc_back">← Tất cả dịch vụ</button>
     <div class="dash-head">
       <div class="co">
         <h1 id="coName">—</h1>
@@ -280,11 +310,38 @@
       <span data-i18n="cred_secnote">Thông tin đăng nhập bạn cung cấp được gửi mã hóa và lưu trong kho bảo mật riêng của ACCA (không lưu trên bảng tính). Dùng để hệ thống tự tải hóa đơn – chứng từ hằng ngày, giúp báo cáo của bạn luôn cập nhật.</span>
     </div>
     <div class="cred-grid" id="credGrid"></div>
+    </div>
   </div>
   <footer class="wrap">
     <span>© <span id="yr"></span> ACCA Consulting Vietnam · MST 0316119996 · <a href="./" data-i18n="back_home" style="color:var(--primary);text-decoration:none;font-weight:600">Về trang chủ</a></span>
   </footer>
 </main>
+
+<!-- UNLOCK / THANH TOÁN -->
+<div class="modal-bd" id="payModal">
+  <div class="modal pay">
+    <button class="mx" id="payClose" aria-label="Đóng">×</button>
+    <span class="pay-eyebrow" data-i18n="pay_eyebrow">Mở khóa dịch vụ</span>
+    <h3 id="payTitle">—</h3>
+    <p class="pay-sub" id="paySub"></p>
+    <div class="pay-soon" id="paySoon" hidden data-i18n="pay_soon">Dịch vụ đang hoàn thiện. Thanh toán bây giờ là đăng ký trước; ACCA kích hoạt và báo cho bạn ngay khi dịch vụ ra mắt.</div>
+    <div class="field"><label for="payMonths" data-i18n="pay_term">Thời hạn sử dụng</label>
+      <select id="payMonths"><option value="1">1 tháng</option><option value="3">3 tháng</option><option value="6">6 tháng</option><option value="12" selected>12 tháng</option></select></div>
+    <div class="pay-total"><span data-i18n="pay_total">Số tiền thanh toán</span><b id="payAmount">—</b></div>
+    <div class="pay-box">
+      <img id="payQr" alt="Mã QR chuyển khoản ACB" width="200" height="200">
+      <dl>
+        <dt data-i18n="pay_bank">Ngân hàng</dt><dd>ACB – Ngân hàng TMCP Á Châu (PGD Minh Phụng)</dd>
+        <dt data-i18n="pay_acc">Số tài khoản</dt><dd><b id="payAccNo"></b> <button class="cp" type="button" data-copy="payAccNo">Sao chép</button></dd>
+        <dt data-i18n="pay_holder">Chủ tài khoản</dt><dd id="payHolder"></dd>
+        <dt data-i18n="pay_content">Nội dung chuyển khoản</dt><dd><b id="payContent"></b> <button class="cp" type="button" data-copy="payContent">Sao chép</button></dd>
+      </dl>
+    </div>
+    <p class="pay-note" data-i18n="pay_note">Quét mã bằng ứng dụng ngân hàng, giữ nguyên nội dung chuyển khoản để ACCA đối chiếu. Dịch vụ được kích hoạt sau khi ACCA xác nhận đã nhận tiền.</p>
+    <button class="btn btn-primary" type="button" id="payDone" style="width:100%" data-i18n="pay_done">Tôi đã chuyển khoản</button>
+    <div class="msg" id="payMsg"></div>
+  </div>
+</div>
 
 <!-- CREDENTIAL MODAL -->
 <div class="modal-bd" id="credModal">
@@ -319,13 +376,26 @@
 
   /* ---------- i18n (VI/EN) ---------- */
   var I18N = {
+    svc_pill:{vi:"ACCA Smart Suite",en:"ACCA Smart Suite"},
+    svc_lead:{vi:"Dịch vụ đã kích hoạt mở được ngay. Dịch vụ chưa kích hoạt bấm Unlock để xem giá và thanh toán.",en:"Activated services open right away. For the others, click Unlock to see the price and pay."},
+    svc_back:{vi:"← Tất cả dịch vụ",en:"← All services"},
+    pay_eyebrow:{vi:"Mở khóa dịch vụ",en:"Unlock service"},
+    pay_soon:{vi:"Dịch vụ đang hoàn thiện. Thanh toán bây giờ là đăng ký trước; ACCA kích hoạt và báo cho bạn ngay khi dịch vụ ra mắt.",en:"This service is being finalised. Paying now pre-registers you; ACCA activates it and notifies you at launch."},
+    pay_term:{vi:"Thời hạn sử dụng",en:"Subscription term"},
+    pay_total:{vi:"Số tiền thanh toán",en:"Amount to pay"},
+    pay_bank:{vi:"Ngân hàng",en:"Bank"},
+    pay_acc:{vi:"Số tài khoản",en:"Account number"},
+    pay_holder:{vi:"Chủ tài khoản",en:"Account holder"},
+    pay_content:{vi:"Nội dung chuyển khoản",en:"Transfer note"},
+    pay_note:{vi:"Quét mã bằng ứng dụng ngân hàng, giữ nguyên nội dung chuyển khoản để ACCA đối chiếu. Dịch vụ được kích hoạt sau khi ACCA xác nhận đã nhận tiền.",en:"Scan with your banking app and keep the transfer note unchanged. The service is activated once ACCA confirms receipt."},
+    pay_done:{vi:"Tôi đã chuyển khoản",en:"I have transferred"},
     mode_legend:{vi:"Chọn dịch vụ theo gói của bạn",en:"Choose the service in your plan"},
     mode1_t:{vi:"Phần mềm kế toán ACCA Smart",en:"ACCA Smart accounting software"},
     mode1_s:{vi:"Dành cho kế toán: ghi chứng từ, sổ sách, báo cáo, tờ khai",en:"For accountants: vouchers, ledgers, reports, returns"},
     mode2_t:{vi:"Thông tin hoạt động kinh doanh",en:"Business performance"},
     mode2_s:{vi:"Dành cho chủ doanh nghiệp: doanh thu, lãi lỗ, thuế, nhắc hạn nộp",en:"For business owners: revenue, profit, taxes, deadlines"},
     err_mode:{vi:"Vui lòng chọn dịch vụ trước khi đăng nhập.",en:"Please choose a service before signing in."},
-    hub_overview:{vi:"Thông tin hoạt động kinh doanh",en:"Business performance"},
+    hub_overview:{vi:"ACCA Smart-Business Infor",en:"ACCA Smart-Business Infor"},
     hub_software:{vi:"Phần mềm kế toán ACCA Smart",en:"ACCA Smart accounting software"},
     hub_software_sub:{vi:"Ghi chứng từ, xem sổ sách, báo cáo và tờ khai",en:"Record vouchers, view ledgers, reports and returns"},
     brand_sub:{vi:"Cổng khách hàng",en:"Client portal"},
@@ -554,19 +624,94 @@
     $("#loginForm").reset(); $("#loginMsg").className="msg";
   }
   $("#logoutBtn").onclick=doLogout;
-  // Chế độ đăng nhập: 1 = phần mềm kế toán, 2 = thông tin kinh doanh (theo gói dịch vụ)
-  function pickedMode(){ var r=document.querySelector('input[name="mode"]:checked'); return r?r.value:""; }
-  function setAccess(acc){ var a=acc||[]; $("#hubSoftware").hidden=a.indexOf("ketoan")<0; }
-  (function(){
-    var m=new URLSearchParams(location.search).get("mode"); if(m!=="ketoan"&&m!=="chudn"){ try{m=localStorage.getItem("acca_portal_mode");}catch(e){} }
-    var el=m==="ketoan"?$("#modeKetoan"):m==="chudn"?$("#modeChudn"):null; if(el) el.checked=true;
-  })();
+  /* ---------- ACCA Smart Suite: dịch vụ theo gói + Unlock thanh toán ---------- */
+  // Giá theo tháng (VNĐ). Sửa ở đây khi đổi bảng giá.
+  var PAY = { bin:"970416", accNo:"10688187", holder:"CONG TY TNHH ACCA CONSULTING VIETNAM" };
+  var PRODUCTS = [
+    {code:"chudn",      ic:"KD",  name:"ACCA Smart-Business Infor", sub:"Phần mềm theo dõi kinh doanh: doanh thu, lãi lỗ, thuế, nhắc hạn nộp (dành cho chủ doanh nghiệp)", price:199000, live:true,  open:"biz"},
+    {code:"accounting", ic:"KT",  name:"ACCA Smart-Accounting", sub:"Phần mềm kế toán online: chứng từ, sổ sách, báo cáo tài chính, tờ khai", price:399000, live:true,  open:"pmketoan/"},
+    {code:"cash",       ic:"TC",  name:"ACCA Smart-Cash",       sub:"Phần mềm thu chi: phiếu thu, phiếu chi, quỹ tiền mặt và tài khoản ngân hàng", price:199000},
+    {code:"document",   ic:"CT",  name:"ACCA Smart-Document",   sub:"Phần mềm tạo chứng từ: phiếu thu, phiếu chi, hợp đồng, biên bản theo mẫu", price:199000},
+    {code:"tax",        ic:"TAX", name:"ACCA Smart-Tax",        sub:"Phần mềm khai báo thuế online: GTGT, TNCN, TNDN từ bảng kê hóa đơn", price:299000},
+    {code:"hr",         ic:"HR",  name:"ACCA Smart-HR",         sub:"Phần mềm nhân sự: hồ sơ, chấm công, bảng lương", price:299000},
+    {code:"insurance",  ic:"BH",  name:"ACCA Smart-Insurance",  sub:"Phần mềm BHXH online: tăng giảm lao động, C12, đối chiếu", price:199000},
+    {code:"manage",     ic:"QL",  name:"ACCA Smart-Manage",     sub:"Phần mềm quản lý kinh doanh: công việc, chi phí, hiệu quả", price:299000},
+    {code:"sales",      ic:"BH$", name:"ACCA Smart-Sales",      sub:"Phần mềm theo dõi bán hàng: đơn hàng, doanh số, công nợ khách", price:299000},
+    {code:"crm",        ic:"CRM", name:"ACCA Smart-CRM",        sub:"Phần mềm quản lý khách hàng: cơ hội, chăm sóc, lịch hẹn", price:299000},
+    {code:"finance",    ic:"TC$", name:"ACCA Smart-Finance",    sub:"Phần mềm quản lý tài chính cá nhân: thu chi, thẻ tín dụng, khoản vay, tiết kiệm", price:99000},
+    {code:"training",   ic:"ĐT",  name:"ACCA Smart-Training",   sub:"Phần mềm đào tạo: khóa học kế toán, thuế, nhân sự cho đội ngũ doanh nghiệp", price:199000},
+    {code:"meeting",    ic:"HỌP", name:"ACCA Smart-Meeting",    sub:"Phần mềm họp: lịch họp, biên bản, phân công và theo dõi việc sau họp", price:199000},
+    {code:"brand",      ic:"BR",  name:"ACCA Smart-Brand Identify", sub:"Phần mềm tạo bộ nhận diện thương hiệu: logo, màu sắc, danh thiếp, mẫu tài liệu", price:299000},
+    {code:"mba",        ic:"MBA", name:"ACCA Smart-mini MBA",   sub:"Phần mềm đào tạo kinh doanh: chiến lược, tài chính, marketing, quản trị cho chủ doanh nghiệp", price:299000},
+    {code:"consulting", ic:"TV",  name:"ACCA Smart-Consulting", sub:"Phần mềm tư vấn kinh doanh chuyên sâu: chẩn đoán doanh nghiệp, kế hoạch hành động, theo dõi kết quả", price:499000},
+    {code:"law",        ic:"PC",  name:"ACCA Smart-Law",        sub:"Phần mềm tư vấn pháp chế: tra cứu quy định, rà soát hợp đồng, hồ sơ pháp lý doanh nghiệp", price:399000},
+    {code:"project",    ic:"DA",  name:"ACCA Smart-Project Management", sub:"Phần mềm quản lý dự án: kế hoạch, tiến độ, phân công, ngân sách dự án", price:299000},
+    {code:"task",       ic:"GV",  name:"ACCA Smart-Task following", sub:"Phần mềm giao việc: giao việc, hạn chót, nhắc việc và theo dõi tiến độ từng người", price:199000}
+  ];
+  var ACCESS=[], URL_MODE=new URLSearchParams(location.search).get("mode")||"";
+  function money(n){ return Math.round(n).toLocaleString("vi-VN")+" VNĐ"; }
+  function setAccess(acc){ ACCESS=(acc||[]).map(String); if(ACCESS.indexOf("ketoan")>=0&&ACCESS.indexOf("accounting")<0) ACCESS.push("accounting"); renderServices(); }
+  function hasAcc(code){ return ACCESS.indexOf(code)>=0; }
+  function renderServices(){
+    var c=STATE.client||{}; $("#svcCo").textContent=c.name||"Tài khoản của bạn"; $("#svcEmail").textContent=STATE.email||"";
+    $("#svcGrid").innerHTML=PRODUCTS.map(function(p){
+      var on=hasAcc(p.code);
+      var st=on?(p.live?'<span class="svc-st on">Đã kích hoạt</span>':'<span class="svc-st soon">Đã đăng ký · sắp ra mắt</span>'):(p.live?'<span class="svc-st off">Chưa kích hoạt</span>':'<span class="svc-st soon">Sắp ra mắt</span>');
+      var btn=on?(p.live?'<button class="btn btn-primary" type="button" data-open="'+p.code+'">Mở</button>':'<button class="btn btn-ghost" type="button" disabled>ACCA sẽ báo khi ra mắt</button>')
+               :'<button class="btn btn-ghost" type="button" data-unlock="'+p.code+'">🔒 Unlock</button>';
+      return '<div class="svc-card'+(on?'':' locked')+'"><div class="svc-top"><span class="svc-ic">'+p.ic+'</span>'+st+'</div><b>'+p.name+'</b><p>'+p.sub+'</p>'+btn+'</div>';
+    }).join("");
+  }
+  function showServices(){ $("#svcView").hidden=false; $("#bizView").hidden=true; window.scrollTo(0,0); }
+  function openBiz(){ $("#svcView").hidden=true; $("#bizView").hidden=false; renderDash(); window.scrollTo(0,0); }
+  $("#bizBack").onclick=showServices;
+  (function(){ var m=""; try{m=sessionStorage.getItem("acca_portal_msg")||""; sessionStorage.removeItem("acca_portal_msg");}catch(e){}
+    if(m){ var el=$("#loginMsg"); el.className="msg err"; el.textContent=m; } })();
+  var CUR_PAY=null;
+  function payContent(p){ var id=String(STATE.email||"").split("@")[0].normalize("NFD").replace(/[^A-Za-z0-9]/g,"").toUpperCase().slice(0,12)||"KHACH"; return ("SMART "+p.code.toUpperCase()+" "+id).slice(0,40); }
+  function renderPay(){
+    var p=CUR_PAY; if(!p) return; var m=+$("#payMonths").value; var amt=p.price*m; var content=payContent(p);
+    $("#payAmount").textContent=money(amt);
+    $("#payContent").textContent=content; $("#payAccNo").textContent=PAY.accNo; $("#payHolder").textContent=PAY.holder;
+    $("#payQr").src="https://img.vietqr.io/image/"+PAY.bin+"-"+PAY.accNo+"-compact2.png?amount="+amt+"&addInfo="+encodeURIComponent(content)+"&accountName="+encodeURIComponent(PAY.holder);
+  }
+  function openPay(code){
+    CUR_PAY=PRODUCTS.filter(function(p){return p.code===code;})[0]; if(!CUR_PAY) return;
+    $("#payTitle").textContent=CUR_PAY.name; $("#paySub").textContent=CUR_PAY.sub+" · "+money(CUR_PAY.price)+"/tháng";
+    $("#paySoon").hidden=!!CUR_PAY.live; $("#payMsg").className="msg"; $("#payDone").disabled=false;
+    renderPay(); $("#payModal").classList.add("on");
+  }
+  $("#payMonths").onchange=renderPay;
+  $("#payClose").onclick=function(){ $("#payModal").classList.remove("on"); };
+  $("#payModal").addEventListener("click",function(e){ if(e.target.id==="payModal") $("#payModal").classList.remove("on"); });
+  $("#payModal").addEventListener("click",function(e){
+    var b=e.target.closest("[data-copy]"); if(!b) return; var txt=$("#"+b.getAttribute("data-copy")).textContent;
+    if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ b.textContent="Đã chép"; setTimeout(function(){b.textContent="Sao chép";},1500); });
+  });
+  $("#payDone").onclick=function(){
+    var p=CUR_PAY, m=+$("#payMonths").value, msg=$("#payMsg"); $("#payDone").disabled=true;
+    var ok=function(){ msg.className="msg ok"; msg.textContent="Đã ghi nhận. ACCA sẽ đối chiếu tiền về tài khoản ACB và kích hoạt "+p.name+" trong giờ làm việc. Cần gấp: gọi/Zalo 0938 847 699."; };
+    api("smart_load",{token:STATE.token, sub:"unlock_request", product:p.code, months:m, amount:p.price*m, content:payContent(p)})
+      .then(function(res){ if(res&&res.ok) ok(); else { msg.className="msg err"; msg.textContent="Chưa ghi nhận được yêu cầu. Vui lòng gửi ảnh chuyển khoản qua Zalo 0938 847 699 để ACCA kích hoạt."; $("#payDone").disabled=false; } })
+      .catch(function(){ msg.className="msg err"; msg.textContent=t("err_net"); $("#payDone").disabled=false; });
+  };
+  $("#svcGrid").addEventListener("click",function(e){
+    var u=e.target.closest("[data-unlock]"); if(u){ openPay(u.getAttribute("data-unlock")); return; }
+    var o=e.target.closest("[data-open]"); if(!o) return; var p=PRODUCTS.filter(function(x){return x.code===o.getAttribute("data-open");})[0];
+    if(p.open==="biz") openBiz(); else location.href=p.open;
+  });
+  function afterLogin(client,access){
+    STATE.client=client; setAccess(access);
+    if(URL_MODE==="ketoan"&&hasAcc("accounting")){ location.href="pmketoan/"; return; }
+    showDash(client); showServices();
+  }
   // Giữ đăng nhập khi quay lại từ phần mềm kế toán (cùng phiên trình duyệt)
   (function(){
     var tok=""; try{tok=sessionStorage.getItem("acca_portal_tok")||"";}catch(e){}
-    if(!tok||!CONFIG.BACKEND_URL||pickedMode()==="ketoan") return;
+    if(!tok||!CONFIG.BACKEND_URL) return;
+    try{STATE.email=sessionStorage.getItem("acca_portal_email")||"";}catch(e){}
     api("dashboard",{token:tok}).then(function(res){
-      if(res&&res.ok&&res.client){ STATE.token=tok; setAccess(res.access); showDash(res.client); }
+      if(res&&res.ok&&res.client){ STATE.token=tok; afterLogin(res.client,res.access); }
       else { try{sessionStorage.removeItem("acca_portal_tok");}catch(e){} }
     }).catch(function(){});
   })();
@@ -574,16 +719,12 @@
   $("#loginForm").addEventListener("submit",function(e){
     e.preventDefault();
     var email=$("#email").value.trim(), pass=$("#pass").value, msg=$("#loginMsg"), btn=$("#loginBtn");
-    var mode=pickedMode();
-    if(!mode){ msg.className="msg err"; msg.textContent=t("err_mode"); return; }
-    try{localStorage.setItem("acca_portal_mode",mode);}catch(e){}
     msg.className="msg"; btn.disabled=true;
-    api("login",{email:email,password:pass,mode:mode}).then(function(res){
+    api("login",{email:email,password:pass}).then(function(res){
       btn.disabled=false;
       if(res && res.ok && res.client){
-        STATE.token=res.token||null; sessionStorage.setItem("acca_portal_tok",STATE.token||""); setAccess(res.access);
-        if(mode==="ketoan"){ location.href="pmketoan/"; return; }
-        showDash(res.client); }
+        STATE.token=res.token||null; STATE.email=email.toLowerCase(); sessionStorage.setItem("acca_portal_tok",STATE.token||""); try{sessionStorage.setItem("acca_portal_email",STATE.email);}catch(e){}
+        afterLogin(res.client,res.access); }
       else { msg.className="msg err"; msg.textContent=(res&&res.error)||t("err_login"); }
     }).catch(function(err){
       btn.disabled=false;
