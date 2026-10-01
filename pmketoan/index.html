@@ -1,0 +1,1123 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Phần mềm kế toán ICCA</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Literata:opsz,wght@7..72,500;7..72,650&display=swap">
+<style>
+/* Layout: ledger workbench — a fixed rail of books on the left, the working sheet on the right */
+:root{
+  --bg:#f2f4f1; --surface:#ffffff; --sunk:#e8ece7; --line:#d4dbd3; --fg:#17221c; --muted:#5a6a60;
+  --accent:#1d5a43; --accent-fg:#ffffff; --accent-soft:#dbeae2; --series2:#a8742a;
+  --red:#a5332b; --red-soft:#f5e0dd; --amber:#875800; --amber-soft:#f5ead2; --ok:#1e6a3a;
+  --f-display:"Literata",Georgia,"Times New Roman",serif;
+  --f-body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101612; --surface:#17201a; --sunk:#0c110e; --line:#29352d; --fg:#e3eae5; --muted:#91a198;
+  --accent:#6dc29b; --accent-fg:#0b1811; --accent-soft:#1c3a2b; --series2:#d8a75c;
+  --red:#ee8a80; --red-soft:#3a1d1a; --amber:#e5b85c; --amber-soft:#382c13; --ok:#80d19f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101612; --surface:#17201a; --sunk:#0c110e; --line:#29352d; --fg:#e3eae5; --muted:#91a198;
+  --accent:#6dc29b; --accent-fg:#0b1811; --accent-soft:#1c3a2b; --series2:#d8a75c;
+  --red:#ee8a80; --red-soft:#3a1d1a; --amber:#e5b85c; --amber-soft:#382c13; --ok:#80d19f; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:14px/1.5 var(--f-body)}
+*{box-sizing:border-box}
+h1,h2,h3{font-family:var(--f-display);font-weight:650;text-wrap:balance;margin:0;line-height:1.25}
+h1{font-size:1.6rem} h2{font-size:1.2rem} h3{font-size:1rem}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{display:grid;grid-template-columns:228px minmax(0,1fr);min-height:100%}
+.rail{background:var(--surface);border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:env(safe-area-inset-top,0px);height:100vh;overflow:auto;display:flex;flex-direction:column;gap:18px}
+.brand{display:flex;flex-direction:column;gap:2px;padding-inline:8px}
+.brand b{font-family:var(--f-display);font-size:1.35rem;letter-spacing:-.01em}
+.brand span{color:var(--muted);font-size:.8rem;line-height:1.35}
+nav{display:flex;flex-direction:column;gap:2px}
+nav a{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:var(--r);color:var(--fg);text-decoration:none;font-weight:500}
+nav a small{color:var(--muted);font-size:.72rem;letter-spacing:.06em}
+nav a:hover{background:var(--sunk)}
+nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+.rail .mode{margin-top:auto;font-size:.78rem;color:var(--muted);padding-inline:8px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:6px;vertical-align:middle}
+.dot.on{background:var(--ok)} .dot.warn{background:var(--amber)}
+main{padding:22px 28px 48px;min-width:0;display:flex;flex-direction:column;gap:18px}
+.topbar{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.topbar .t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.eyebrow{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.period{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+select,input[type=text],input[type=date],input:not([type]),input[type=search],input[type=number]{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:6px 9px;min-height:34px;max-width:100%}
+input:focus,select:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:6px 12px;min-height:34px;cursor:pointer;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.08);color:var(--accent-fg)}
+.btn.danger{color:var(--red)} .btn.danger.armed{background:var(--red);color:var(--surface);border-color:var(--red)}
+.btn.sm{min-height:28px;padding:3px 9px;font-size:.82rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.link{background:none;border:0;color:var(--accent);cursor:pointer;padding:4px 0;font-weight:500}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row.between{justify-content:space-between}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--line)}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:8px 12px;cursor:pointer;color:var(--muted);font-weight:500;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;min-width:0}
+.tbl-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--sunk);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;white-space:nowrap}
+td.code{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:500}
+tr.grp td{font-weight:600}
+tr.sub td:first-child{padding-left:26px;color:var(--muted)}
+tr.total td{font-weight:700;background:var(--sunk);border-top:2px solid var(--line)}
+tr.click{cursor:pointer} tr.click:hover td{background:var(--accent-soft)}
+td .muted,.muted{color:var(--muted)}
+.chip{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.74rem;font-weight:600;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.chip.PT,.chip.BC{background:var(--accent-soft);color:var(--accent)}
+.chip.PC,.chip.BN{background:var(--amber-soft);color:var(--amber)}
+.chip.BR{background:var(--accent);color:var(--accent-fg)}
+.chip.MV{background:var(--series2);color:var(--surface)}
+.chip.KC{background:var(--fg);color:var(--bg)}
+.chip.red{background:var(--red-soft);color:var(--red)} .chip.amber{background:var(--amber-soft);color:var(--amber)} .chip.ok{background:var(--accent-soft);color:var(--ok)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .v{font-size:1.3rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.01em;overflow-wrap:anywhere}
+.kpi .l{font-size:.78rem;color:var(--muted)}
+.kpi .s{font-size:.75rem;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px}
+.stack{display:flex;flex-direction:column;gap:10px;min-width:0}
+.list{display:flex;flex-direction:column}
+.list .it{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.list .it:last-child{border-bottom:0}
+.alert{display:flex;gap:10px;padding:9px 12px;border-radius:var(--r);background:var(--amber-soft);color:var(--fg);font-size:.88rem}
+.alert.red{background:var(--red-soft)}
+.alert b{color:var(--amber)} .alert.red b{color:var(--red)}
+.alert.info{background:var(--accent-soft)} .alert.info b{color:var(--accent)}
+.empty{padding:36px 20px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;color:var(--muted)}
+.empty h3{color:var(--fg)}
+.rep-h{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:.84rem}
+.rep-h .c{text-align:center;flex:1 1 100%;display:flex;flex-direction:column;gap:2px}
+.rep-h .c h2{font-size:1.25rem;text-transform:uppercase;letter-spacing:.02em}
+.sign{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;font-size:.84rem;margin-top:8px}
+.sign b{display:block} .sign i{display:block;color:var(--muted);font-size:.76rem;margin-bottom:46px}
+form.inline{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+label{display:flex;flex-direction:column;gap:4px;font-size:.8rem;color:var(--muted);font-weight:500;min-width:0}
+label input,label select{color:var(--fg);font-size:.9rem}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--fg);font-size:.9rem}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:9px 16px;border-radius:var(--r);font-weight:500;z-index:60;max-width:calc(100% - 32px)}
+.ro{background:var(--amber-soft);padding:8px 12px;border-radius:var(--r);font-size:.86rem}
+/* modal */
+.modal{position:fixed;inset:0;background:color-mix(in srgb,var(--fg) 40%,transparent);display:flex;align-items:flex-start;justify-content:center;padding:4vh 16px;overflow:auto;z-index:50}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:10px;width:min(980px,100%);display:flex;flex-direction:column;box-shadow:0 20px 50px rgb(0 0 0 / .25)}
+.sheet-h,.sheet-f{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sheet-f{border-bottom:0;border-top:1px solid var(--line)}
+.sheet-b{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.icon-btn{background:none;border:0;font-size:1.5rem;line-height:1;cursor:pointer;color:var(--muted);padding:4px 8px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.grid4 small,.ed-lines small{color:var(--muted);font-size:.74rem;font-weight:400;display:block;min-height:1em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ed-lines td{padding:6px}
+.ed-lines input{width:100%;min-width:84px}
+.ed-lines input.amt{text-align:right;min-width:130px}
+.vat{background:var(--sunk);border-radius:var(--r);padding:12px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.vat .out{font-weight:600;color:var(--fg);font-size:.95rem;padding-top:6px;font-variant-numeric:tabular-nums}
+.ed-total{display:flex;justify-content:flex-end;gap:12px;align-items:baseline;font-size:.95rem}
+.ed-total strong{font-size:1.3rem;font-variant-numeric:tabular-nums}
+.err{color:var(--red);margin:0;white-space:pre-line;font-size:.88rem}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:.78rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+@media (max-width:900px){.grid2{grid-template-columns:1fr}}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  .rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 16px;gap:10px}
+  nav{flex-direction:row;overflow-x:auto}
+  nav a small{display:none}
+  .rail .mode{margin-top:0}
+  main{padding:16px 16px 40px}
+  .grid4,.vat{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sign{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* quy trình phân hệ kiểu MISA */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.flow .step{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:10px 12px;border-radius:var(--r);border:1px dashed transparent;background:none;cursor:pointer;min-width:110px;flex:1 1 110px;color:var(--fg);font-weight:500}
+.flow .step:hover{border-color:var(--accent);background:var(--accent-soft)}
+.flow .step .ic{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:.82rem;letter-spacing:.02em}
+.flow .step.rep .ic{background:var(--sunk);color:var(--muted)}
+.flow .step small{color:var(--muted);font-weight:400;font-size:.74rem;line-height:1.3}
+.flow .arr{align-self:center;color:var(--line);font-size:1.3rem;padding-inline:2px}
+.book{display:flex;flex-direction:column;gap:4px;padding-inline:8px}
+.book select{width:100%;font-size:.84rem}
+.brand a{color:inherit;text-decoration:none}
+.backup-warn{font-size:.76rem;color:var(--amber);padding-inline:8px}
+@media (max-width:820px){.flow .arr{display:none}.flow .step{min-width:96px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand"><b><a href="../" title="Về trang accavn.com">ICCA Kế toán</a></b><span id="co-name">Chưa đặt tên doanh nghiệp</span></div>
+    <div class="book"><label for="book-sel">Dữ liệu kế toán</label><select id="book-sel"></select></div>
+    <nav id="nav" aria-label="Phân hệ">
+      <a href="#tongquan" data-v="tongquan">Tổng quan</a>
+      <a href="#quy" data-v="quy">Quỹ <small>111</small></a>
+      <a href="#nganhang" data-v="nganhang">Ngân hàng <small>112</small></a>
+      <a href="#muahang" data-v="muahang">Mua hàng <small>331</small></a>
+      <a href="#banhang" data-v="banhang">Bán hàng <small>131</small></a>
+      <a href="#thue" data-v="thue">Thuế <small>GTGT</small></a>
+      <a href="#tonghop" data-v="tonghop">Tổng hợp <small>NKC·SC</small></a>
+      <a href="#baocao" data-v="baocao">Báo cáo <small>BCTC</small></a>
+      <a href="#danhmuc" data-v="danhmuc">Danh mục</a>
+      <a href="#hethong" data-v="hethong">Hệ thống</a>
+    </nav>
+    <div class="backup-warn" id="backup-warn" hidden></div>
+    <div class="mode" id="mode"><span class="dot"></span>Đang mở dữ liệu…</div>
+  </aside>
+  <main id="main"></main>
+</div>
+<div id="modal" class="modal" hidden></div>
+<div id="toast" class="toast" hidden></div>
+<datalist id="dl-acc"></datalist>
+<datalist id="dl-partner"></datalist>
+<input type="file" id="file-import" accept=".json,application/json" hidden>
+
+<script>
+"use strict";
+/* ================= helpers ================= */
+const $=(s,el=document)=>el.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt0=n=>Math.round(n||0).toLocaleString('vi-VN');
+const fmt=n=>{n=Math.round(n||0);if(!n)return '';return n<0?'('+Math.abs(n).toLocaleString('vi-VN')+')':n.toLocaleString('vi-VN');};
+const fmtM=n=>{const a=Math.abs(n);const s=n<0?'−':'';if(a>=1e9)return s+(a/1e9).toLocaleString('vi-VN',{maximumFractionDigits:2})+' tỷ';if(a>=1e6)return s+(a/1e6).toLocaleString('vi-VN',{maximumFractionDigits:1})+' tr';return s+fmt0(a);};
+const parseNum=s=>{s=String(s??'');const neg=/^\s*[-(−]/.test(s);const d=s.replace(/[^\d]/g,'');return d?(neg?-1:1)*parseInt(d,10):0;};
+const z2=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+z2(d.getMonth()+1)+'-'+z2(d.getDate());
+const todayStr=()=>ymd(new Date());
+const addDays=(s,n)=>{const[y,m,d]=s.split('-').map(Number);return ymd(new Date(y,m-1,d+n));};
+const dmy=s=>{if(!s)return '';const[y,m,d]=s.split('-');return d+'/'+m+'/'+y;};
+const lastDay=(y,m)=>new Date(y,m,0).getDate();
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const pref={get(k,d){try{const v=localStorage.getItem('socai.'+k);return v?JSON.parse(v):d;}catch(e){return d;}},set(k,v){try{localStorage.setItem('socai.'+k,JSON.stringify(v));}catch(e){}}};
+let toastT;function toast(msg){const t=$('#toast');t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2800);}
+
+/* ================= Hệ thống tài khoản ================= */
+// [mã, tên, {only:'TT99'|'TT133', n99, n133}]
+const COA_BASE=[
+['111','Tiền mặt'],['1111','Tiền Việt Nam'],['1112','Ngoại tệ'],
+['112','Tiền gửi ngân hàng',{n99:'Tiền gửi không kỳ hạn'}],['1121','Tiền Việt Nam'],['1122','Ngoại tệ'],
+['113','Tiền đang chuyển',{only:'TT99'}],
+['121','Chứng khoán kinh doanh'],
+['128','Đầu tư nắm giữ đến ngày đáo hạn'],['1281','Tiền gửi có kỳ hạn'],['1288','Các khoản đầu tư khác nắm giữ đến ngày đáo hạn'],
+['131','Phải thu của khách hàng'],
+['133','Thuế GTGT được khấu trừ'],['1331','Thuế GTGT được khấu trừ của hàng hóa, dịch vụ'],['1332','Thuế GTGT được khấu trừ của TSCĐ'],
+['136','Phải thu nội bộ'],
+['138','Phải thu khác'],['1381','Tài sản thiếu chờ xử lý'],['1388','Phải thu khác'],
+['141','Tạm ứng'],
+['151','Hàng mua đang đi đường'],['152','Nguyên liệu, vật liệu'],['153','Công cụ, dụng cụ'],
+['154','Chi phí sản xuất, kinh doanh dở dang'],
+['155','Thành phẩm',{n99:'Sản phẩm'}],
+['156','Hàng hóa'],['1561','Giá mua hàng hóa'],['1562','Chi phí thu mua hàng hóa'],
+['157','Hàng gửi đi bán'],
+['211','Tài sản cố định hữu hình'],['212','Tài sản cố định thuê tài chính',{only:'TT99'}],['213','Tài sản cố định vô hình'],
+['214','Hao mòn tài sản cố định'],
+['215','Tài sản sinh học',{only:'TT99'}],
+['217','Bất động sản đầu tư'],
+['221','Đầu tư vào công ty con',{only:'TT99'}],['222','Đầu tư vào công ty liên doanh, liên kết',{only:'TT99'}],
+['228','Đầu tư khác'],['229','Dự phòng tổn thất tài sản'],
+['241','Xây dựng cơ bản dở dang'],
+['242','Chi phí trả trước',{n99:'Chi phí chờ phân bổ'}],
+['243','Tài sản thuế thu nhập hoãn lại',{only:'TT99'}],
+['244','Cầm cố, thế chấp, ký quỹ, ký cược'],
+['331','Phải trả cho người bán'],
+['332','Phải trả cổ tức, lợi nhuận',{only:'TT99'}],
+['333','Thuế và các khoản phải nộp Nhà nước'],['3331','Thuế giá trị gia tăng phải nộp'],['33311','Thuế GTGT đầu ra'],['33312','Thuế GTGT hàng nhập khẩu'],
+['3334','Thuế thu nhập doanh nghiệp'],['3335','Thuế thu nhập cá nhân'],['3338','Thuế khác'],['3339','Phí, lệ phí và các khoản phải nộp khác'],
+['334','Phải trả người lao động'],
+['335','Chi phí phải trả'],['336','Phải trả nội bộ'],
+['338','Phải trả, phải nộp khác'],['3382','Kinh phí công đoàn'],['3383','Bảo hiểm xã hội'],['3384','Bảo hiểm y tế'],['3386','Bảo hiểm thất nghiệp'],['3387','Doanh thu chưa thực hiện'],['3388','Phải trả, phải nộp khác'],
+['341','Vay và nợ thuê tài chính'],
+['352','Dự phòng phải trả'],['353','Quỹ khen thưởng, phúc lợi'],['356','Quỹ phát triển khoa học và công nghệ'],
+['411','Vốn đầu tư của chủ sở hữu'],['413','Chênh lệch tỷ giá hối đoái'],['418','Các quỹ thuộc vốn chủ sở hữu'],
+['421','Lợi nhuận sau thuế chưa phân phối'],['4211','LNST chưa phân phối năm trước'],['4212','LNST chưa phân phối năm nay'],
+['511','Doanh thu bán hàng và cung cấp dịch vụ'],['5111','Doanh thu bán hàng hóa'],['5112','Doanh thu bán thành phẩm'],['5113','Doanh thu cung cấp dịch vụ'],['5118','Doanh thu khác'],
+['515','Doanh thu hoạt động tài chính'],
+['521','Các khoản giảm trừ doanh thu',{only:'TT99'}],
+['621','Chi phí nguyên liệu, vật liệu trực tiếp',{only:'TT99'}],['622','Chi phí nhân công trực tiếp',{only:'TT99'}],['627','Chi phí sản xuất chung',{only:'TT99'}],
+['632','Giá vốn hàng bán'],['635','Chi phí tài chính'],
+['641','Chi phí bán hàng',{only:'TT99'}],
+['642','Chi phí quản lý doanh nghiệp',{n133:'Chi phí quản lý kinh doanh'}],
+['6421','Chi phí bán hàng',{only:'TT133'}],['6422','Chi phí quản lý doanh nghiệp',{only:'TT133'}],
+['711','Thu nhập khác'],['811','Chi phí khác'],
+['821','Chi phí thuế thu nhập doanh nghiệp'],['8211','Chi phí thuế TNDN hiện hành',{only:'TT99'}],['8212','Chi phí thuế TNDN hoãn lại',{only:'TT99'}],
+['911','Xác định kết quả kinh doanh']
+];
+const REGIMES={TT99:'Thông tư 99/2025/TT-BTC',TT133:'Thông tư 133/2016/TT-BTC'};
+const PARTNER_ACC=c=>/^(131|331|141|1388|3388|334)/.test(c||'');
+
+/* ================= loại chứng từ ================= */
+const VT={
+  PT:{name:'Phiếu thu',desc:'Thu tiền khách hàng',lines:[['1111','131']]},
+  PC:{name:'Phiếu chi',desc:'Chi tiền mặt',lines:[['331','1111']]},
+  BC:{name:'Giấy báo Có',desc:'Khách hàng chuyển khoản',lines:[['1121','131']]},
+  BN:{name:'Giấy báo Nợ',desc:'Chuyển khoản trả nhà cung cấp',lines:[['331','1121']]},
+  BR:{name:'Hóa đơn bán ra',desc:'Bán hàng hóa, dịch vụ',lines:[['131','5113']],vat:'out'},
+  MV:{name:'Hóa đơn mua vào',desc:'Mua hàng hóa, dịch vụ',lines:[['642','331']],vat:'in'},
+  KT:{name:'Phiếu kế toán',desc:'',lines:[['','']]},
+  KC:{name:'Kết chuyển',desc:'Kết chuyển xác định kết quả kinh doanh',lines:[]}
+};
+const RATES={'10':0.10,'8':0.08,'5':0.05,'0':0,'KCT':0,'KKK':0};
+const RATE_LABEL={'10':'10%','8':'8% (giảm thuế)','5':'5%','0':'0%','KCT':'Không chịu thuế','KKK':'Không kê khai, tính nộp'};
+
+/* ================= state & data layer ================= */
+const S={settings:null,opening:null,vouchers:[],partners:[],accounts:[]};
+const D={lines:[],acc:new Map(),coa:[]};
+let mode='loading';const canWrite=true;
+/* Dữ liệu lưu trên trình duyệt, tách theo từng "dữ liệu kế toán" (mỗi doanh nghiệp một bộ sổ) */
+const BOOKS_KEY='icca.books',CUR_KEY='icca.book';
+let BOOKS=[],BOOK=null,LKEY='';
+let L={vouchers:{},partners:{},accounts:{},meta:{}};
+let storageOK=true;
+
+function defaults(){const y=new Date().getFullYear();return {name:'',mst:'',address:'',regime:'TT99',fyStart:y+'-01-01',vatPeriod:'month',preparer:'',chiefAcc:'',director:''};}
+const SET=()=>Object.assign(defaults(),S.settings||{});
+
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){storageOK=false;return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);return true;}catch(e){storageOK=false;return false;}}
+function saveBooks(){lsSet(BOOKS_KEY,JSON.stringify(BOOKS));}
+function boot(){
+  try{BOOKS=JSON.parse(lsGet(BOOKS_KEY)||'[]');}catch(e){BOOKS=[];}
+  if(!Array.isArray(BOOKS))BOOKS=[];
+  if(!BOOKS.length){BOOKS=[{id:'b'+uid(),name:'Dữ liệu kế toán 1',created:todayStr()}];saveBooks();}
+  const cur=lsGet(CUR_KEY);
+  openBook(BOOKS.some(b=>b.id===cur)?cur:BOOKS[0].id);
+  if(location.search.includes('demo=1')&&!S.vouchers.length){loadDemo();history.replaceState(null,'',location.pathname+location.hash);}
+}
+function openBook(id){
+  BOOK=BOOKS.find(b=>b.id===id)||BOOKS[0];LKEY='icca.data.'+BOOK.id;lsSet(CUR_KEY,BOOK.id);
+  L={vouchers:{},partners:{},accounts:{},meta:{}};
+  try{const raw=lsGet(LKEY);if(raw)L=Object.assign(L,JSON.parse(raw));}catch(e){}
+  mode='local';OPEN_DRAFT=null;ui.cnPartner='';ui.pendingDel=null;
+  pullLocal();changed();
+}
+function pullLocal(){
+  ['vouchers','partners','accounts'].forEach(c=>S[c]=Object.entries(L[c]||{}).map(([id,d])=>Object.assign({id},d)));
+  S.settings=L.meta.settings||null;S.opening=L.meta.opening||null;
+}
+function persist(){
+  if(!lsSet(LKEY,JSON.stringify(L)))throw {code:'storage',message:'Trình duyệt không cho lưu (bộ nhớ đầy hoặc đang ở chế độ ẩn danh)'};
+  const nm=L.meta.settings&&L.meta.settings.name;if(nm&&BOOK.name!==nm){BOOK.name=nm;saveBooks();}
+}
+async function putDoc(coll,id,data){
+  L[coll]=L[coll]||{};L[coll][id]=data;persist();pullLocal();changed();
+}
+async function delDoc(coll,id){
+  if(L[coll])delete L[coll][id];persist();pullLocal();changed();
+}
+function writeErr(e){toast('Chưa lưu được: '+((e&&e.message)||'lỗi không xác định')+'.');}
+function loadDemo(){
+  // Dữ liệu ví dụ để dùng thử — không phải số liệu thật
+  const y=new Date().getFullYear(),m=z2(Math.max(1,new Date().getMonth())),d=n=>`${y}-${m}-${z2(n)}`,mm=m;
+  const yy=String(y).slice(2);
+  L.meta.settings={name:'Công ty mẫu (dữ liệu ví dụ)',mst:'0000000000',address:'Dữ liệu ví dụ',regime:'TT99',fyStart:`${y}-01-01`,vatPeriod:'month',preparer:'',chiefAcc:'',director:''};
+  L.meta.opening={rows:[{acc:'1111',partner:'',dr:50000000,cr:0},{acc:'1121',partner:'',dr:400000000,cr:0},{acc:'131',partner:'KH001',dr:80000000,cr:0},{acc:'331',partner:'NCC001',dr:0,cr:30000000},{acc:'411',partner:'',dr:0,cr:500000000}]};
+  L.partners={'p-KH001':{code:'KH001',name:'Công ty TNHH An Phát (ví dụ)',mst:'',kind:'KH'},'p-KH002':{code:'KH002',name:'Công ty CP Bình Minh (ví dụ)',mst:'',kind:'KH'},'p-NCC001':{code:'NCC001',name:'Công ty cho thuê văn phòng (ví dụ)',mst:'',kind:'NCC'},'p-BL':{code:'BL',name:'Bảng lương nhân viên (ví dụ)',mst:'',kind:'NV'}};
+  const ts=new Date().toISOString();const V=(type,n,day,partner,desc,lines,vat)=>({type,no:`${type}${yy}${mm}-00${n}`,date:d(day),partner,desc,lines,vat:vat||null,createdAt:ts,updatedAt:ts});
+  L.vouchers={
+    ex1:V('BR',1,5,'KH001','Phí dịch vụ kế toán (ví dụ)',[{dr:'131',cr:'5113',amount:60000000,note:'Phí dịch vụ kế toán'},{dr:'131',cr:'33311',amount:4800000,note:'Thuế GTGT',vat:true}],{dir:'out',rate:'8',base:60000000,tax:4800000,invSym:'1C'+yy+'TAA',invNo:'0000101',invDate:d(5)}),
+    ex2:V('MV',1,10,'NCC001','Thuê văn phòng (ví dụ)',[{dr:'642',cr:'331',amount:20000000,note:'Thuê văn phòng'},{dr:'1331',cr:'331',amount:2000000,note:'Thuế GTGT',vat:true}],{dir:'in',rate:'10',base:20000000,tax:2000000,invSym:'1C'+yy+'TVP',invNo:'0000452',invDate:d(10)}),
+    ex3:V('BC',1,12,'KH001','An Phát chuyển khoản thanh toán (ví dụ)',[{dr:'1121',cr:'131',amount:100000000,note:'Thu nợ khách hàng'}]),
+    ex4:V('BN',1,15,'NCC001','Trả tiền thuê văn phòng (ví dụ)',[{dr:'331',cr:'1121',amount:52000000,note:'Trả nợ nhà cung cấp'}]),
+    ex5:V('PC',1,20,'','Mua văn phòng phẩm (ví dụ)',[{dr:'642',cr:'1111',amount:3500000,note:'Văn phòng phẩm'}]),
+    ex6:V('BR',2,25,'KH002','Phí tư vấn thuế (ví dụ)',[{dr:'131',cr:'5113',amount:25000000,note:'Phí tư vấn thuế'},{dr:'131',cr:'33311',amount:2000000,note:'Thuế GTGT',vat:true}],{dir:'out',rate:'8',base:25000000,tax:2000000,invSym:'1C'+yy+'TAA',invNo:'0000102',invDate:d(25)}),
+    ex7:V('KT',1,28,'BL','Tiền lương tháng (ví dụ)',[{dr:'642',cr:'334',amount:45000000,note:'Lương bộ phận quản lý'}])
+  };
+  try{persist();}catch(e){writeErr(e);}
+  PER={kind:'month',y,m:+m,q:Math.ceil(+m/3),from:'',to:''};pref.set('per',PER);
+  pullLocal();changed();toast('Đã nạp dữ liệu ví dụ');
+}
+
+function derive(){
+  const reg=SET().regime;
+  const coa=[];
+  for(const [c,n,o] of COA_BASE){ if(o&&o.only&&o.only!==reg) continue; coa.push({code:c,name:(reg==='TT133'&&o&&o.n133)||(reg==='TT99'&&o&&o.n99)||n,sys:true}); }
+  for(const a of S.accounts){ if(!coa.some(x=>x.code===a.code)) coa.push({code:a.code,name:a.name,sys:false,id:a.id}); }
+  coa.sort((a,b)=>a.code.localeCompare(b.code));
+  D.coa=coa; D.acc=new Map(coa.map(a=>[a.code,a.name]));
+  const lines=[];
+  for(const v of S.vouchers){
+    (v.lines||[]).forEach(l=>{const a=+l.amount||0; if(!a||!l.dr||!l.cr) return;
+      lines.push({v,date:v.date||'',no:v.no||'',dr:String(l.dr),cr:String(l.cr),amt:a,note:l.note||v.desc||'',partner:v.partner||'',kc:v.type==='KC'});});
+  }
+  lines.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:a.no.localeCompare(b.no));
+  D.lines=lines;
+  $('#dl-acc').innerHTML=coa.map(a=>`<option value="${esc(a.code)}">${esc(a.name)}</option>`).join('');
+  $('#dl-partner').innerHTML=S.partners.map(p=>`<option value="${esc(p.code)}">${esc(p.name)}</option>`).join('');
+}
+const accName=c=>D.acc.get(c)||(c&&c.length>3?(D.acc.get(c.slice(0,4))||D.acc.get(c.slice(0,3))||''):'');
+const partnerName=c=>{const p=S.partners.find(x=>x.code===c);return p?p.name:'';};
+const accExists=c=>D.acc.has(c);
+
+let renderQueued=false;
+function changed(){derive();if(renderQueued)return;renderQueued=true;requestAnimationFrame(()=>{renderQueued=false;render();});}
+
+/* ================= kỳ báo cáo ================= */
+const now=new Date();
+let PER=pref.get('per',{kind:'year',y:now.getFullYear(),m:now.getMonth()+1,q:Math.floor(now.getMonth()/3)+1,from:'',to:''});
+function range(p=PER){
+  const {kind,y,m,q}=p;
+  if(kind==='month') return {from:`${y}-${z2(m)}-01`,to:`${y}-${z2(m)}-${lastDay(y,m)}`,label:`Tháng ${m}/${y}`};
+  if(kind==='quarter'){const m1=(q-1)*3+1,m3=m1+2;return {from:`${y}-${z2(m1)}-01`,to:`${y}-${z2(m3)}-${lastDay(y,m3)}`,label:`Quý ${q}/${y}`};}
+  if(kind==='custom'&&p.from&&p.to) return {from:p.from,to:p.to,label:`Từ ${dmy(p.from)} đến ${dmy(p.to)}`};
+  return {from:`${y}-01-01`,to:`${y}-12-31`,label:`Năm ${y}`};
+}
+function periodHTML(){
+  const p=PER,years=[];for(let y=now.getFullYear()+1;y>=2019;y--)years.push(y);
+  let sub='';
+  if(p.kind==='month') sub=`<select id="per-m" aria-label="Tháng">${Array.from({length:12},(_,i)=>`<option value="${i+1}" ${p.m===i+1?'selected':''}>Tháng ${i+1}</option>`).join('')}</select>`;
+  if(p.kind==='quarter') sub=`<select id="per-q" aria-label="Quý">${[1,2,3,4].map(q=>`<option value="${q}" ${p.q===q?'selected':''}>Quý ${q}</option>`).join('')}</select>`;
+  const yr=p.kind==='custom'?`<input type="date" id="per-from" value="${esc(p.from)}" aria-label="Từ ngày"><input type="date" id="per-to" value="${esc(p.to)}" aria-label="Đến ngày">`
+    :`<select id="per-y" aria-label="Năm">${years.map(y=>`<option ${p.y===y?'selected':''}>${y}</option>`).join('')}</select>`;
+  return `<div class="period"><select id="per-kind" aria-label="Loại kỳ"><option value="month" ${p.kind==='month'?'selected':''}>Tháng</option><option value="quarter" ${p.kind==='quarter'?'selected':''}>Quý</option><option value="year" ${p.kind==='year'?'selected':''}>Năm</option><option value="custom" ${p.kind==='custom'?'selected':''}>Tùy chọn</option></select>${sub}${yr}</div>`;
+}
+
+/* ================= tính toán sổ ================= */
+function addTo(m,k,f,a){let o=m.get(k);if(!o){o={dr:0,cr:0};m.set(k,o);}o[f]+=a;}
+function agg(from,to,o={}){const m=new Map();for(const l of D.lines){if(l.date<from||l.date>to)continue;if(o.noKC&&l.kc)continue;if(o.skipId&&l.v.id===o.skipId)continue;addTo(m,l.dr,'dr',l.amt);addTo(m,l.cr,'cr',l.amt);}return m;}
+function balBefore(date,byP=false){
+  const m=new Map();const put=(k,v)=>m.set(k,(m.get(k)||0)+v);
+  for(const r of (S.opening&&S.opening.rows)||[]){const v=(+r.dr||0)-(+r.cr||0);if(v)put(byP?r.acc+'|'+(r.partner||''):r.acc,v);}
+  for(const l of D.lines){if(l.date>=date)break;put(byP?l.dr+'|'+l.partner:l.dr,l.amt);put(byP?l.cr+'|'+l.partner:l.cr,-l.amt);}
+  return m;
+}
+const sumPre=(m,pres,pick)=>{let t=0;for(const [k,v] of m){const c=k.split('|')[0];if(pres.some(p=>c.startsWith(p)))t+=pick?pick(v):v;}return t;};
+function pl(from,to){
+  const reg=SET().regime,m=agg(from,to,{noKC:true});
+  const s=(pre,side)=>{let t=0;for(const [k,o] of m)if(k.startsWith(pre))t+=side==='cr'?o.cr-o.dr:o.dr-o.cr;return t;};
+  let cr511=0,dr511=0;for(const [k,o] of m)if(k.startsWith('511')){cr511+=o.cr;dr511+=o.dr;}
+  const r={};
+  r.dt=cr511;r.gt=dr511+s('521','dr');r.thuan=r.dt-r.gt;r.gv=s('632','dr');r.gop=r.thuan-r.gv;
+  r.tc=s('515','cr');r.cptc=s('635','dr');
+  if(reg==='TT133'){r.ban=s('6421','dr');r.ql=s('642','dr')-r.ban;}else{r.ban=s('641','dr');r.ql=s('642','dr');}
+  r.lnkd=r.gop+r.tc-r.cptc-r.ban-r.ql;r.tnk=s('711','cr');r.cpk=s('811','dr');r.khac=r.tnk-r.cpk;
+  r.truoc=r.lnkd+r.khac;r.cit=s('821','dr');r.sau=r.truoc-r.cit;
+  r.chiphi=r.gv+r.cptc+r.ban+r.ql+r.cpk;
+  return r;
+}
+function vatOf(v){return v.vat||null;}
+function vatCalc(from,to){
+  const r={inBase:0,inTax:0,out:{},n:0,cashWarn:[]};
+  for(const k of Object.keys(RATES))r.out[k]={base:0,tax:0};
+  for(const v of S.vouchers){const t=vatOf(v);if(!t||v.date<from||v.date>to)continue;r.n++;
+    if(t.dir==='in'){r.inBase+=+t.base||0;r.inTax+=+t.tax||0;
+      if((+t.base||0)+(+t.tax||0)>=5e6&&(v.lines||[]).some(l=>String(l.cr).startsWith('111')))r.cashWarn.push(v);}
+    else{const o=r.out[t.rate]||r.out['10'];o.base+=+t.base||0;o.tax+=+t.tax||0;}}
+  r.c26=r.out.KCT.base;r.c29=r.out['0'].base;r.c30=r.out['5'].base;r.c31=r.out['5'].tax;
+  r.c32=r.out['10'].base+r.out['8'].base;r.c33=r.out['10'].tax+r.out['8'].tax;r.c32a=r.out.KKK.base;
+  r.c27=r.c29+r.c30+r.c32+r.c32a;r.c28=r.c31+r.c33;r.c34=r.c26+r.c27;r.c35=r.c28;
+  r.c23=r.inBase;r.c24=r.inTax;r.c25=r.inTax;
+  r.c22=vatCarry(from);r.c36=r.c35-r.c25;
+  const net=r.c36-r.c22;r.c40a=net>0?net:0;r.c43=net<0?-net:0;
+  return r;
+}
+function vatCarry(before){
+  // khấu trừ chuyển kỳ: lũy kế theo từng kỳ khai, kỳ phát sinh phải nộp thì về 0
+  const step=SET().vatPeriod==='quarter'?3:1;
+  const vs=S.vouchers.filter(v=>v.vat&&v.date<before);if(!vs.length)return 0;
+  const first=vs.reduce((a,v)=>v.date<a?v.date:a,before);
+  let y=+first.slice(0,4),m=+first.slice(5,7);m=m-((m-1)%step);
+  let carry=0;
+  for(let guard=0;guard<400;guard++){
+    const f=`${y}-${z2(m)}-01`;if(f>=before)break;
+    let me=m+step-1,ye=y;const t=`${ye}-${z2(me)}-${lastDay(ye,me)}`;
+    let inT=0,outT=0;for(const v of vs){if(v.date<f||v.date>t)continue;if(v.vat.dir==='in')inT+=+v.vat.tax||0;else outT+=+v.vat.tax||0;}
+    carry=Math.max(0,carry+inT-outT);
+    m+=step;if(m>12){m-=12;y++;}
+  }
+  return carry;
+}
+
+/* ================= router & khung ================= */
+const touches=(v,p)=>(v.lines||[]).some(l=>String(l.dr).startsWith(p)||String(l.cr).startsWith(p));
+// Phân hệ theo bố cục MISA: mỗi phân hệ có sơ đồ quy trình, danh sách chứng từ và sổ/báo cáo riêng
+const MODS={
+  quy:{title:'Quỹ tiền mặt',types:['PT','PC'],filter:v=>touches(v,'111'),
+    steps:[['new:PT','PT','Thu tiền','Phiếu thu'],['new:PC','PC','Chi tiền','Phiếu chi'],['tab:so','S07','Sổ quỹ tiền mặt','Thu, chi, tồn quỹ']],
+    tabs:[['ds','Danh sách chứng từ'],['so','Sổ quỹ tiền mặt']],rep:{so:()=>bookLedger('111','Sổ quỹ tiền mặt',true)}},
+  nganhang:{title:'Ngân hàng',types:['BC','BN'],filter:v=>touches(v,'112'),
+    steps:[['new:BC','BC','Thu tiền gửi','Giấy báo Có'],['new:BN','BN','Chi tiền gửi','Giấy báo Nợ'],['tab:so','S08','Sổ tiền gửi','Đối chiếu sao kê']],
+    tabs:[['ds','Danh sách chứng từ'],['so','Sổ tiền gửi ngân hàng']],rep:{so:()=>bookLedger('112','Sổ tiền gửi ngân hàng',true)}},
+  muahang:{title:'Mua hàng',types:['MV','PC','BN'],filter:v=>v.type==='MV'||touches(v,'331'),
+    steps:[['new:MV','HĐ','Mua hàng hóa, dịch vụ','Hóa đơn mua vào'],['new:PC','PC','Trả tiền mặt','Phiếu chi trả NCC'],['new:BN','BN','Trả qua ngân hàng','Giấy báo Nợ'],['tab:cn','331','Công nợ nhà cung cấp','Sổ chi tiết S31']],
+    tabs:[['ds','Danh sách chứng từ'],['cn','Công nợ nhà cung cấp']],rep:{cn:()=>bookAR('331')}},
+  banhang:{title:'Bán hàng',types:['BR','PT','BC'],filter:v=>v.type==='BR'||touches(v,'131'),
+    steps:[['new:BR','HĐ','Bán hàng, dịch vụ','Hóa đơn bán ra'],['new:PT','PT','Thu tiền mặt','Phiếu thu của khách'],['new:BC','BC','Thu qua ngân hàng','Giấy báo Có'],['tab:cn','131','Công nợ khách hàng','Sổ chi tiết S31']],
+    tabs:[['ds','Danh sách chứng từ'],['cn','Công nợ khách hàng']],rep:{cn:()=>bookAR('131')}},
+  thue:{title:'Thuế',types:['MV','BR'],filter:v=>!!v.vat,
+    steps:[['new:MV','VÀO','Hóa đơn đầu vào','Thuế được khấu trừ'],['new:BR','RA','Hóa đơn đầu ra','Thuế phải nộp'],['tab:bk','BK','Bảng kê hóa đơn','Mua vào, bán ra'],['tab:tk','01','Tờ khai 01/GTGT','Đối chiếu trước khi nộp']],
+    tabs:[['tk','Tờ khai 01/GTGT'],['bk','Bảng kê hóa đơn'],['ds','Danh sách chứng từ']],rep:{tk:()=>repGTGT(),bk:()=>repBangKe()}},
+  tonghop:{title:'Tổng hợp',types:['KT'],filter:v=>v.type==='KT'||v.type==='KC',
+    steps:[['new:KT','KT','Chứng từ nghiệp vụ khác','Lương, khấu hao, phân bổ'],['tab:kc','911','Kết chuyển lãi lỗ','Cuối kỳ'],['tab:nkc','S03a','Nhật ký chung','Toàn bộ bút toán'],['tab:sc','S03b','Sổ cái','Theo tài khoản']],
+    tabs:[['ds','Chứng từ nghiệp vụ khác'],['kc','Kết chuyển lãi lỗ'],['nkc','Nhật ký chung'],['sc','Sổ cái']],rep:{kc:()=>repKC(),nkc:()=>bookNKC(),sc:()=>bookLedger(ui.ledgerAcc,'Sổ cái')}}
+};
+const VIEWS={tongquan:'Tổng quan',quy:'Quỹ tiền mặt',nganhang:'Ngân hàng',muahang:'Mua hàng',banhang:'Bán hàng',thue:'Thuế',tonghop:'Tổng hợp',baocao:'Báo cáo tài chính',danhmuc:'Danh mục',hethong:'Hệ thống'};
+let view=(location.hash||'').replace('#','');if(!VIEWS[view])view=pref.get('view','tongquan');if(!VIEWS[view])view='tongquan';
+let sub=Object.assign({baocao:'cdps',danhmuc:'tk',quy:'ds',nganhang:'ds',muahang:'ds',banhang:'ds',thue:'tk',tonghop:'ds'},pref.get('sub2',{}));
+let ui={vtype:'',vq:'',ledgerAcc:'1111',cnAcc:'131',cnPartner:'',pendingDel:null};
+let CUR_FILTER=()=>true;
+window.addEventListener('hashchange',()=>{const v=location.hash.replace('#','');if(VIEWS[v]){view=v;pref.set('view',v);ui.vtype='';ui.vq='';ui.cnPartner='';render();window.scrollTo(0,0);}});
+let CUR_TABLE=null;
+
+function vModule(){
+  const M0=MODS[view];const t=sub[view];
+  const flow=`<div class="flow" aria-label="Quy trình ${esc(M0.title)}">${M0.steps.map((s,i)=>{const [act,ic,name,hint]=s;const [k,v]=act.split(':');
+    return `${i?'<span class="arr" aria-hidden="true">→</span>':''}<button class="step ${k==='tab'?'rep':''}" data-act="${k==='new'?'new':'tab'}" ${k==='new'?`data-type="${v}"`:`data-g="${view}" data-k="${v}"`} ${k==='new'&&!canWrite?'disabled':''}><span class="ic">${esc(ic)}</span>${esc(name)}<small>${esc(hint)}</small></button>`;}).join('')}</div>`;
+  const body=t==='ds'||!M0.rep[t]?vVouchers(M0):M0.rep[t]();
+  return flow+tabsHTML(view,M0.tabs)+body;
+}
+
+function render(){
+  const st=SET();
+  $('#co-name').textContent=st.name||'Chưa đặt tên doanh nghiệp';
+  const bs=$('#book-sel');bs.innerHTML=BOOKS.map(b=>`<option value="${esc(b.id)}" ${BOOK&&b.id===BOOK.id?'selected':''}>${esc(b.name)}</option>`).join('')+'<option value="__new">+ Thêm dữ liệu kế toán mới</option>';
+  document.querySelectorAll('#nav a').forEach(a=>{if(a.dataset.v===view)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
+  $('#mode').innerHTML=storageOK?`<span class="dot warn"></span>Dữ liệu lưu trên trình duyệt này<br>${esc(REGIMES[st.regime])}`:`<span class="dot"></span>Trình duyệt đang chặn lưu dữ liệu. Không dùng chế độ ẩn danh.`;
+  const lb=pref.get('lastBackup.'+(BOOK&&BOOK.id),'');const bw=$('#backup-warn');
+  const hasData=S.vouchers.length>0;const days=lb?Math.round((new Date(todayStr())-new Date(lb))/864e5):null;
+  bw.hidden=!(hasData&&(days===null||days>=7));bw.innerHTML=`${lb?'Sao lưu lần cuối '+dmy(lb)+'.':'Chưa sao lưu lần nào.'} <a href="#hethong">Sao lưu ngay</a>`;
+  const r=range();CUR_TABLE=null;CUR_FILTER=()=>true;
+  let body='';
+  try{body=MODS[view]?vModule():({tongquan:vOverview,baocao:vReports,danhmuc:vCatalog,hethong:vSettings})[view]();}
+  catch(e){console.error(e);body=`<div class="alert red"><b>Lỗi hiển thị</b>${esc(e.message)}</div>`;}
+  const showPer=view!=='danhmuc'&&view!=='hethong';
+  $('#main').innerHTML=`<header class="topbar"><div class="t"><span class="eyebrow">${showPer?esc(r.label):esc(st.name||'ICCA Kế toán')}</span><h1>${VIEWS[view]}</h1></div>${showPer?periodHTML():''}</header>${body}`;
+}
+
+/* ================= TỔNG QUAN ================= */
+function vOverview(){
+  const {from,to}=range();const st=SET();
+  const next=addDays(to,1);const bal=balBefore(next),balP=balBefore(next,true);
+  const tien=sumPre(bal,['111','112','113']);
+  const pthu=sumPre(balP,['131'],v=>v>0?v:0);const ptra=sumPre(balP,['331'],v=>v<0?-v:0);
+  const p=pl(from,to);const vt=vatCalc(from,to);
+  if(!S.vouchers.length&&!(S.opening&&S.opening.rows&&S.opening.rows.length)){
+    return `<div class="panel empty"><h3>Sổ chưa có chứng từ nào</h3><p>Bắt đầu bằng thông tin doanh nghiệp và số dư đầu kỳ, sau đó ghi phiếu thu, phiếu chi, hóa đơn. Sổ cái, bảng cân đối số phát sinh, báo cáo tài chính và tờ khai GTGT sẽ tự lên.</p>
+    <div class="row" style="justify-content:center"><a class="btn" href="#hethong">Nhập thông tin doanh nghiệp</a><button class="btn" data-act="demo">Dùng thử với dữ liệu mẫu</button><button class="btn primary" data-act="new" data-type="PT">Tạo chứng từ đầu tiên</button></div>
+    <span style="font-size:.8rem">Sổ sách lưu ngay trên trình duyệt của bạn. Nên sao lưu ra tệp định kỳ ở mục Hệ thống.</span></div>`;
+  }
+  const kpi=(l,v,s,cls='')=>`<div class="kpi"><span class="l">${l}</span><span class="v ${cls}">${v}</span><span class="s">${s}</span></div>`;
+  const warns=checks();
+  const recent=[...S.vouchers].sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.no||'').localeCompare(a.no||'')).slice(0,7);
+  return `<section class="kpis">
+    ${kpi('Tiền và tương đương tiền',fmt0(tien),'111 + 112 + 113, cuối kỳ')}
+    ${kpi('Phải thu khách hàng',fmt0(pthu),'Dư Nợ 131 theo đối tượng')}
+    ${kpi('Phải trả người bán',fmt0(ptra),'Dư Có 331 theo đối tượng')}
+    ${kpi('Doanh thu thuần',fmt0(p.thuan),'511 trừ giảm trừ, trong kỳ')}
+    ${kpi('Lợi nhuận trước thuế',fmt0(p.truoc),p.truoc>=0?'Lãi trong kỳ':'Lỗ trong kỳ')}
+    ${kpi(vt.c40a>0?'Thuế GTGT phải nộp':'GTGT còn được khấu trừ',fmt0(vt.c40a>0?vt.c40a:vt.c43),'Chỉ tiêu '+(vt.c40a>0?'[40a]':'[43]')+' tờ khai 01/GTGT')}
+  </section>
+  <div class="grid2">
+    <section class="panel stack"><div class="row between"><h2>Doanh thu và chi phí theo tháng</h2><div class="legend"><span><i style="background:var(--accent)"></i>Doanh thu thuần</span><span><i style="background:var(--series2)"></i>Tổng chi phí</span></div></div>
+      <div class="chart">${chartMonthly(+to.slice(0,4))}</div><span class="muted" style="font-size:.78rem">Năm ${to.slice(0,4)} · đơn vị: triệu đồng · không gồm bút toán kết chuyển</span></section>
+    <section class="stack">
+      <div class="panel stack"><h2>Hạn nộp sắp tới</h2><div class="list">${deadlines().map(d=>`<div class="it"><span>${esc(d.name)}<br><span class="muted" style="font-size:.8rem">${esc(d.per)}</span></span><span style="text-align:right">${dmy(d.date)}<br><span class="chip ${d.days<=5?'red':d.days<=14?'amber':''}">còn ${d.days} ngày</span></span></div>`).join('')}</div></div>
+      <div class="panel stack"><h2>Kiểm tra sổ</h2>${warns.length?warns.map(w=>`<div class="alert ${w.lv||''}"><b>${esc(w.t)}</b><span>${w.d}</span></div>`).join(''):'<div class="alert info"><b>Ổn</b><span>Không phát hiện lỗi về quỹ âm, đối tượng công nợ, số dư đầu kỳ hay thanh toán tiền mặt.</span></div>'}</div>
+    </section>
+  </div>
+  <section class="stack"><div class="row between"><h2>Chứng từ gần đây</h2><a class="btn sm" href="#tonghop">Nhật ký và sổ cái</a></div>${voucherTable(recent)}</section>`;
+}
+function chartMonthly(y){
+  const data=[];for(let m=1;m<=12;m++){const p=pl(`${y}-${z2(m)}-01`,`${y}-${z2(m)}-${lastDay(y,m)}`);data.push({m,rev:p.thuan/1e6,exp:p.chiphi/1e6});}
+  let max=Math.max(1,...data.map(d=>Math.max(d.rev,d.exp)));
+  const mag=Math.pow(10,Math.floor(Math.log10(max)));const step=[1,2,2.5,5,10].map(s=>s*mag).find(s=>max/s<=4)||mag*10;max=Math.ceil(max/step)*step;
+  const W=640,H=230,L=48,B=26,T=10,cw=(W-L-8)/12,bw=Math.min(16,cw/2-4);
+  const yv=v=>T+(H-T-B)*(1-Math.max(0,v)/max);
+  let g='';for(let t=0;t<=max+1e-9;t+=step){const yy=yv(t);g+=`<line x1="${L}" x2="${W-8}" y1="${yy}" y2="${yy}" stroke="var(--line)" stroke-width="1"/><text x="${L-6}" y="${yy+4}" text-anchor="end" font-size="11" fill="var(--muted)">${t.toLocaleString('vi-VN')}</text>`;}
+  let bars='';data.forEach((d,i)=>{const x=L+i*cw+cw/2;
+    bars+=`<rect x="${x-bw-1}" y="${yv(d.rev)}" width="${bw}" height="${H-B-yv(d.rev)}" fill="var(--accent)" rx="2"><title>T${d.m}: doanh thu ${d.rev.toLocaleString('vi-VN',{maximumFractionDigits:1})} tr</title></rect>`;
+    bars+=`<rect x="${x+1}" y="${yv(d.exp)}" width="${bw}" height="${H-B-yv(d.exp)}" fill="var(--series2)" rx="2"><title>T${d.m}: chi phí ${d.exp.toLocaleString('vi-VN',{maximumFractionDigits:1})} tr</title></rect>`;
+    bars+=`<text x="${x}" y="${H-8}" text-anchor="middle" font-size="11" fill="var(--muted)">T${d.m}</text>`;});
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Biểu đồ doanh thu và chi phí 12 tháng năm ${y}">${g}${bars}</svg>`;
+}
+function deadlines(){
+  const st=SET(),t=todayStr(),out=[];const q=st.vatPeriod==='quarter';
+  const base=new Date();
+  for(let k=-1;k<=3;k++){
+    const d=new Date(base.getFullYear(),base.getMonth()+k,1);const y=d.getFullYear(),m=d.getMonth()+1;
+    if(!q){const dd=ymd(new Date(y,m,20));out.push({name:'Tờ khai GTGT, TNCN khấu trừ',per:`Tháng ${m}/${y}`,date:dd});}
+    if(m%3===0){const qq=m/3;const e=new Date(y,m,1);const dl=ymd(new Date(e.getFullYear(),e.getMonth()+1,0));
+      if(q)out.push({name:'Tờ khai GTGT, TNCN khấu trừ',per:`Quý ${qq}/${y}`,date:dl});
+      out.push({name:'Tạm nộp thuế TNDN',per:`Quý ${qq}/${y}`,date:ymd(new Date(y,m+1,0))});}
+  }
+  const fy=new Date().getFullYear()-1;out.push({name:'BCTC năm và quyết toán thuế TNDN',per:`Năm ${fy}`,date:`${fy+1}-03-31`});
+  out.push({name:'BCTC năm và quyết toán thuế TNDN',per:`Năm ${fy+1}`,date:`${fy+2}-03-31`});
+  const seen=new Set();
+  return out.filter(d=>d.date>=t).filter(d=>{const k=d.name+d.per;if(seen.has(k))return false;seen.add(k);return true;})
+    .map(d=>Object.assign(d,{days:Math.round((new Date(d.date)-new Date(t))/864e5)})).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
+}
+function checks(){
+  const w=[];
+  // quỹ tiền mặt âm
+  let cash=0;for(const r of (S.opening&&S.opening.rows)||[])if(String(r.acc).startsWith('111'))cash+=(+r.dr||0)-(+r.cr||0);
+  for(const l of D.lines){if(l.dr.startsWith('111'))cash+=l.amt;if(l.cr.startsWith('111'))cash-=l.amt;if(cash<0){w.push({lv:'red',t:'Quỹ tiền mặt âm',d:`Tồn quỹ âm ${fmt0(-cash)} sau chứng từ ${esc(l.no)} ngày ${dmy(l.date)}. Kiểm tra lại phiếu chi hoặc số dư đầu kỳ.`});break;}}
+  const noP=S.vouchers.filter(v=>!v.partner&&(v.lines||[]).some(l=>PARTNER_ACC(l.dr)||PARTNER_ACC(l.cr)));
+  if(noP.length)w.push({t:'Thiếu đối tượng công nợ',d:`${noP.length} chứng từ có TK 131/331/141 nhưng chưa gắn đối tượng: ${noP.slice(0,4).map(v=>esc(v.no)).join(', ')}${noP.length>4?'…':''}`});
+  const rows=(S.opening&&S.opening.rows)||[];const od=rows.reduce((s,r)=>s+(+r.dr||0),0),oc=rows.reduce((s,r)=>s+(+r.cr||0),0);
+  if(Math.round(od-oc))w.push({lv:'red',t:'Số dư đầu kỳ chưa cân',d:`Tổng dư Nợ ${fmt0(od)} khác tổng dư Có ${fmt0(oc)}, chênh ${fmt0(od-oc)}.`});
+  const {from,to}=range();const vt=vatCalc(from,to);
+  if(vt.cashWarn.length)w.push({t:'Hóa đơn từ 5 triệu trả tiền mặt',d:`${vt.cashWarn.length} hóa đơn đầu vào từ 5 triệu đồng thanh toán bằng tiền mặt (${vt.cashWarn.slice(0,3).map(v=>esc(v.no)).join(', ')}). Thuế GTGT đầu vào chỉ được khấu trừ khi có chứng từ thanh toán không dùng tiền mặt.`});
+  const unk=new Set();for(const l of D.lines){if(!accExists(l.dr))unk.add(l.dr);if(!accExists(l.cr))unk.add(l.cr);}
+  if(unk.size)w.push({t:'Tài khoản ngoài danh mục',d:`Có bút toán dùng TK ${[...unk].slice(0,6).map(esc).join(', ')} không có trong hệ thống tài khoản ${esc(SET().regime)}. Thêm vào Danh mục hoặc sửa chứng từ.`});
+  return w;
+}
+
+/* ================= CHỨNG TỪ ================= */
+function vTotal(v){return (v.lines||[]).reduce((s,l)=>s+(+l.amount||0),0);}
+function voucherTable(list){
+  if(!list.length)return `<div class="panel empty"><h3>Không có chứng từ trong kỳ này</h3><p>Đổi kỳ ở góc trên hoặc tạo chứng từ mới.</p></div>`;
+  return `<div class="tbl-wrap"><table><thead><tr><th>Ngày</th><th>Số CT</th><th>Loại</th><th>Đối tượng</th><th>Diễn giải</th><th>Định khoản</th><th class="num">Số tiền</th>${canWrite?'<th></th>':''}</tr></thead><tbody>
+  ${list.map(v=>`<tr class="click" data-act="edit" data-id="${esc(v.id)}"><td>${dmy(v.date)}</td><td class="code">${esc(v.no)}</td><td><span class="chip ${esc(v.type)}">${esc((VT[v.type]||{}).name||v.type)}</span></td>
+   <td>${esc(v.partner)}${v.partner&&partnerName(v.partner)?`<br><span class="muted" style="font-size:.8rem">${esc(partnerName(v.partner))}</span>`:''}</td><td>${esc(v.desc)}${v.vat&&v.vat.invNo?`<br><span class="muted" style="font-size:.8rem">HĐ ${esc(v.vat.invSym||'')} số ${esc(v.vat.invNo)}</span>`:''}</td>
+   <td class="code muted">${(v.lines||[]).slice(0,3).map(l=>`N${esc(l.dr)}/C${esc(l.cr)}`).join('<br>')}${(v.lines||[]).length>3?'<br>…':''}</td><td class="num">${fmt0(vTotal(v))}</td>
+   ${canWrite?`<td class="num"><button class="btn sm" data-act="dup" data-id="${esc(v.id)}">Nhân bản</button> <button class="btn sm danger ${ui.pendingDel===v.id?'armed':''}" data-act="del" data-id="${esc(v.id)}">${ui.pendingDel===v.id?'Bấm lần nữa để xóa':'Xóa'}</button></td>`:''}</tr>`).join('')}
+  </tbody></table></div>`;
+}
+function filteredVouchers(){
+  const {from,to}=range();const q=ui.vq.trim().toLowerCase();
+  let list=S.vouchers.filter(v=>v.date>=from&&v.date<=to&&CUR_FILTER(v)&&(!ui.vtype||v.type===ui.vtype));
+  if(q)list=list.filter(v=>[v.no,v.partner,partnerName(v.partner),v.desc,v.vat&&v.vat.invNo].join(' ').toLowerCase().includes(q));
+  return list.sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.no||'').localeCompare(a.no||''));
+}
+function vVouchers(mod){
+  CUR_FILTER=mod?mod.filter:()=>true;
+  const types=mod?mod.types:Object.keys(VT).filter(k=>k!=='KC');
+  const list=filteredVouchers();
+  const tot=list.reduce((s,v)=>s+vTotal(v),0);
+  const present=[...new Set(S.vouchers.filter(CUR_FILTER).map(v=>v.type))];
+  return `${canWrite?`<div class="row">${types.map((k,i)=>`<button class="btn ${i===0?'primary':''}" data-act="new" data-type="${k}">+ ${VT[k].name}</button>`).join('')}</div>`:''}
+  <div class="row between"><div class="row"><select id="f-vtype" aria-label="Lọc loại chứng từ"><option value="">Tất cả loại</option>${Object.entries(VT).filter(([k])=>present.includes(k)||types.includes(k)).map(([k,o])=>`<option value="${k}" ${ui.vtype===k?'selected':''}>${o.name}</option>`).join('')}</select>
+   <input type="search" id="f-vq" placeholder="Tìm số CT, đối tượng, diễn giải, số HĐ" value="${esc(ui.vq)}" style="min-width:min(280px,100%)"></div>
+   <span class="muted">${list.length} chứng từ · tổng ${fmt0(tot)} đ</span></div>
+  <div id="vlist">${voucherTable(list)}</div>`;
+}
+function nextNo(type,date){
+  const pre=type+date.slice(2,4)+date.slice(5,7)+'-';
+  let mx=0;for(const v of S.vouchers)if((v.no||'').startsWith(pre)){const n=parseInt(v.no.slice(pre.length),10);if(n>mx)mx=n;}
+  return pre+String(mx+1).padStart(3,'0');
+}
+
+/* ---------- trình nhập chứng từ ---------- */
+let ED=null;const M=$('#modal');
+function edOpen(src,type,dup){
+  if(src){const v=JSON.parse(JSON.stringify(src));
+    ED={id:dup?uid():v.id,isNew:!!dup,type:v.type,no:dup?nextNo(v.type,todayStr()):v.no,date:dup?todayStr():v.date,partner:v.partner||'',desc:v.desc||'',createdAt:dup?null:v.createdAt,
+      lines:(v.lines||[]).filter(l=>!l.vat).map(l=>({dr:l.dr,cr:l.cr,amount:+l.amount||0,note:l.note||''})),vat:null};
+    if(v.vat){const vl=(v.lines||[]).find(l=>l.vat)||{};ED.vat=Object.assign({dir:'in',rate:'10',invSym:'',invNo:'',invDate:v.date},v.vat,{dr:vl.dr||'',cr:vl.cr||'',autoTax:false,accManual:true});}
+  }else{const t=VT[type],d=todayStr();
+    ED={id:uid(),isNew:true,type,no:nextNo(type,d),date:d,partner:'',desc:t.desc,createdAt:null,lines:t.lines.map(([dr,cr])=>({dr,cr,amount:0,note:''})),
+      vat:t.vat?{dir:t.vat,rate:'10',base:0,tax:0,invSym:'',invNo:'',invDate:d,dr:'',cr:'',autoTax:true,accManual:false}:null};}
+  if(!ED.lines.length)ED.lines.push({dr:'',cr:'',amount:0,note:''});
+  edCalc();edRender();M.hidden=false;
+  setTimeout(()=>{const f=M.querySelector(src?'#ed-desc':'#ed-partner');if(f)f.focus();},30);
+}
+function edClose(){M.hidden=true;M.innerHTML='';ED=null;}
+function edCalc(){
+  const v=ED;if(!v.vat)return;const t=v.vat;
+  t.base=v.lines.reduce((s,l)=>s+(+l.amount||0),0);
+  if(t.autoTax)t.tax=Math.round(t.base*(RATES[t.rate]||0));
+  if(!t.accManual){const f=v.lines[0]||{};if(t.dir==='out'){t.dr=f.dr||'131';t.cr='33311';}else{t.dr='1331';t.cr=f.cr||'331';}}
+}
+const edTotal=()=>ED.lines.reduce((s,l)=>s+(+l.amount||0),0)+(ED.vat?(+ED.vat.tax||0):0);
+function edSync(){
+  edCalc();const t=ED.vat,a=document.activeElement;
+  if(t){const b=$('#v-base');if(b)b.textContent=fmt0(t.base);
+    const tx=$('#v-tax');if(tx&&a!==tx)tx.value=fmt0(t.tax);
+    ['dr','cr'].forEach(k=>{const el=$('#v-'+k);if(el&&a!==el){el.value=t[k];const n=$('#v-'+k+'n');if(n)n.textContent=accName(t[k]);}});}
+  $('#ed-total').textContent=fmt0(edTotal());
+}
+function edRender(){
+  const v=ED,t=VT[v.type],vt=v.vat;
+  M.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ed-title">
+  <header class="sheet-h"><h2 id="ed-title">${v.isNew?'Thêm':'Sửa'} ${esc(t.name.toLowerCase())}</h2><button class="icon-btn" data-act="ed-close" aria-label="Đóng">×</button></header>
+  <div class="sheet-b">
+   <div class="grid4">
+    <label for="ed-type">Loại chứng từ<select id="ed-type" ${v.type==='KC'?'disabled':''}>${Object.entries(VT).filter(([k])=>k!=='KC'||v.type==='KC').map(([k,o])=>`<option value="${k}" ${k===v.type?'selected':''}>${o.name}</option>`).join('')}</select><small></small></label>
+    <label for="ed-no">Số chứng từ<input id="ed-no" value="${esc(v.no)}"><small></small></label>
+    <label for="ed-date">Ngày hạch toán<input id="ed-date" type="date" value="${esc(v.date)}"><small></small></label>
+    <label for="ed-partner">Đối tượng (mã)<input id="ed-partner" list="dl-partner" value="${esc(v.partner)}" placeholder="VD: KH001" autocomplete="off"><small id="ed-pname">${esc(partnerName(v.partner))}</small></label>
+   </div>
+   <label for="ed-desc">Diễn giải<input id="ed-desc" value="${esc(v.desc)}"></label>
+   <div class="tbl-wrap"><table class="ed-lines"><thead><tr><th>TK Nợ</th><th>TK Có</th><th class="num">Số tiền (đ)</th><th>Diễn giải dòng</th><th></th></tr></thead><tbody>
+    ${v.lines.map((l,i)=>`<tr>
+     <td><input id="ed-l${i}-dr" class="acc" data-f="dr" data-i="${i}" list="dl-acc" value="${esc(l.dr)}" aria-label="TK Nợ dòng ${i+1}" autocomplete="off"><small data-an="dr${i}">${esc(accName(l.dr))}</small></td>
+     <td><input id="ed-l${i}-cr" class="acc" data-f="cr" data-i="${i}" list="dl-acc" value="${esc(l.cr)}" aria-label="TK Có dòng ${i+1}" autocomplete="off"><small data-an="cr${i}">${esc(accName(l.cr))}</small></td>
+     <td><input id="ed-l${i}-amt" class="amt" data-f="amount" data-i="${i}" inputmode="numeric" value="${l.amount?fmt0(l.amount):''}" aria-label="Số tiền dòng ${i+1}"></td>
+     <td><input id="ed-l${i}-note" data-f="note" data-i="${i}" value="${esc(l.note)}" aria-label="Diễn giải dòng ${i+1}"></td>
+     <td><button class="icon-btn" data-act="ed-rmline" data-i="${i}" aria-label="Xóa dòng ${i+1}" ${v.lines.length<2?'disabled':''}>×</button></td></tr>`).join('')}
+   </tbody></table></div>
+   <div class="row between"><button class="link" data-act="ed-addline">+ Thêm dòng định khoản</button>
+    <label class="chk"><input type="checkbox" id="ed-hasvat" ${vt?'checked':''}> Có hóa đơn GTGT</label></div>
+   ${vt?`<div class="vat">
+     <label for="v-dir">Chiều hóa đơn<select id="v-dir"><option value="in" ${vt.dir==='in'?'selected':''}>Mua vào (đầu vào)</option><option value="out" ${vt.dir==='out'?'selected':''}>Bán ra (đầu ra)</option></select></label>
+     <label for="v-sym">Ký hiệu hóa đơn<input id="v-sym" value="${esc(vt.invSym)}" placeholder="1C26TAA"></label>
+     <label for="v-no">Số hóa đơn<input id="v-no" value="${esc(vt.invNo)}"></label>
+     <label for="v-date">Ngày hóa đơn<input id="v-date" type="date" value="${esc(vt.invDate)}"></label>
+     <label for="v-rate">Thuế suất<select id="v-rate">${Object.keys(RATES).map(k=>`<option value="${k}" ${vt.rate===k?'selected':''}>${RATE_LABEL[k]}</option>`).join('')}</select></label>
+     <label>Tiền hàng chưa thuế<span class="out" id="v-base">${fmt0(vt.base)}</span></label>
+     <label for="v-tax">Tiền thuế GTGT<input id="v-tax" class="amt" inputmode="numeric" value="${fmt0(vt.tax)}"></label>
+     <label>Định khoản thuế<span class="row" style="gap:4px;flex-wrap:nowrap"><input id="v-dr" list="dl-acc" value="${esc(vt.dr)}" aria-label="TK Nợ thuế" style="width:50%"><input id="v-cr" list="dl-acc" value="${esc(vt.cr)}" aria-label="TK Có thuế" style="width:50%"></span></label>
+   </div>`:''}
+   <div class="ed-total"><span class="muted">Tổng thanh toán</span><strong id="ed-total">${fmt0(edTotal())}</strong></div>
+   <p class="err" id="ed-err" role="alert"></p>
+  </div>
+  <footer class="sheet-f"><span class="muted" style="font-size:.8rem">Mỗi dòng là một cặp Nợ/Có nên chứng từ luôn cân.</span>
+   <div class="row"><button class="btn" data-act="ed-close">Hủy</button>${canWrite?`${v.isNew?'<button class="btn" data-act="ed-save" data-again="1">Lưu và thêm mới</button>':''}<button class="btn primary" data-act="ed-save">Lưu chứng từ</button>`:''}</div></footer></div>`;
+}
+M.addEventListener('input',e=>{
+  if(!ED)return;const el=e.target,f=el.dataset.f;
+  if(f){const i=+el.dataset.i,l=ED.lines[i];if(!l)return;
+    if(f==='amount')l.amount=Math.max(0,parseNum(el.value));
+    else if(f==='dr'||f==='cr'){l[f]=el.value.trim();const s=M.querySelector(`[data-an="${f}${i}"]`);if(s)s.textContent=accName(l[f]);}
+    else l[f]=el.value;
+    edSync();return;}
+  const t=ED.vat;
+  switch(el.id){
+    case 'ed-no':ED.no=el.value.trim();break;
+    case 'ed-date':ED.date=el.value;break;
+    case 'ed-partner':ED.partner=el.value.trim();$('#ed-pname').textContent=partnerName(ED.partner)||(ED.partner?'Chưa có trong danh mục':'');break;
+    case 'ed-desc':ED.desc=el.value;break;
+    case 'v-sym':t.invSym=el.value.trim();break;
+    case 'v-no':t.invNo=el.value.trim();break;
+    case 'v-date':t.invDate=el.value;break;
+    case 'v-tax':t.tax=Math.max(0,parseNum(el.value));t.autoTax=false;$('#ed-total').textContent=fmt0(edTotal());break;
+    case 'v-dr':case 'v-cr':t[el.id.slice(2)]=el.value.trim();t.accManual=true;break;
+  }
+});
+M.addEventListener('change',e=>{
+  if(!ED)return;const el=e.target;
+  if(el.id==='ed-type'){ED.type=el.value;if(ED.isNew)ED.no=nextNo(ED.type,ED.date||todayStr());
+    if(VT[ED.type].vat&&!ED.vat)ED.vat={dir:VT[ED.type].vat,rate:'10',base:0,tax:0,invSym:'',invNo:'',invDate:ED.date,dr:'',cr:'',autoTax:true,accManual:false};
+    edCalc();edRender();}
+  else if(el.id==='ed-date'&&ED.isNew){const n=nextNo(ED.type,ED.date);ED.no=n;$('#ed-no').value=n;}
+  else if(el.id==='ed-hasvat'){ED.vat=el.checked?{dir:VT[ED.type].vat||'in',rate:'10',base:0,tax:0,invSym:'',invNo:'',invDate:ED.date,dr:'',cr:'',autoTax:true,accManual:false}:null;edCalc();edRender();}
+  else if(el.id==='v-dir'){ED.vat.dir=el.value;ED.vat.accManual=false;edSync();}
+  else if(el.id==='v-rate'){ED.vat.rate=el.value;ED.vat.autoTax=true;edSync();}
+});
+M.addEventListener('focusout',e=>{const el=e.target;if(el.classList&&el.classList.contains('amt')){const n=parseNum(el.value);el.value=n?fmt0(n):'';}});
+M.addEventListener('keydown',e=>{if(e.key==='Escape')edClose();});
+async function edSave(again){
+  const v=ED,err=[];
+  if(!v.date)err.push('Chọn ngày hạch toán.');
+  if(!v.no)err.push('Nhập số chứng từ.');
+  else if(S.vouchers.some(x=>x.no===v.no&&x.id!==v.id))err.push(`Số chứng từ ${v.no} đã có. Đổi số khác.`);
+  const lines=v.lines.filter(l=>l.dr||l.cr||l.amount);
+  if(!lines.length)err.push('Cần ít nhất một dòng định khoản.');
+  const chk=(l,lab)=>{if(!l.dr||!l.cr){err.push(`${lab}: nhập đủ TK Nợ và TK Có.`);return;}
+    if(!accExists(l.dr))err.push(`${lab}: TK ${l.dr} không có trong danh mục.`);if(!accExists(l.cr))err.push(`${lab}: TK ${l.cr} không có trong danh mục.`);
+    if(l.dr===l.cr)err.push(`${lab}: TK Nợ và TK Có trùng nhau.`);if(!(+l.amount>0))err.push(`${lab}: số tiền phải lớn hơn 0.`);};
+  lines.forEach((l,i)=>chk(l,'Dòng '+(i+1)));
+  const t=v.vat;const all=lines.map(l=>({dr:l.dr,cr:l.cr,amount:+l.amount,note:l.note||''}));
+  if(t&&+t.tax>0){chk({dr:t.dr,cr:t.cr,amount:t.tax},'Dòng thuế');all.push({dr:t.dr,cr:t.cr,amount:+t.tax,note:'Thuế GTGT',vat:true});}
+  if(t&&!t.invNo)err.push('Nhập số hóa đơn GTGT.');
+  if(all.some(l=>PARTNER_ACC(l.dr)||PARTNER_ACC(l.cr))&&!v.partner)err.push('Chứng từ có TK công nợ (131, 331, 141, 334…) cần nhập mã đối tượng.');
+  if(err.length){$('#ed-err').textContent=err.join('\n');return;}
+  const nowIso=new Date().toISOString();
+  const doc={type:v.type,no:v.no,date:v.date,partner:v.partner,desc:v.desc.trim(),lines:all,
+    vat:t?{dir:t.dir,rate:t.rate,base:+t.base||0,tax:+t.tax||0,invSym:t.invSym||'',invNo:t.invNo||'',invDate:t.invDate||v.date}:null,
+    createdAt:v.createdAt||nowIso,updatedAt:nowIso};
+  const btns=M.querySelectorAll('[data-act="ed-save"]');btns.forEach(b=>b.disabled=true);
+  try{await putDoc('vouchers',v.id,doc);toast(`Đã lưu ${VT[v.type].name.toLowerCase()} ${v.no}`);
+    if(again){const ty=v.type;edClose();changed();setTimeout(()=>edOpen(null,ty),60);}else edClose();}
+  catch(e){btns.forEach(b=>b.disabled=false);writeErr(e);}
+}
+
+/* ================= SỔ SÁCH ================= */
+function tabsHTML(group,items){return `<div class="tabs" role="tablist">${items.map(([k,l])=>`<button role="tab" aria-selected="${sub[group]===k}" data-act="tab" data-g="${group}" data-k="${k}">${l}</button>`).join('')}</div>`;}
+function exportBtn(){return `<button class="btn sm" data-act="csv">Xuất CSV</button>`;}
+function vBooks(){
+  const items=[['nkc','Nhật ký chung'],['socai','Sổ cái'],['quy','Sổ quỹ tiền mặt'],['nh','Sổ tiền gửi'],['congno','Công nợ']];
+  let body='';const s=sub.sosach;
+  if(s==='nkc')body=bookNKC();else if(s==='socai')body=bookLedger(ui.ledgerAcc,'Sổ cái');else if(s==='quy')body=bookLedger('111','Sổ quỹ tiền mặt',true);
+  else if(s==='nh')body=bookLedger('112','Sổ tiền gửi ngân hàng',true);else body=bookAR();
+  return tabsHTML('sosach',items)+body;
+}
+function repHead(title,sub2,form){
+  const st=SET(),r=range();
+  return `<div class="rep-h"><div><b>${esc(st.name||'Đơn vị: ……')}</b><br>MST: ${esc(st.mst||'……')}<br>${esc(st.address||'')}</div><div style="text-align:right">${form?`<b>${esc(form)}</b><br>`:''}<span class="muted">(Theo ${esc(REGIMES[st.regime])})</span></div>
+  <div class="c"><h2>${esc(title)}</h2><span>${esc(sub2||r.label)}</span><span class="muted">Đơn vị tính: đồng Việt Nam</span></div></div>`;
+}
+function signHTML(){const st=SET();return `<div class="sign"><div><b>Người lập biểu</b><i>(Ký, họ tên)</i>${esc(st.preparer)}</div><div><b>Kế toán trưởng</b><i>(Ký, họ tên)</i>${esc(st.chiefAcc)}</div><div><b>Người đại diện theo pháp luật</b><i>(Ký, họ tên, đóng dấu)</i>${esc(st.director)}</div></div>`;}
+function bookNKC(){
+  const {from,to}=range();const rows=D.lines.filter(l=>l.date>=from&&l.date<=to);
+  const tot=rows.reduce((s,l)=>s+l.amt,0);const shown=rows.slice(0,800);
+  CUR_TABLE={name:'nhat-ky-chung',head:['Ngày','Số CT','Diễn giải','TK Nợ','TK Có','Số tiền'],rows:rows.map(l=>[dmy(l.date),l.no,l.note,l.dr,l.cr,Math.round(l.amt)])};
+  return `<div class="panel stack">${repHead('Sổ nhật ký chung',null,'Mẫu S03a-DN')}<div class="row between"><span class="muted">${rows.length} bút toán</span>${exportBtn()}</div>
+  <div class="tbl-wrap"><table><thead><tr><th>Ngày</th><th>Số CT</th><th>Diễn giải</th><th>TK Nợ</th><th>TK Có</th><th class="num">Số tiền</th></tr></thead><tbody>
+  ${shown.map(l=>`<tr class="click" data-act="edit" data-id="${esc(l.v.id)}"><td>${dmy(l.date)}</td><td class="code">${esc(l.no)}</td><td>${esc(l.note)}</td><td class="code">${esc(l.dr)}</td><td class="code">${esc(l.cr)}</td><td class="num">${fmt0(l.amt)}</td></tr>`).join('')||'<tr><td colspan="6" class="muted">Không có bút toán trong kỳ.</td></tr>'}
+  ${rows.length?`<tr class="total"><td colspan="5">Cộng phát sinh</td><td class="num">${fmt0(tot)}</td></tr>`:''}</tbody></table></div>
+  ${rows.length>800?`<span class="muted">Đang hiển thị 800 dòng đầu. Xuất CSV để xem đủ ${rows.length} dòng.</span>`:''}${signHTML()}</div>`;
+}
+function bookLedger(p,title,cash){
+  const {from,to}=range();
+  const ob=sumPre(balBefore(from),[p]);
+  let run=ob,td=0,tc=0;const rows=[];
+  for(const l of D.lines){if(l.date<from||l.date>to)continue;const isD=l.dr.startsWith(p),isC=l.cr.startsWith(p);if(!isD&&!isC)continue;
+    const d=isD?l.amt:0,c=isC?l.amt:0;run+=d-c;td+=d;tc+=c;rows.push({l,d,c,run,ctr:isD&&!isC?l.cr:isC&&!isD?l.dr:l.dr+'/'+l.cr});}
+  const hd=cash?['Thu','Chi','Tồn']:['PS Nợ','PS Có','Số dư'];
+  CUR_TABLE={name:(cash?'so-':'so-cai-')+p,head:['Ngày','Số CT','Diễn giải','TK đối ứng',...hd],rows:[['','','Số dư đầu kỳ','','','',Math.round(ob)],...rows.map(r=>[dmy(r.l.date),r.l.no,r.l.note,r.ctr,Math.round(r.d),Math.round(r.c),Math.round(r.run)]),['','','Cộng phát sinh','',Math.round(td),Math.round(tc),''],['','','Số dư cuối kỳ','','','',Math.round(run)]]};
+  const picker=cash?'':`<label for="f-led" style="flex-direction:row;align-items:center;gap:8px">Tài khoản<input id="f-led" list="dl-acc" value="${esc(p)}" style="width:110px" autocomplete="off"></label><span>${esc(accName(p))}</span>`;
+  const bal=v=>v>=0?fmt0(v):`<span style="color:var(--red)">${fmt(v)}</span>`;
+  return `<div class="panel stack">${repHead(title+(cash?'':' TK '+p),null,cash?(p==='111'?'Mẫu S07-DN':'Mẫu S08-DN'):'Mẫu S03b-DN')}<div class="row between"><div class="row">${picker}</div>${exportBtn()}</div>
+  <div class="tbl-wrap"><table><thead><tr><th>Ngày</th><th>Số CT</th><th>Diễn giải</th><th>TK đối ứng</th><th class="num">${hd[0]}</th><th class="num">${hd[1]}</th><th class="num">${hd[2]}</th></tr></thead><tbody>
+  <tr class="grp"><td colspan="6">Số dư đầu kỳ</td><td class="num">${bal(ob)}</td></tr>
+  ${rows.slice(0,1000).map(r=>`<tr class="click" data-act="edit" data-id="${esc(r.l.v.id)}"><td>${dmy(r.l.date)}</td><td class="code">${esc(r.l.no)}</td><td>${esc(r.l.note)}</td><td class="code">${esc(r.ctr)}</td><td class="num">${fmt(r.d)}</td><td class="num">${fmt(r.c)}</td><td class="num">${bal(r.run)}</td></tr>`).join('')}
+  <tr class="total"><td colspan="4">Cộng phát sinh</td><td class="num">${fmt0(td)}</td><td class="num">${fmt0(tc)}</td><td></td></tr>
+  <tr class="total"><td colspan="6">Số dư cuối kỳ</td><td class="num">${bal(run)}</td></tr></tbody></table></div>
+  <span class="muted" style="font-size:.8rem">Số dư dương là dư Nợ, số trong ngoặc là dư Có.</span></div>`;
+}
+function bookAR(fixed){
+  const {from,to}=range();const p=fixed||ui.cnAcc;
+  const ob=balBefore(from,true);const mv=new Map();
+  for(const l of D.lines){if(l.date<from||l.date>to)continue;if(l.dr.startsWith(p))addTo(mv,l.partner,'dr',l.amt);if(l.cr.startsWith(p))addTo(mv,l.partner,'cr',l.amt);}
+  const op=new Map();for(const [k,v] of ob){const [c,pt]=k.split('|');if(c.startsWith(p))op.set(pt,(op.get(pt)||0)+v);}
+  const keys=[...new Set([...op.keys(),...mv.keys()])].sort();
+  const rows=keys.map(k=>{const o=op.get(k)||0,m=mv.get(k)||{dr:0,cr:0},c=o+m.dr-m.cr;return {k,o,dr:m.dr,cr:m.cr,c};}).filter(r=>Math.round(r.o)||Math.round(r.dr)||Math.round(r.cr));
+  const T={od:0,oc:0,dr:0,cr:0,cd:0,cc:0};rows.forEach(r=>{if(r.o>0)T.od+=r.o;else T.oc-=r.o;T.dr+=r.dr;T.cr+=r.cr;if(r.c>0)T.cd+=r.c;else T.cc-=r.c;});
+  CUR_TABLE={name:'cong-no-'+p,head:['Mã đối tượng','Tên','Dư Nợ đầu kỳ','Dư Có đầu kỳ','PS Nợ','PS Có','Dư Nợ cuối kỳ','Dư Có cuối kỳ'],rows:rows.map(r=>[r.k,partnerName(r.k),Math.round(Math.max(r.o,0)),Math.round(Math.max(-r.o,0)),Math.round(r.dr),Math.round(r.cr),Math.round(Math.max(r.c,0)),Math.round(Math.max(-r.c,0))])};
+  let detail='';
+  if(ui.cnPartner!==''&&keys.includes(ui.cnPartner)){
+    const pt=ui.cnPartner;let run=op.get(pt)||0;const o=run;const dl=[];
+    for(const l of D.lines){if(l.date<from||l.date>to||l.partner!==pt)continue;const isD=l.dr.startsWith(p),isC=l.cr.startsWith(p);if(!isD&&!isC)continue;const d=isD?l.amt:0,c=isC?l.amt:0;run+=d-c;dl.push({l,d,c,run,ctr:isD?l.cr:l.dr});}
+    detail=`<div class="panel stack"><div class="row between"><h3>Chi tiết ${esc(pt||'(chưa gắn đối tượng)')} ${esc(partnerName(pt))}</h3><button class="btn sm" data-act="cn-close">Đóng chi tiết</button></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Ngày</th><th>Số CT</th><th>Diễn giải</th><th>TK đối ứng</th><th class="num">PS Nợ</th><th class="num">PS Có</th><th class="num">Số dư</th></tr></thead><tbody>
+    <tr class="grp"><td colspan="6">Số dư đầu kỳ</td><td class="num">${fmt(o)||'0'}</td></tr>
+    ${dl.map(r=>`<tr class="click" data-act="edit" data-id="${esc(r.l.v.id)}"><td>${dmy(r.l.date)}</td><td class="code">${esc(r.l.no)}</td><td>${esc(r.l.note)}</td><td class="code">${esc(r.ctr)}</td><td class="num">${fmt(r.d)}</td><td class="num">${fmt(r.c)}</td><td class="num">${fmt(r.run)||'0'}</td></tr>`).join('')}
+    </tbody></table></div></div>`;
+  }
+  return `<div class="panel stack">${repHead('Tổng hợp công nợ TK '+p,null,'Sổ chi tiết thanh toán S31-DN')}
+  <div class="row between"><div class="row">${fixed?`<span class="muted">${esc(p)} ${esc(accName(p))}</span>`:`<label for="f-cn" style="flex-direction:row;align-items:center;gap:8px">Tài khoản<select id="f-cn">${[['131','131 Phải thu khách hàng'],['331','331 Phải trả người bán'],['141','141 Tạm ứng'],['334','334 Phải trả người lao động'],['1388','1388 Phải thu khác'],['3388','3388 Phải trả khác']].map(([k,l])=>`<option value="${k}" ${p===k?'selected':''}>${l}</option>`).join('')}</select></label>`}</div>${exportBtn()}</div>
+  <div class="tbl-wrap"><table><thead><tr><th>Đối tượng</th><th class="num">Dư Nợ ĐK</th><th class="num">Dư Có ĐK</th><th class="num">PS Nợ</th><th class="num">PS Có</th><th class="num">Dư Nợ CK</th><th class="num">Dư Có CK</th></tr></thead><tbody>
+  ${rows.map(r=>`<tr class="click" data-act="cn-open" data-p="${esc(r.k)}"><td><b>${esc(r.k||'(chưa gắn)')}</b> <span class="muted">${esc(partnerName(r.k))}</span></td><td class="num">${fmt(Math.max(r.o,0))}</td><td class="num">${fmt(Math.max(-r.o,0))}</td><td class="num">${fmt(r.dr)}</td><td class="num">${fmt(r.cr)}</td><td class="num">${fmt(Math.max(r.c,0))}</td><td class="num">${fmt(Math.max(-r.c,0))}</td></tr>`).join('')||'<tr><td colspan="7" class="muted">Không có số dư hay phát sinh.</td></tr>'}
+  ${rows.length?`<tr class="total"><td>Cộng</td><td class="num">${fmt0(T.od)}</td><td class="num">${fmt0(T.oc)}</td><td class="num">${fmt0(T.dr)}</td><td class="num">${fmt0(T.cr)}</td><td class="num">${fmt0(T.cd)}</td><td class="num">${fmt0(T.cc)}</td></tr>`:''}
+  </tbody></table></div><span class="muted" style="font-size:.8rem">Bấm vào một đối tượng để xem sổ chi tiết.</span></div>${detail}`;
+}
+
+/* ================= BÁO CÁO ================= */
+function vReports(){
+  const items=[['cdps','Cân đối số phát sinh'],['kqkd','Kết quả kinh doanh'],['cdkt','Tình hình tài chính']];
+  const s=sub.baocao;
+  return tabsHTML('baocao',items)+(s==='kqkd'?repKQKD():s==='cdkt'?repCDKT():repCDPS());
+}
+function repCDPS(){
+  const {from,to}=range();const ob=balBefore(from),mv=agg(from,to);
+  const codes=new Set([...ob.keys(),...mv.keys()]);const leaf=new Map();
+  for(const c of codes){const o=ob.get(c)||0,m=mv.get(c)||{dr:0,cr:0};const cl=o+m.dr-m.cr;if(!Math.round(o)&&!Math.round(m.dr)&&!Math.round(m.cr))continue;leaf.set(c,{o,dr:m.dr,cr:m.cr,cl});}
+  const groups=new Map();for(const [c,v] of leaf){const g=c.slice(0,3);if(!groups.has(g))groups.set(g,[]);groups.get(g).push([c,v]);}
+  const T={od:0,oc:0,dr:0,cr:0,cd:0,cc:0};const out=[];const csv=[];
+  const cell=(v)=>[fmt(Math.max(v,0)),fmt(Math.max(-v,0))];
+  for(const g of [...groups.keys()].sort()){
+    const ch=groups.get(g).sort((a,b)=>a[0].localeCompare(b[0]));const s={o:0,dr:0,cr:0,cl:0};ch.forEach(([,v])=>{s.o+=v.o;s.dr+=v.dr;s.cr+=v.cr;s.cl+=v.cl;});
+    if(s.o>0)T.od+=s.o;else T.oc-=s.o;T.dr+=s.dr;T.cr+=s.cr;if(s.cl>0)T.cd+=s.cl;else T.cc-=s.cl;
+    const [a,b]=cell(s.o),[c,d]=cell(s.cl);
+    out.push(`<tr class="grp click" data-act="goto-ledger" data-acc="${g}"><td class="code">${g}</td><td>${esc(accName(g))}</td><td class="num">${a}</td><td class="num">${b}</td><td class="num">${fmt(s.dr)}</td><td class="num">${fmt(s.cr)}</td><td class="num">${c}</td><td class="num">${d}</td></tr>`);
+    csv.push([g,accName(g),Math.round(Math.max(s.o,0)),Math.round(Math.max(-s.o,0)),Math.round(s.dr),Math.round(s.cr),Math.round(Math.max(s.cl,0)),Math.round(Math.max(-s.cl,0))]);
+    if(!(ch.length===1&&ch[0][0]===g))for(const [cc,v] of ch){const [a1,b1]=cell(v.o),[c1,d1]=cell(v.cl);
+      out.push(`<tr class="sub click" data-act="goto-ledger" data-acc="${cc}"><td class="code">${cc}</td><td class="muted">${esc(accName(cc))}</td><td class="num">${a1}</td><td class="num">${b1}</td><td class="num">${fmt(v.dr)}</td><td class="num">${fmt(v.cr)}</td><td class="num">${c1}</td><td class="num">${d1}</td></tr>`);
+      csv.push([cc,accName(cc),Math.round(Math.max(v.o,0)),Math.round(Math.max(-v.o,0)),Math.round(v.dr),Math.round(v.cr),Math.round(Math.max(v.cl,0)),Math.round(Math.max(-v.cl,0))]);}
+  }
+  CUR_TABLE={name:'can-doi-so-phat-sinh',head:['Số hiệu TK','Tên tài khoản','Dư Nợ đầu kỳ','Dư Có đầu kỳ','PS Nợ','PS Có','Dư Nợ cuối kỳ','Dư Có cuối kỳ'],rows:csv};
+  const ok=Math.round(T.od-T.oc)===0&&Math.round(T.dr-T.cr)===0&&Math.round(T.cd-T.cc)===0;
+  return `<div class="panel stack">${repHead('Bảng cân đối số phát sinh',null,'Mẫu S06-DN')}<div class="row between">${ok?'<span class="chip ok">Bảng cân: Nợ = Có ở cả ba cặp cột</span>':'<span class="chip red">Bảng chưa cân, kiểm tra số dư đầu kỳ</span>'}${exportBtn()}</div>
+  <div class="tbl-wrap"><table><thead><tr><th rowspan="2">Số hiệu</th><th rowspan="2">Tên tài khoản</th><th class="num" colspan="2">Số dư đầu kỳ</th><th class="num" colspan="2">Số phát sinh trong kỳ</th><th class="num" colspan="2">Số dư cuối kỳ</th></tr><tr><th class="num">Nợ</th><th class="num">Có</th><th class="num">Nợ</th><th class="num">Có</th><th class="num">Nợ</th><th class="num">Có</th></tr></thead><tbody>
+  ${out.join('')||'<tr><td colspan="8" class="muted">Chưa có số liệu trong kỳ.</td></tr>'}
+  <tr class="total"><td colspan="2">Tổng cộng</td><td class="num">${fmt0(T.od)}</td><td class="num">${fmt0(T.oc)}</td><td class="num">${fmt0(T.dr)}</td><td class="num">${fmt0(T.cr)}</td><td class="num">${fmt0(T.cd)}</td><td class="num">${fmt0(T.cc)}</td></tr></tbody></table></div>${signHTML()}</div>`;
+}
+function repKQKD(){
+  const {from,to}=range();const reg=SET().regime;const a=pl(from,to),b=pl(to.slice(0,4)+'-01-01',to);
+  const L=[['Doanh thu bán hàng và cung cấp dịch vụ','dt','Có 511'],['Các khoản giảm trừ doanh thu','gt',reg==='TT99'?'521, Nợ 511':'Nợ 511'],['Doanh thu thuần','thuan','',1],['Giá vốn hàng bán','gv','632'],['Lợi nhuận gộp','gop','',1],
+    ['Doanh thu hoạt động tài chính','tc','515'],['Chi phí tài chính','cptc','635'],['Chi phí bán hàng','ban',reg==='TT133'?'6421':'641'],['Chi phí quản lý doanh nghiệp','ql',reg==='TT133'?'6422':'642'],
+    ['Lợi nhuận thuần từ hoạt động kinh doanh','lnkd','',1],['Thu nhập khác','tnk','711'],['Chi phí khác','cpk','811'],['Lợi nhuận khác','khac','',1],['Tổng lợi nhuận kế toán trước thuế','truoc','',1],['Chi phí thuế TNDN','cit','821'],['Lợi nhuận sau thuế TNDN','sau','',1]];
+  CUR_TABLE={name:'ket-qua-kinh-doanh',head:['Chỉ tiêu','TK nguồn','Kỳ này','Lũy kế từ đầu năm'],rows:L.map(r=>[r[0],r[2],Math.round(a[r[1]]),Math.round(b[r[1]])])};
+  return `<div class="panel stack">${repHead('Báo cáo kết quả hoạt động kinh doanh',null,reg==='TT133'?'Mẫu B02-DNN':'Mẫu B02-DN')}<div class="row between"><span class="muted">Số liệu lấy từ phát sinh, bỏ qua bút toán kết chuyển nên xem được cả khi chưa kết chuyển.</span>${exportBtn()}</div>
+  <div class="tbl-wrap"><table><thead><tr><th>Chỉ tiêu</th><th>TK nguồn</th><th class="num">Kỳ này</th><th class="num">Lũy kế năm ${to.slice(0,4)}</th></tr></thead><tbody>
+  ${L.map(r=>`<tr class="${r[3]?'grp':''}"><td>${esc(r[0])}</td><td class="muted code">${esc(r[2])}</td><td class="num">${fmt(a[r[1]])||'0'}</td><td class="num">${fmt(b[r[1]])||'0'}</td></tr>`).join('')}
+  </tbody></table></div>${signHTML()}</div>`;
+}
+function bsItems(date){
+  const bal=balBefore(date),balP=balBefore(date,true);const used=new Set();
+  const take=(pres)=>{let t=0;for(const [k,v] of bal){if(pres.some(p=>k.startsWith(p))){t+=v;used.add(k);}}return t;};
+  const takeP=(pre,sign)=>{let t=0;for(const [k,v] of balP){const c=k.split('|')[0];if(c.startsWith(pre)){if(sign>0&&v>0)t+=v;if(sign<0&&v<0)t-=v;}}for(const k of bal.keys())if(k.startsWith(pre))used.add(k);return t;};
+  const take333=(sign)=>{let t=0;for(const [k,v] of bal){if(k.startsWith('333')){used.add(k);if(sign>0&&v>0)t+=v;if(sign<0&&v<0)t-=v;}}return t;};
+  const A=[['Tiền và các khoản tương đương tiền','111, 112, 113',take(['111','112','113'])],['Đầu tư tài chính ngắn hạn','121, 128',take(['121','128'])],
+    ['Phải thu của khách hàng','Dư Nợ 131',takeP('131',1)],['Trả trước cho người bán','Dư Nợ 331',takeP('331',1)],['Thuế GTGT được khấu trừ','133',take(['133'])],
+    ['Thuế và các khoản khác phải thu Nhà nước','Dư Nợ 333',take333(1)],['Phải thu khác','136, 138, 141, 244',take(['136','138','141','244'])],
+    ['Hàng tồn kho','151–157',take(['151','152','153','154','155','156','157'])],['Tài sản cố định (nguyên giá)','211, 212, 213',take(['211','212','213'])],
+    ['Giá trị hao mòn lũy kế','214',take(['214'])],['Bất động sản đầu tư','217',take(['217'])],['Xây dựng cơ bản dở dang','241',take(['241'])],
+    ['Chi phí trả trước / chờ phân bổ','242',take(['242'])],['Đầu tư tài chính dài hạn','221, 222, 228',take(['221','222','228'])],['Dự phòng tổn thất tài sản','229',take(['229'])],['Tài sản khác','215, 243',take(['215','243'])]];
+  const N=[['Phải trả người bán','Dư Có 331',takeP('331',-1)],['Người mua trả tiền trước','Dư Có 131',takeP('131',-1)],['Thuế và các khoản phải nộp Nhà nước','Dư Có 333',take333(-1)],
+    ['Phải trả người lao động','334',-take(['334'])],['Chi phí phải trả','335',-take(['335'])],['Phải trả khác','332, 336, 338, 352, 353, 356',-take(['332','336','338','352','353','356'])],['Vay và nợ thuê tài chính','341',-take(['341'])]];
+  const pnl=-take(['5','6','7','8','9']);
+  const E=[['Vốn góp của chủ sở hữu','411',-take(['411'])],['Chênh lệch tỷ giá, các quỹ thuộc vốn CSH','413, 418',-take(['413','418'])],['Lợi nhuận sau thuế chưa phân phối','421 + lãi lỗ chưa kết chuyển',-take(['421'])+pnl]];
+  let other=0;for(const [k,v] of bal)if(!used.has(k))other+=v;
+  if(Math.round(other)>0)A.push(['Tài sản chưa phân loại','TK ngoài bảng ánh xạ',other]);else if(Math.round(other)<0)N.push(['Nợ phải trả chưa phân loại','TK ngoài bảng ánh xạ',-other]);
+  return {A,N,E};
+}
+function repCDKT(){
+  const {to}=range();const st=SET();const d1=st.fyStart||(to.slice(0,4)+'-01-01');const end=addDays(to,1);
+  const x=bsItems(end),y=bsItems(d1);
+  const sum=a=>a.reduce((s,r)=>s+r[2],0);
+  const sec=(title,a,b)=>`<tr class="grp"><td colspan="4">${title}</td></tr>`+a.map((r,i)=>`<tr class="sub"><td>${esc(r[0])}</td><td class="muted code">${esc(r[1])}</td><td class="num">${fmt(r[2])||'0'}</td><td class="num">${fmt((b[i]||[])[2])||'0'}</td></tr>`).join('');
+  const tA=sum(x.A),tN=sum(x.N)+sum(x.E),tA0=sum(y.A),tN0=sum(y.N)+sum(y.E);
+  const ok=Math.round(tA-tN)===0;
+  CUR_TABLE={name:'tinh-hinh-tai-chinh',head:['Chỉ tiêu','TK nguồn','Cuối kỳ','Đầu năm'],rows:[...x.A.map((r,i)=>[r[0],r[1],Math.round(r[2]),Math.round((y.A[i]||[])[2]||0)]),['TỔNG TÀI SẢN','',Math.round(tA),Math.round(tA0)],...x.N.map((r,i)=>[r[0],r[1],Math.round(r[2]),Math.round((y.N[i]||[])[2]||0)]),...x.E.map((r,i)=>[r[0],r[1],Math.round(r[2]),Math.round((y.E[i]||[])[2]||0)]),['TỔNG NGUỒN VỐN','',Math.round(tN),Math.round(tN0)]]};
+  return `<div class="panel stack">${repHead(st.regime==='TT133'?'Báo cáo tình hình tài chính':'Báo cáo tình hình tài chính',`Tại ngày ${dmy(to)}`,st.regime==='TT133'?'Mẫu B01a-DNN':'Mẫu B01-DN')}
+  <div class="row between">${ok?'<span class="chip ok">Tổng tài sản bằng tổng nguồn vốn</span>':`<span class="chip red">Lệch ${fmt0(tA-tN)}</span>`}${exportBtn()}</div>
+  <div class="tbl-wrap"><table><thead><tr><th>Chỉ tiêu</th><th>TK nguồn</th><th class="num">Cuối kỳ</th><th class="num">Đầu năm ${dmy(d1)}</th></tr></thead><tbody>
+  ${sec('TÀI SẢN',x.A,y.A)}<tr class="total"><td colspan="2">Tổng cộng tài sản</td><td class="num">${fmt0(tA)}</td><td class="num">${fmt0(tA0)}</td></tr>
+  ${sec('NỢ PHẢI TRẢ',x.N,y.N)}${sec('VỐN CHỦ SỞ HỮU',x.E,y.E)}<tr class="total"><td colspan="2">Tổng cộng nguồn vốn</td><td class="num">${fmt0(tN)}</td><td class="num">${fmt0(tN0)}</td></tr>
+  </tbody></table></div><span class="muted" style="font-size:.8rem">Bản rút gọn để quản trị. Phải thu, phải trả tách dư Nợ và dư Có theo từng đối tượng. Lãi lỗ chưa kết chuyển được cộng vào chỉ tiêu lợi nhuận chưa phân phối.</span>${signHTML()}</div>`;
+}
+function repGTGT(){
+  const {from,to,label}=range();const r=vatCalc(from,to);const st=SET();
+  const L=[['22','Thuế GTGT còn được khấu trừ kỳ trước chuyển sang','',r.c22],['','Hàng hóa, dịch vụ mua vào trong kỳ','',null],['23','Giá trị HHDV mua vào',r.c23,null],['24','Thuế GTGT của HHDV mua vào','',r.c24],['25','Tổng số thuế GTGT được khấu trừ kỳ này','',r.c25],
+    ['','Hàng hóa, dịch vụ bán ra trong kỳ','',null],['26','HHDV bán ra không chịu thuế GTGT',r.c26,null],['27','HHDV bán ra chịu thuế ([27]=[29]+[30]+[32]+[32a])',r.c27,r.c28],['29','Thuế suất 0%',r.c29,null],['30','Thuế suất 5%',r.c30,r.c31],
+    ['32','Thuế suất 10% (gồm 8% được giảm)',r.c32,r.c33],['32a','HHDV không phải kê khai, tính nộp thuế',r.c32a,null],['34','Tổng doanh thu và thuế GTGT của HHDV bán ra',r.c34,r.c35],
+    ['36','Thuế GTGT phát sinh trong kỳ ([36]=[35]-[25])','',r.c36],['40a','Thuế GTGT phải nộp','',r.c40a],['43','Thuế GTGT còn được khấu trừ chuyển kỳ sau','',r.c43]];
+  CUR_TABLE={name:'to-khai-01-gtgt',head:['Chỉ tiêu','Nội dung','Giá trị HHDV','Thuế GTGT'],rows:L.map(x=>[x[0],x[1],x[2]===''?'':Math.round(x[2]||0),x[3]===null?'':Math.round(x[3]||0)])};
+  const v8=r.out['8'];
+  return `<div class="panel stack">${repHead('Tờ khai thuế giá trị gia tăng',`Kỳ tính thuế: ${label}`,'Mẫu 01/GTGT')}
+  ${st.vatPeriod==='quarter'&&PER.kind==='month'?'<div class="alert"><b>Lưu ý</b><span>Doanh nghiệp khai theo quý. Chọn kỳ "Quý" ở góc trên để lên đúng tờ khai.</span></div>':''}
+  ${r.cashWarn.length?`<div class="alert red"><b>Kiểm tra khấu trừ</b><span>${r.cashWarn.length} hóa đơn đầu vào từ 5 triệu đồng có bút toán Có 111. Thuế đầu vào của các hóa đơn này chưa đủ điều kiện khấu trừ nếu không có chứng từ thanh toán không dùng tiền mặt; số liệu bên dưới vẫn đang cộng chúng.</span></div>`:''}
+  <div class="row between"><span class="muted">${r.n} hóa đơn trong kỳ. Chỉ tiêu [22] tự tính từ các kỳ trước trong sổ.</span>${exportBtn()}</div>
+  <div class="tbl-wrap"><table><thead><tr><th>Chỉ tiêu</th><th>Nội dung</th><th class="num">Giá trị HHDV</th><th class="num">Thuế GTGT</th></tr></thead><tbody>
+  ${L.map(x=>`<tr class="${x[0]?'':'grp'} ${['40a','43','36'].includes(x[0])?'grp':''}"><td class="code">${x[0]?'['+x[0]+']':''}</td><td>${esc(x[1])}</td><td class="num">${x[2]===''?'':fmt0(x[2])}</td><td class="num">${x[3]===null?'':fmt0(x[3])}</td></tr>`).join('')}
+  </tbody></table></div>
+  ${v8.base?`<div class="alert info"><b>Giảm thuế 8%</b><span>Doanh số chịu thuế suất 8% trong kỳ: ${fmt0(v8.base)} đ, thuế ${fmt0(v8.tax)} đ. Phần này đang cộng vào chỉ tiêu [32]/[33]; lập thêm phụ lục giảm thuế GTGT theo hướng dẫn HTKK hiện hành khi nộp.</span></div>`:''}
+  <span class="muted" style="font-size:.8rem">Bảng tổng hợp để đối chiếu trước khi khai trên HTKK hoặc eTax. Người có thẩm quyền kiểm tra và ký nộp.</span></div>`;
+}
+function buildClosing(from,to){
+  const id='KC-'+to;const m=agg(from,to,{skipId:id});
+  const net=new Map();for(const [k,o] of m){if(!/^[5-8]/.test(k))continue;if(/^(621|622|623|627|611|631)/.test(k))continue;const n=o.dr-o.cr;if(Math.round(n))net.set(k,n);}
+  const lines=[];
+  for(const [k,n] of [...net]){if(!k.startsWith('521'))continue;let tgt=[...net.keys()].filter(c=>c.startsWith('511')).sort((a,b)=>net.get(a)-net.get(b))[0]||'5111';
+    lines.push({dr:tgt,cr:k,amount:n,note:'Kết chuyển giảm trừ doanh thu'});net.set(tgt,(net.get(tgt)||0)+n);net.delete(k);}
+  let toCr=0,toDr=0;
+  for(const [k,n] of [...net].sort((a,b)=>a[0].localeCompare(b[0]))){if(!Math.round(n))continue;
+    if(n<0){lines.push({dr:k,cr:'911',amount:-n,note:'Kết chuyển '+accName(k).toLowerCase()});toCr+=-n;}
+    else{lines.push({dr:'911',cr:k,amount:n,note:'Kết chuyển '+accName(k).toLowerCase()});toDr+=n;}}
+  const pr=toCr-toDr;
+  if(Math.round(pr)>0)lines.push({dr:'911',cr:'4212',amount:pr,note:'Kết chuyển lãi'});
+  else if(Math.round(pr)<0)lines.push({dr:'4212',cr:'911',amount:-pr,note:'Kết chuyển lỗ'});
+  return {id,lines:lines.map(l=>Object.assign(l,{amount:Math.round(l.amount)})).filter(l=>l.amount>0),profit:pr};
+}
+function repKC(){
+  const {from,to,label}=range();const c=buildClosing(from,to);const ex=S.vouchers.find(v=>v.id===c.id);
+  return `<div class="panel stack"><h2>Kết chuyển xác định kết quả kinh doanh · ${esc(label)}</h2>
+  <p class="muted" style="max-width:70ch;margin:0">Bút toán kết chuyển doanh thu, chi phí sang TK 911 và lãi lỗ sang TK 4212, ghi vào ngày cuối kỳ ${dmy(to)}. Chạy lại cho cùng kỳ sẽ thay bút toán cũ. Không kết chuyển 621, 622, 627 vì các TK này tập hợp giá thành qua 154.</p>
+  ${ex?`<div class="alert info"><b>Đã có</b><span>Kỳ này đã có chứng từ ${esc(ex.no)}. Danh sách dưới đây là phần phát sinh thêm sau lần kết chuyển đó${c.lines.length?'':' (không còn số dư cần kết chuyển)'}.</span></div>`:''}
+  <div class="tbl-wrap"><table><thead><tr><th>TK Nợ</th><th>TK Có</th><th>Diễn giải</th><th class="num">Số tiền</th></tr></thead><tbody>
+  ${c.lines.map(l=>`<tr><td class="code">${esc(l.dr)}</td><td class="code">${esc(l.cr)}</td><td>${esc(l.note)}</td><td class="num">${fmt0(l.amount)}</td></tr>`).join('')||'<tr><td colspan="4" class="muted">Các tài khoản doanh thu, chi phí không còn số dư trong kỳ.</td></tr>'}
+  </tbody></table></div>
+  <div class="row between"><span>Kết quả: <b>${c.profit>=0?'Lãi':'Lỗ'} ${fmt0(Math.abs(c.profit))} đ</b></span>${canWrite&&c.lines.length?`<button class="btn primary" data-act="kc-post">Ghi sổ bút toán kết chuyển</button>`:''}</div></div>`;
+}
+async function postClosing(){
+  const {from,to}=range();const c=buildClosing(from,to);if(!c.lines.length)return;
+  const ex=S.vouchers.find(v=>v.id===c.id);
+  const lines=ex?[...(ex.lines||[]),...c.lines]:c.lines;
+  const nowIso=new Date().toISOString();
+  try{await putDoc('vouchers',c.id,{type:'KC',no:ex?ex.no:'KC'+to.slice(2,4)+to.slice(5,7)+'-'+to.slice(8),date:to,partner:'',desc:'Kết chuyển xác định kết quả kinh doanh '+range().label.toLowerCase(),lines,vat:null,createdAt:ex?ex.createdAt:nowIso,updatedAt:nowIso});toast('Đã ghi bút toán kết chuyển');}
+  catch(e){writeErr(e);}
+}
+
+/* ================= DANH MỤC ================= */
+function vCatalog(){
+  const items=[['tk','Hệ thống tài khoản'],['dt','Khách hàng, nhà cung cấp'],['sd','Số dư đầu kỳ']];
+  const s=sub.danhmuc;return tabsHTML('danhmuc',items)+(s==='tk'?catAcc():s==='dt'?catPartner():catOpening());
+}
+function catAcc(){
+  const st=SET();const used=new Set();D.lines.forEach(l=>{used.add(l.dr);used.add(l.cr);});
+  return `<div class="panel stack"><div class="row between"><h2>Hệ thống tài khoản theo ${esc(REGIMES[st.regime])}</h2><span class="muted">${D.coa.length} tài khoản</span></div>
+  ${canWrite?`<form class="inline" id="form-acc"><label for="na-code">Số hiệu TK chi tiết<input id="na-code" placeholder="VD: 64271" required style="width:140px"></label><label for="na-name" style="flex:1 1 220px">Tên tài khoản<input id="na-name" required placeholder="VD: Chi phí dịch vụ mua ngoài, văn phòng HCM"></label><button class="btn primary" type="submit">Thêm tài khoản</button></form>`:''}
+  <div class="tbl-wrap"><table><thead><tr><th>Số hiệu</th><th>Tên tài khoản</th><th>Nguồn</th><th class="num">Đang dùng</th>${canWrite?'<th></th>':''}</tr></thead><tbody>
+  ${D.coa.map(a=>`<tr class="${a.code.length===3?'grp':'sub'}"><td class="code">${esc(a.code)}</td><td>${esc(a.name)}</td><td>${a.sys?'<span class="muted">Hệ thống</span>':'<span class="chip">Tự thêm</span>'}</td><td class="num">${used.has(a.code)?'Có':''}</td>${canWrite?`<td class="num">${!a.sys&&!used.has(a.code)?`<button class="btn sm danger" data-act="del-acc" data-id="${esc(a.id)}">Xóa</button>`:''}</td>`:''}</tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+function catPartner(){
+  const used=new Set(S.vouchers.map(v=>v.partner));
+  const list=[...S.partners].sort((a,b)=>(a.code||'').localeCompare(b.code||''));
+  return `<div class="panel stack"><h2>Đối tượng công nợ</h2>
+  ${canWrite?`<form class="inline" id="form-partner"><label for="np-code">Mã<input id="np-code" required placeholder="KH001" style="width:110px"></label><label for="np-name" style="flex:1 1 220px">Tên đối tượng<input id="np-name" required placeholder="Công ty TNHH …"></label><label for="np-mst">MST<input id="np-mst" style="width:140px" inputmode="numeric"></label><label for="np-kind">Loại<select id="np-kind"><option value="KH">Khách hàng</option><option value="NCC">Nhà cung cấp</option><option value="NV">Nhân viên</option><option value="KHAC">Khác</option></select></label><button class="btn primary" type="submit">Lưu đối tượng</button></form>
+  <span class="muted" style="font-size:.8rem">Nhập trùng mã để sửa thông tin đối tượng đã có.</span>`:''}
+  ${list.length?`<div class="tbl-wrap"><table><thead><tr><th>Mã</th><th>Tên</th><th>MST</th><th>Loại</th>${canWrite?'<th></th>':''}</tr></thead><tbody>
+  ${list.map(p=>`<tr><td class="code">${esc(p.code)}</td><td>${esc(p.name)}</td><td class="code">${esc(p.mst)}</td><td><span class="chip">${esc({KH:'Khách hàng',NCC:'Nhà cung cấp',NV:'Nhân viên',KHAC:'Khác'}[p.kind]||p.kind)}</span></td>${canWrite?`<td class="num">${used.has(p.code)?'<span class="muted">Đang dùng</span>':`<button class="btn sm danger" data-act="del-partner" data-id="${esc(p.id)}">Xóa</button>`}</td>`:''}</tr>`).join('')}
+  </tbody></table></div>`:'<div class="empty"><h3>Chưa có đối tượng</h3><p>Thêm khách hàng, nhà cung cấp, nhân viên tạm ứng để theo dõi công nợ theo từng người.</p></div>'}</div>`;
+}
+let OPEN_DRAFT=null;
+function catOpening(){
+  const st=SET();if(!OPEN_DRAFT)OPEN_DRAFT=JSON.parse(JSON.stringify((S.opening&&S.opening.rows)||[]));
+  if(!OPEN_DRAFT.length)OPEN_DRAFT.push({acc:'',partner:'',dr:0,cr:0});
+  const od=OPEN_DRAFT.reduce((s,r)=>s+(+r.dr||0),0),oc=OPEN_DRAFT.reduce((s,r)=>s+(+r.cr||0),0);
+  return `<div class="panel stack"><div class="row between"><h2>Số dư đầu kỳ tại ngày ${dmy(st.fyStart)}</h2><span id="op-chk">${Math.round(od-oc)?`<span class="chip red">Lệch ${fmt0(od-oc)}</span>`:'<span class="chip ok">Nợ = Có</span>'}</span></div>
+  <p class="muted" style="margin:0;max-width:70ch">Nhập số dư cuối năm trước của từng tài khoản chi tiết. Với TK 131, 331, 141 nhập theo từng mã đối tượng để công nợ lên đúng.</p>
+  <div class="tbl-wrap"><table class="ed-lines" id="op-table"><thead><tr><th>Tài khoản</th><th>Đối tượng</th><th class="num">Dư Nợ</th><th class="num">Dư Có</th><th></th></tr></thead><tbody>
+  ${OPEN_DRAFT.map((r,i)=>`<tr><td><input id="op-${i}-acc" data-o="acc" data-i="${i}" list="dl-acc" value="${esc(r.acc)}" aria-label="Tài khoản dòng ${i+1}" ${canWrite?'':'disabled'}><small data-on="${i}">${esc(accName(r.acc))}</small></td><td><input id="op-${i}-p" data-o="partner" data-i="${i}" list="dl-partner" value="${esc(r.partner)}" aria-label="Đối tượng dòng ${i+1}" ${canWrite?'':'disabled'}></td>
+   <td><input id="op-${i}-dr" class="amt" data-o="dr" data-i="${i}" inputmode="numeric" value="${r.dr?fmt0(r.dr):''}" aria-label="Dư Nợ dòng ${i+1}" ${canWrite?'':'disabled'}></td><td><input id="op-${i}-cr" class="amt" data-o="cr" data-i="${i}" inputmode="numeric" value="${r.cr?fmt0(r.cr):''}" aria-label="Dư Có dòng ${i+1}" ${canWrite?'':'disabled'}></td>
+   <td>${canWrite?`<button class="icon-btn" data-act="op-rm" data-i="${i}" aria-label="Xóa dòng ${i+1}">×</button>`:''}</td></tr>`).join('')}
+  <tr class="total"><td colspan="2">Tổng cộng</td><td class="num" id="op-td">${fmt0(od)}</td><td class="num" id="op-tc">${fmt0(oc)}</td><td></td></tr></tbody></table></div>
+  ${canWrite?`<div class="row between"><button class="link" data-act="op-add">+ Thêm dòng</button><div class="row"><button class="btn" data-act="op-reset">Bỏ thay đổi</button><button class="btn primary" data-act="op-save">Lưu số dư đầu kỳ</button></div></div>`:''}</div>`;
+}
+
+/* ================= THIẾT LẬP ================= */
+function vSettings(){
+  const st=SET();const f=(id,l,v,ph='',w='')=>`<label for="${id}" ${w}>${l}<input id="${id}" value="${esc(v)}" placeholder="${esc(ph)}" ${canWrite?'':'disabled'}></label>`;
+  return `<form class="panel stack" id="form-set"><h2>Thông tin doanh nghiệp</h2>
+  <div class="grid4">${f('s-name','Tên doanh nghiệp',st.name,'Công ty TNHH …','style="grid-column:span 2"')}${f('s-mst','Mã số thuế',st.mst,'0316119996')}
+  <label for="s-regime">Chế độ kế toán<select id="s-regime" ${canWrite?'':'disabled'}>${Object.entries(REGIMES).map(([k,l])=>`<option value="${k}" ${st.regime===k?'selected':''}>${l}</option>`).join('')}</select></label></div>
+  <div class="grid4">${f('s-address','Địa chỉ',st.address,'','style="grid-column:span 2"')}<label for="s-fy">Ngày đầu năm tài chính<input type="date" id="s-fy" value="${esc(st.fyStart)}" ${canWrite?'':'disabled'}></label>
+  <label for="s-vat">Kỳ khai thuế GTGT<select id="s-vat" ${canWrite?'':'disabled'}><option value="month" ${st.vatPeriod==='month'?'selected':''}>Theo tháng</option><option value="quarter" ${st.vatPeriod==='quarter'?'selected':''}>Theo quý</option></select></label></div>
+  <h3>Người ký báo cáo</h3><div class="grid4">${f('s-prep','Người lập biểu',st.preparer)}${f('s-chief','Kế toán trưởng',st.chiefAcc)}${f('s-dir','Người đại diện theo pháp luật',st.director)}</div>
+  ${canWrite?'<div class="row"><button class="btn primary" type="submit">Lưu thiết lập</button></div>':''}</form>
+  <section class="panel stack"><h2>Sao lưu và chuyển dữ liệu</h2>
+  <p class="muted" style="margin:0;max-width:70ch">Sổ sách đang lưu trên trình duyệt của máy này. Dữ liệu sẽ mất nếu xóa dữ liệu duyệt web, đổi máy hoặc dùng cửa sổ ẩn danh, nên hãy tải tệp sao lưu ít nhất mỗi tuần. Nhập lại tệp sao lưu sẽ ghi đè các bản ghi cùng mã, không xóa bản ghi khác.</p>
+  <div class="row"><button class="btn primary" data-act="backup">Tải tệp sao lưu</button><button class="btn" data-act="import">Nhập từ tệp sao lưu</button></div>
+  <p class="muted" style="margin:0;font-size:.8rem">${(()=>{const lb=pref.get('lastBackup.'+BOOK.id,'');return lb?'Lần sao lưu gần nhất: '+dmy(lb)+'.':'Bộ sổ này chưa được sao lưu lần nào.';})()}</p></section>
+  <section class="panel stack"><h2>Dữ liệu kế toán trên máy này</h2>
+  <p class="muted" style="margin:0;max-width:70ch">Mỗi doanh nghiệp là một bộ sổ riêng, giống "dữ liệu kế toán" trong MISA. Đổi bộ sổ ở ô chọn phía trên menu.</p>
+  <div class="tbl-wrap"><table><thead><tr><th>Tên</th><th>Tạo ngày</th><th></th></tr></thead><tbody>
+  ${BOOKS.map(b=>`<tr><td><b>${esc(b.name)}</b>${b.id===BOOK.id?' <span class="chip ok">Đang mở</span>':''}</td><td>${dmy(b.created)}</td><td class="num">${b.id!==BOOK.id?`<button class="btn sm" data-act="book-open" data-id="${esc(b.id)}">Mở</button> `:''}<button class="btn sm danger ${ui.pendingDel==='book:'+b.id?'armed':''}" data-act="book-del" data-id="${esc(b.id)}">${ui.pendingDel==='book:'+b.id?'Bấm lần nữa để xóa vĩnh viễn':'Xóa'}</button></td></tr>`).join('')}
+  </tbody></table></div>
+  <div class="row"><label for="nb-name" style="flex:1 1 240px">Tên bộ sổ mới<input id="nb-name" placeholder="VD: Công ty TNHH ABC 2026"></label><button class="btn" data-act="book-new" style="align-self:flex-end">Tạo dữ liệu kế toán mới</button>${!S.vouchers.length?'<button class="btn" data-act="demo" style="align-self:flex-end">Nạp dữ liệu mẫu vào bộ sổ này</button>':''}</div></section>`;
+}
+
+/* ================= CSV / sao lưu ================= */
+async function saveFile(name,text,isBackup){
+  try{
+    const blob=new Blob([text],{type:name.endsWith('.json')?'application/json':'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),4000);toast('Đã tải '+name);
+    if(isBackup){pref.set('lastBackup.'+BOOK.id,todayStr());render();}
+  }catch(e){toast('Trình duyệt không cho tải tệp.');}
+}
+function exportCSV(){
+  if(!CUR_TABLE)return;const q=v=>{const s=String(v??'');return /[",\n;]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;};
+  const txt='﻿'+[CUR_TABLE.head,...CUR_TABLE.rows].map(r=>r.map(q).join(',')).join('\r\n');
+  saveFile(`${CUR_TABLE.name}-${range().from}_${range().to}.csv`,txt);
+}
+function backup(){
+  const data={app:'so-cai-acca',version:1,exportedAt:new Date().toISOString(),settings:S.settings,opening:S.opening,vouchers:S.vouchers,partners:S.partners,accounts:S.accounts};
+  const nm=(SET().name||BOOK.name).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').replace(/[^\w]+/g,'-').replace(/^-|-$/g,'').slice(0,40)||'so-ke-toan';
+  saveFile(`icca-sao-luu-${nm}-${todayStr()}.json`,JSON.stringify(data,null,1),true);
+}
+function repBangKe(){
+  const {from,to}=range();const rows=S.vouchers.filter(v=>v.vat&&v.date>=from&&v.date<=to).sort((a,b)=>(a.vat.invDate||a.date).localeCompare(b.vat.invDate||b.date));
+  const part=dir=>{const list=rows.filter(v=>v.vat.dir===dir);let tb=0,tt=0;
+    const tr=list.map((v,i)=>{tb+=+v.vat.base||0;tt+=+v.vat.tax||0;const p=S.partners.find(x=>x.code===v.partner)||{};
+      return `<tr class="click" data-act="edit" data-id="${esc(v.id)}"><td>${i+1}</td><td class="code">${esc(v.vat.invSym)}</td><td class="code">${esc(v.vat.invNo)}</td><td>${dmy(v.vat.invDate||v.date)}</td><td>${esc(p.name||v.partner)}</td><td class="code">${esc(p.mst||'')}</td><td>${esc(RATE_LABEL[v.vat.rate]||v.vat.rate)}</td><td class="num">${fmt0(v.vat.base)}</td><td class="num">${fmt0(v.vat.tax)}</td></tr>`;}).join('');
+    return {html:`<h3>${dir==='in'?'Hàng hóa, dịch vụ mua vào':'Hàng hóa, dịch vụ bán ra'}</h3><div class="tbl-wrap"><table><thead><tr><th>STT</th><th>Ký hiệu</th><th>Số HĐ</th><th>Ngày HĐ</th><th>${dir==='in'?'Người bán':'Người mua'}</th><th>MST</th><th>Thuế suất</th><th class="num">Giá trị chưa thuế</th><th class="num">Thuế GTGT</th></tr></thead><tbody>${tr||'<tr><td colspan="9" class="muted">Không có hóa đơn trong kỳ.</td></tr>'}${list.length?`<tr class="total"><td colspan="7">Cộng</td><td class="num">${fmt0(tb)}</td><td class="num">${fmt0(tt)}</td></tr>`:''}</tbody></table></div>`,list};};
+  const a=part('in'),b=part('out');
+  const csvRow=(v,dir)=>{const p=S.partners.find(x=>x.code===v.partner)||{};return [dir==='in'?'Mua vào':'Bán ra',v.vat.invSym,v.vat.invNo,dmy(v.vat.invDate||v.date),p.name||v.partner,p.mst||'',RATE_LABEL[v.vat.rate]||v.vat.rate,Math.round(v.vat.base),Math.round(v.vat.tax)];};
+  CUR_TABLE={name:'bang-ke-hoa-don',head:['Chiều','Ký hiệu','Số HĐ','Ngày HĐ','Đối tượng','MST','Thuế suất','Giá trị chưa thuế','Thuế GTGT'],rows:[...a.list.map(v=>csvRow(v,'in')),...b.list.map(v=>csvRow(v,'out'))]};
+  return `<div class="panel stack">${repHead('Bảng kê hóa đơn, chứng từ hàng hóa, dịch vụ',null,'Đối chiếu với hoadondientu.gdt.gov.vn')}<div class="row between"><span class="muted">${rows.length} hóa đơn trong kỳ</span>${exportBtn()}</div>${a.html}${b.html}</div>`;
+}
+async function importFile(file){
+  let data;try{data=JSON.parse(await file.text());}catch(e){toast('Tệp không đúng định dạng JSON.');return;}
+  if(!data||data.app!=='so-cai-acca'){toast('Đây không phải tệp sao lưu của Sổ Cái.');return;}
+  const clean=o=>{const c=Object.assign({},o);delete c.id;return c;};
+  let n=0;
+  try{
+    if(data.settings&&typeof data.settings==='object')await putDoc('meta','settings',clean(data.settings));
+    if(data.opening&&Array.isArray(data.opening.rows))await putDoc('meta','opening',{rows:data.opening.rows});
+    for(const c of ['partners','accounts','vouchers'])for(const o of (Array.isArray(data[c])?data[c]:[])){if(!o||typeof o.id!=='string'||!/^[\w\-.~:@+]{1,120}$/.test(o.id))continue;await putDoc(c,o.id,clean(o));n++;}
+    toast(`Đã nhập ${n} bản ghi`);
+  }catch(e){writeErr(e);}
+}
+
+/* ================= sự kiện ================= */
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  if(a!=='del'&&a!=='book-del'&&ui.pendingDel){ui.pendingDel=null;}
+  switch(a){
+    case 'new':if(canWrite)edOpen(null,b.dataset.type);break;
+    case 'edit':{if(e.target.closest('button')&&e.target.closest('button')!==b)return;const v=S.vouchers.find(x=>x.id===b.dataset.id);if(v)edOpen(v);break;}
+    case 'dup':{e.stopPropagation();const v=S.vouchers.find(x=>x.id===b.dataset.id);if(v)edOpen(v,null,true);break;}
+    case 'del':{e.stopPropagation();const id=b.dataset.id;if(ui.pendingDel===id){ui.pendingDel=null;try{await delDoc('vouchers',id);toast('Đã xóa chứng từ');}catch(err){writeErr(err);}}else{ui.pendingDel=id;render();setTimeout(()=>{if(ui.pendingDel===id){ui.pendingDel=null;render();}},4000);}break;}
+    case 'ed-close':edClose();break;
+    case 'ed-addline':ED.lines.push({dr:ED.lines.length?ED.lines[ED.lines.length-1].dr:'',cr:ED.lines.length?ED.lines[ED.lines.length-1].cr:'',amount:0,note:''});edRender();break;
+    case 'ed-rmline':ED.lines.splice(+b.dataset.i,1);edCalc();edRender();break;
+    case 'ed-save':edSave(!!b.dataset.again);break;
+    case 'tab':sub[b.dataset.g]=b.dataset.k;pref.set('sub2',sub);if(b.dataset.g==='danhmuc')OPEN_DRAFT=null;ui.cnPartner='';render();break;
+    case 'csv':exportCSV();break;
+    case 'goto-ledger':ui.ledgerAcc=b.dataset.acc;sub.tonghop='sc';pref.set('sub2',sub);view='tonghop';location.hash='tonghop';render();break;
+    case 'demo':loadDemo();break;
+    case 'book-new':{const n=$('#nb-name').value.trim()||('Dữ liệu kế toán '+(BOOKS.length+1));const b={id:'b'+uid(),name:n,created:todayStr()};BOOKS.push(b);saveBooks();openBook(b.id);toast('Đã tạo '+n);break;}
+    case 'book-open':openBook(b.dataset.id);toast('Đã mở '+BOOK.name);break;
+    case 'book-del':{const id=b.dataset.id;if(ui.pendingDel!=='book:'+id){ui.pendingDel='book:'+id;render();setTimeout(()=>{if(ui.pendingDel==='book:'+id){ui.pendingDel=null;render();}},4000);break;}
+      ui.pendingDel=null;try{localStorage.removeItem('icca.data.'+id);}catch(err){}BOOKS=BOOKS.filter(x=>x.id!==id);if(!BOOKS.length)BOOKS.push({id:'b'+uid(),name:'Dữ liệu kế toán 1',created:todayStr()});saveBooks();openBook(BOOK.id===id?BOOKS[0].id:BOOK.id);toast('Đã xóa dữ liệu kế toán');break;}
+    case 'cn-open':ui.cnPartner=b.dataset.p;render();break;
+    case 'cn-close':ui.cnPartner='';render();break;
+    case 'kc-post':b.disabled=true;await postClosing();break;
+    case 'del-acc':try{await delDoc('accounts',b.dataset.id);toast('Đã xóa tài khoản');}catch(err){writeErr(err);}break;
+    case 'del-partner':try{await delDoc('partners',b.dataset.id);toast('Đã xóa đối tượng');}catch(err){writeErr(err);}break;
+    case 'op-add':OPEN_DRAFT.push({acc:'',partner:'',dr:0,cr:0});render();break;
+    case 'op-rm':OPEN_DRAFT.splice(+b.dataset.i,1);render();break;
+    case 'op-reset':OPEN_DRAFT=null;render();break;
+    case 'op-save':{const rows=OPEN_DRAFT.filter(r=>r.acc&&((+r.dr||0)||(+r.cr||0))).map(r=>({acc:r.acc,partner:r.partner||'',dr:+r.dr||0,cr:+r.cr||0}));
+      const bad=rows.filter(r=>!accExists(r.acc));if(bad.length){toast('TK '+bad.map(r=>r.acc).join(', ')+' không có trong danh mục.');break;}
+      try{await putDoc('meta','opening',{rows});OPEN_DRAFT=null;toast('Đã lưu số dư đầu kỳ');}catch(err){writeErr(err);}break;}
+    case 'backup':backup();break;
+    case 'import':$('#file-import').click();break;
+  }
+});
+$('#file-import').addEventListener('change',e=>{const f=e.target.files[0];if(f)importFile(f);e.target.value='';});
+document.addEventListener('change',e=>{
+  const el=e.target;if(el.closest('#modal'))return;
+  switch(el.id){
+    case 'per-kind':PER.kind=el.value;if(el.value==='custom'&&!PER.from){const r=range(Object.assign({},PER,{kind:'year'}));PER.from=r.from;PER.to=r.to;}break;
+    case 'per-y':PER.y=+el.value;break;case 'per-m':PER.m=+el.value;break;case 'per-q':PER.q=+el.value;break;
+    case 'per-from':PER.from=el.value;break;case 'per-to':PER.to=el.value;break;
+    case 'f-vtype':ui.vtype=el.value;render();return;
+    case 'book-sel':if(el.value==='__new'){view='hethong';location.hash='hethong';render();setTimeout(()=>{const f=$('#nb-name');if(f)f.focus();},50);}else{openBook(el.value);toast('Đã mở '+BOOK.name);}return;
+    case 'f-led':{const v=el.value.trim();if(v){ui.ledgerAcc=v;render();}return;}
+    case 'f-cn':ui.cnAcc=el.value;ui.cnPartner='';render();return;
+    default:return;
+  }
+  pref.set('per',PER);render();
+});
+document.addEventListener('input',e=>{
+  const el=e.target;if(el.closest('#modal'))return;
+  if(el.id==='f-vq'){ui.vq=el.value;$('#vlist').innerHTML=voucherTable(filteredVouchers());return;}
+  if(el.dataset.o&&OPEN_DRAFT){const i=+el.dataset.i,r=OPEN_DRAFT[i];if(!r)return;const k=el.dataset.o;
+    if(k==='dr'||k==='cr')r[k]=Math.max(0,parseNum(el.value));else r[k]=el.value.trim();
+    if(k==='acc'){const s=document.querySelector(`[data-on="${i}"]`);if(s)s.textContent=accName(r.acc);}
+    const od=OPEN_DRAFT.reduce((s,x)=>s+(+x.dr||0),0),oc=OPEN_DRAFT.reduce((s,x)=>s+(+x.cr||0),0);
+    $('#op-td').textContent=fmt0(od);$('#op-tc').textContent=fmt0(oc);$('#op-chk').innerHTML=Math.round(od-oc)?`<span class="chip red">Lệch ${fmt0(od-oc)}</span>`:'<span class="chip ok">Nợ = Có</span>';}
+});
+document.addEventListener('focusout',e=>{const el=e.target;if(el.closest&&el.closest('#modal'))return;if(el.classList&&el.classList.contains('amt')){const n=parseNum(el.value);el.value=n?fmt0(n):'';}});
+document.addEventListener('submit',async e=>{
+  e.preventDefault();const f=e.target;
+  if(f.id==='form-set'){const g=id=>$('#'+id).value.trim();
+    const doc={name:g('s-name'),mst:g('s-mst'),address:g('s-address'),regime:$('#s-regime').value,fyStart:$('#s-fy').value||defaults().fyStart,vatPeriod:$('#s-vat').value,preparer:g('s-prep'),chiefAcc:g('s-chief'),director:g('s-dir')};
+    try{await putDoc('meta','settings',doc);toast('Đã lưu thiết lập');}catch(err){writeErr(err);}}
+  if(f.id==='form-acc'){const code=$('#na-code').value.trim(),name=$('#na-name').value.trim();
+    if(!/^\d{3,8}$/.test(code)){toast('Số hiệu tài khoản chỉ gồm 3 đến 8 chữ số.');return;}
+    if(!D.acc.has(code.slice(0,3))){toast(`Không có TK cấp 1 ${code.slice(0,3)} trong ${SET().regime}.`);return;}
+    if(D.acc.has(code)){toast(`TK ${code} đã có.`);return;}
+    try{await putDoc('accounts','a'+code,{code,name});toast('Đã thêm TK '+code);}catch(err){writeErr(err);}}
+  if(f.id==='form-partner'){const code=$('#np-code').value.trim().toUpperCase(),name=$('#np-name').value.trim();
+    if(!/^[A-Za-z0-9_\-.]{1,40}$/.test(code)){toast('Mã đối tượng chỉ gồm chữ không dấu, số, gạch ngang.');return;}
+    const ex=S.partners.find(p=>p.code===code);
+    try{await putDoc('partners',ex?ex.id:'p-'+code,{code,name,mst:$('#np-mst').value.trim(),kind:$('#np-kind').value});toast('Đã lưu đối tượng '+code);}catch(err){writeErr(err);}}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!M.hidden)edClose();});
+
+boot();
+</script>
+</body>
+</html>
