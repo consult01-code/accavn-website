@@ -217,14 +217,15 @@
 </header>
 
 <!-- LOGIN -->
-<main id="loginView">
+<main id="loginView" hidden>
   <div class="login-wrap">
     <div class="login-card">
       <div class="lc-ic">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </div>
-      <h1 data-i18n="login_h">Kho phần mềm online</h1>
-      <p class="sub" data-i18n="login_sub">Chọn dịch vụ trong gói của bạn, rồi đăng nhập bằng tài khoản ACCA cấp.</p>
+      <button class="btn btn-ghost btn-sm" type="button" id="loginBack" style="width:auto;margin:0 0 14px">← Kho phần mềm online</button>
+      <h1 id="loginTitle">ACCA Smart-Business Infor</h1>
+      <p class="sub" id="loginSub">Đăng nhập bằng tài khoản ACCA cấp cho gói này.</p>
       <form id="loginForm" autocomplete="on">
         <div class="field">
           <label for="email" data-i18n="email_lbl">Email đăng nhập</label>
@@ -238,15 +239,15 @@
         <div class="msg" id="loginMsg"></div>
       </form>
       <div class="login-foot">
-        <span data-i18n="login_help">Chưa có tài khoản?</span>
-        <a href="./#lienhe" data-i18n="login_contact">Liên hệ ACCA để được cấp</a>
+        <span>Chưa có tài khoản?</span>
+        <a href="#" id="loginBuy">Mua gói tại Kho phần mềm</a>
       </div>
     </div>
   </div>
 </main>
 
 <!-- DASHBOARD -->
-<main id="dashView" hidden>
+<main id="dashView">
   <div class="wrap dash">
     <section id="svcView">
       <div class="svc-head">
@@ -327,6 +328,11 @@
     <div class="pay-soon" id="paySoon" hidden data-i18n="pay_soon">Dịch vụ đang hoàn thiện. Thanh toán bây giờ là đăng ký trước; ACCA kích hoạt và báo cho bạn ngay khi dịch vụ ra mắt.</div>
     <div class="field"><label for="payMonths" data-i18n="pay_term">Thời hạn sử dụng</label>
       <select id="payMonths"><option value="1">1 tháng</option><option value="3">3 tháng</option><option value="6">6 tháng</option><option value="12" selected>12 tháng</option></select></div>
+    <div id="payContact">
+      <div class="field"><label for="payEmail">Email nhận tài khoản *</label><input type="email" id="payEmail" placeholder="ten@congty.com" autocomplete="email"></div>
+      <div class="field"><label for="payPhone">Số điện thoại *</label><input type="tel" id="payPhone" placeholder="09xx xxx xxx" autocomplete="tel" inputmode="tel"></div>
+      <div class="field"><label for="payCo">Tên doanh nghiệp</label><input type="text" id="payCo" placeholder="Công ty TNHH ..." autocomplete="organization"></div>
+    </div>
     <div class="pay-total"><span data-i18n="pay_total">Số tiền thanh toán</span><b id="payAmount">—</b></div>
     <div class="pay-box">
       <img id="payQr" alt="Mã QR chuyển khoản ACB" width="200" height="200">
@@ -619,9 +625,9 @@
     window.scrollTo(0,0);
   }
   function doLogout(){
-    STATE.token=null; STATE.client=null; sessionStorage.removeItem("acca_portal_tok");
-    $("#dashView").hidden=true; $("#loginView").hidden=false; $("#logoutBtn").hidden=true;
-    $("#loginForm").reset(); $("#loginMsg").className="msg";
+    STATE.token=null; STATE.client=null; STATE.email=""; ACCESS=[];
+    try{ sessionStorage.removeItem("acca_portal_tok"); sessionStorage.removeItem("acca_portal_email"); }catch(e){}
+    $("#loginForm").reset(); $("#loginMsg").className="msg"; showCatalog();
   }
   $("#logoutBtn").onclick=doLogout;
   /* ---------- ACCA Smart Suite: dịch vụ theo gói + Unlock thanh toán ---------- */
@@ -648,27 +654,49 @@
     {code:"project",    ic:"DA",  name:"ACCA Smart-Project Management", sub:"Phần mềm quản lý dự án: kế hoạch, tiến độ, phân công, ngân sách dự án", price:299000},
     {code:"task",       ic:"GV",  name:"ACCA Smart-Task following", sub:"Phần mềm giao việc: giao việc, hạn chót, nhắc việc và theo dõi tiến độ từng người", price:199000}
   ];
-  var ACCESS=[], URL_MODE=new URLSearchParams(location.search).get("mode")||"";
+  var ACCESS=[], LOGIN_TARGET="chudn";
   function money(n){ return Math.round(n).toLocaleString("vi-VN")+" VNĐ"; }
   function setAccess(acc){ ACCESS=(acc||[]).map(String); if(ACCESS.indexOf("ketoan")>=0&&ACCESS.indexOf("accounting")<0) ACCESS.push("accounting"); renderServices(); }
   function hasAcc(code){ return ACCESS.indexOf(code)>=0; }
   function renderServices(){
-    var c=STATE.client||{}; $("#svcCo").textContent=c.name||"Tài khoản của bạn"; $("#svcEmail").textContent=STATE.email||"";
+    var logged=!!STATE.token, c=STATE.client||{};
+    $("#svcCo").textContent=logged?(c.name||"Tài khoản của bạn"):"Kho phần mềm online ACCA Smart";
+    $("#svcEmail").textContent=logged?(STATE.email||""):"Bấm Mở để đăng nhập trong từng phần mềm. Chưa có gói thì bấm Unlock để mua.";
     $("#svcGrid").innerHTML=PRODUCTS.map(function(p){
-      var on=hasAcc(p.code);
-      var st=on?(p.live?'<span class="svc-st on">Đã kích hoạt</span>':'<span class="svc-st soon">Đã đăng ký · sắp ra mắt</span>'):(p.live?'<span class="svc-st off">Chưa kích hoạt</span>':'<span class="svc-st soon">Sắp ra mắt</span>');
-      var btn=on?(p.live?'<button class="btn btn-primary" type="button" data-open="'+p.code+'">Mở</button>':'<button class="btn btn-ghost" type="button" disabled>ACCA sẽ báo khi ra mắt</button>')
-               :'<button class="btn btn-ghost" type="button" data-unlock="'+p.code+'">🔒 Unlock</button>';
-      return '<div class="svc-card'+(on?'':' locked')+'"><div class="svc-top"><span class="svc-ic">'+p.ic+'</span>'+st+'</div><b>'+p.name+'</b><p>'+p.sub+'</p>'+btn+'</div>';
+      var on=logged&&hasAcc(p.code), st, btn;
+      if(!p.live){
+        st=on?'<span class="svc-st soon">Đã đăng ký · sắp ra mắt</span>':'<span class="svc-st soon">Sắp ra mắt</span>';
+        btn=on?'<button class="btn btn-ghost" type="button" disabled>ACCA sẽ báo khi ra mắt</button>':'<button class="btn btn-ghost" type="button" data-unlock="'+p.code+'">🔒 Unlock · đăng ký trước</button>';
+      } else if(on){
+        st='<span class="svc-st on">Đã kích hoạt</span>';
+        btn='<button class="btn btn-primary" type="button" data-open="'+p.code+'">Mở</button>';
+      } else {
+        st=logged?'<span class="svc-st off">Chưa kích hoạt</span>':'<span class="svc-st on">Đang hoạt động</span>';
+        btn=(logged?'':'<button class="btn btn-primary" type="button" data-open="'+p.code+'">Mở phần mềm</button>')+'<button class="btn btn-ghost" type="button" data-unlock="'+p.code+'">🔒 Unlock</button>';
+      }
+      return '<div class="svc-card'+((on||(!logged&&p.live))?'':' locked')+'"><div class="svc-top"><span class="svc-ic">'+p.ic+'</span>'+st+'</div><b>'+p.name+'</b><p>'+p.sub+'</p>'+btn+'</div>';
     }).join("");
   }
+  function showCatalog(){ $("#loginView").hidden=true; $("#dashView").hidden=false; $("#logoutBtn").hidden=!STATE.token; renderServices(); showServices(); }
+  function showLoginFor(code){
+    var p=PRODUCTS.filter(function(x){return x.code===code;})[0]; LOGIN_TARGET=code;
+    $("#loginTitle").textContent=p?p.name:"Đăng nhập"; $("#loginSub").textContent="Đăng nhập bằng tài khoản ACCA cấp cho gói "+(p?p.name:"")+".";
+    $("#dashView").hidden=true; $("#loginView").hidden=false; $("#loginMsg").className="msg"; window.scrollTo(0,0);
+    setTimeout(function(){ var f=$("#email"); if(f) f.focus(); },30);
+  }
+  $("#loginBack").onclick=showCatalog;
+  $("#loginBuy").onclick=function(e){ e.preventDefault(); showCatalog(); openPay(LOGIN_TARGET); };
   function showServices(){ $("#svcView").hidden=false; $("#bizView").hidden=true; window.scrollTo(0,0); }
   function openBiz(){ $("#svcView").hidden=true; $("#bizView").hidden=false; renderDash(); window.scrollTo(0,0); }
   $("#bizBack").onclick=showServices;
   (function(){ var m=""; try{m=sessionStorage.getItem("acca_portal_msg")||""; sessionStorage.removeItem("acca_portal_msg");}catch(e){}
     if(m){ var el=$("#loginMsg"); el.className="msg err"; el.textContent=m; } })();
   var CUR_PAY=null;
-  function payContent(p){ var id=String(STATE.email||"").split("@")[0].normalize("NFD").replace(/[^A-Za-z0-9]/g,"").toUpperCase().slice(0,12)||"KHACH"; return ("SMART "+p.code.toUpperCase()+" "+id).slice(0,40); }
+  function payContent(p){
+    var src=STATE.email||($("#payPhone")&&$("#payPhone").value)||($("#payEmail")&&$("#payEmail").value.split("@")[0])||"";
+    var id=String(src).split("@")[0].normalize("NFD").replace(/[^A-Za-z0-9]/g,"").toUpperCase().slice(0,12)||"KHACH";
+    return ("SMART "+p.code.toUpperCase()+" "+id).slice(0,40);
+  }
   function renderPay(){
     var p=CUR_PAY; if(!p) return; var m=+$("#payMonths").value; var amt=p.price*m; var content=payContent(p);
     $("#payAmount").textContent=money(amt);
@@ -679,9 +707,11 @@
     CUR_PAY=PRODUCTS.filter(function(p){return p.code===code;})[0]; if(!CUR_PAY) return;
     $("#payTitle").textContent=CUR_PAY.name; $("#paySub").textContent=CUR_PAY.sub+" · "+money(CUR_PAY.price)+"/tháng";
     $("#paySoon").hidden=!!CUR_PAY.live; $("#payMsg").className="msg"; $("#payDone").disabled=false;
+    $("#payContact").hidden=!!STATE.token;
     renderPay(); $("#payModal").classList.add("on");
   }
   $("#payMonths").onchange=renderPay;
+  $("#payPhone").addEventListener("input",renderPay); $("#payEmail").addEventListener("input",renderPay);
   $("#payClose").onclick=function(){ $("#payModal").classList.remove("on"); };
   $("#payModal").addEventListener("click",function(e){ if(e.target.id==="payModal") $("#payModal").classList.remove("on"); });
   $("#payModal").addEventListener("click",function(e){
@@ -689,22 +719,28 @@
     if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ b.textContent="Đã chép"; setTimeout(function(){b.textContent="Sao chép";},1500); });
   });
   $("#payDone").onclick=function(){
-    var p=CUR_PAY, m=+$("#payMonths").value, msg=$("#payMsg"); $("#payDone").disabled=true;
+    var p=CUR_PAY, m=+$("#payMonths").value, msg=$("#payMsg");
+    var em=$("#payEmail").value.trim(), ph=$("#payPhone").value.trim();
+    if(!STATE.token && (!/^\S+@\S+\.\S+$/.test(em) || ph.replace(/\D/g,"").length<9)){ msg.className="msg err"; msg.textContent="Vui lòng nhập email và số điện thoại để ACCA gửi tài khoản sau khi kích hoạt."; return; }
+    $("#payDone").disabled=true;
     var ok=function(){ msg.className="msg ok"; msg.textContent="Đã ghi nhận. ACCA sẽ đối chiếu tiền về tài khoản ACB và kích hoạt "+p.name+" trong giờ làm việc. Cần gấp: gọi/Zalo 0938 847 699."; };
-    api("smart_load",{token:STATE.token, sub:"unlock_request", product:p.code, months:m, amount:p.price*m, content:payContent(p)})
+    api("smart_load",{token:STATE.token, sub:"unlock_request", product:p.code, months:m, amount:p.price*m, content:payContent(p), email:em, phone:ph, company:$("#payCo").value.trim()})
       .then(function(res){ if(res&&res.ok) ok(); else { msg.className="msg err"; msg.textContent="Chưa ghi nhận được yêu cầu. Vui lòng gửi ảnh chuyển khoản qua Zalo 0938 847 699 để ACCA kích hoạt."; $("#payDone").disabled=false; } })
       .catch(function(){ msg.className="msg err"; msg.textContent=t("err_net"); $("#payDone").disabled=false; });
   };
   $("#svcGrid").addEventListener("click",function(e){
     var u=e.target.closest("[data-unlock]"); if(u){ openPay(u.getAttribute("data-unlock")); return; }
     var o=e.target.closest("[data-open]"); if(!o) return; var p=PRODUCTS.filter(function(x){return x.code===o.getAttribute("data-open");})[0];
-    if(p.open==="biz") openBiz(); else location.href=p.open;
+    if(p.open==="biz"){ if(STATE.token&&hasAcc("chudn")) openBiz(); else showLoginFor("chudn"); }
+    else location.href=p.open;
   });
-  function afterLogin(client,access){
+  function afterLogin(client,access,toBiz){
     STATE.client=client; setAccess(access);
-    if(URL_MODE==="ketoan"&&hasAcc("accounting")){ location.href="pmketoan/"; return; }
-    showDash(client); showServices();
+    showDash(client); showCatalog();
+    if(toBiz&&hasAcc("chudn")) openBiz();
   }
+  showCatalog();
+  if(/^#unlock-/.test(location.hash)){ var uc=location.hash.slice(8); setTimeout(function(){ openPay(uc); },50); }
   // Giữ đăng nhập khi quay lại từ phần mềm kế toán (cùng phiên trình duyệt)
   (function(){
     var tok=""; try{tok=sessionStorage.getItem("acca_portal_tok")||"";}catch(e){}
@@ -720,11 +756,11 @@
     e.preventDefault();
     var email=$("#email").value.trim(), pass=$("#pass").value, msg=$("#loginMsg"), btn=$("#loginBtn");
     msg.className="msg"; btn.disabled=true;
-    api("login",{email:email,password:pass}).then(function(res){
+    api("login",{email:email,password:pass,mode:LOGIN_TARGET}).then(function(res){
       btn.disabled=false;
       if(res && res.ok && res.client){
         STATE.token=res.token||null; STATE.email=email.toLowerCase(); sessionStorage.setItem("acca_portal_tok",STATE.token||""); try{sessionStorage.setItem("acca_portal_email",STATE.email);}catch(e){}
-        afterLogin(res.client,res.access); }
+        afterLogin(res.client,res.access,true); }
       else { msg.className="msg err"; msg.textContent=(res&&res.error)||t("err_login"); }
     }).catch(function(err){
       btn.disabled=false;
