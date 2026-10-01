@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Phần mềm kế toán ICCA</title>
+<title>Phần mềm kế toán ACCA Smart</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -164,7 +164,7 @@ label input,label select{color:var(--fg);font-size:.9rem}
 <body>
 <div class="app">
   <aside class="rail">
-    <div class="brand"><b><a href="../" title="Về trang accavn.com">ICCA Kế toán</a></b><span id="co-name">Chưa đặt tên doanh nghiệp</span></div>
+    <div class="brand"><b><a href="../" title="Về trang accavn.com">ACCA Smart</a></b><span id="co-name">Chưa đặt tên doanh nghiệp</span></div>
     <div class="book"><label for="book-sel">Dữ liệu kế toán</label><select id="book-sel"></select></div>
     <nav id="nav" aria-label="Phân hệ">
       <a href="#tongquan" data-v="tongquan">Tổng quan</a>
@@ -497,7 +497,7 @@ function render(){
   try{body=MODS[view]?vModule():({tongquan:vOverview,baocao:vReports,danhmuc:vCatalog,hethong:vSettings})[view]();}
   catch(e){console.error(e);body=`<div class="alert red"><b>Lỗi hiển thị</b>${esc(e.message)}</div>`;}
   const showPer=view!=='danhmuc'&&view!=='hethong';
-  $('#main').innerHTML=`<header class="topbar"><div class="t"><span class="eyebrow">${showPer?esc(r.label):esc(st.name||'ICCA Kế toán')}</span><h1>${VIEWS[view]}</h1></div>${showPer?periodHTML():''}</header>${body}`;
+  $('#main').innerHTML=`<header class="topbar"><div class="t"><span class="eyebrow">${showPer?esc(r.label):esc(st.name||'Phần mềm kế toán ACCA Smart')}</span><h1>${VIEWS[view]}</h1></div>${showPer?periodHTML():''}</header>${body}`;
 }
 
 /* ================= TỔNG QUAN ================= */
@@ -1013,7 +1013,7 @@ function exportCSV(){
 function backup(){
   const data={app:'so-cai-acca',version:1,exportedAt:new Date().toISOString(),settings:S.settings,opening:S.opening,vouchers:S.vouchers,partners:S.partners,accounts:S.accounts};
   const nm=(SET().name||BOOK.name).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').replace(/[^\w]+/g,'-').replace(/^-|-$/g,'').slice(0,40)||'so-ke-toan';
-  saveFile(`icca-sao-luu-${nm}-${todayStr()}.json`,JSON.stringify(data,null,1),true);
+  saveFile(`acca-smart-sao-luu-${nm}-${todayStr()}.json`,JSON.stringify(data,null,1),true);
 }
 function repBangKe(){
   const {from,to}=range();const rows=S.vouchers.filter(v=>v.vat&&v.date>=from&&v.date<=to).sort((a,b)=>(a.vat.invDate||a.date).localeCompare(b.vat.invDate||b.date));
