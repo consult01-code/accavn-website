@@ -30,3 +30,16 @@
   q.addEventListener("input",function(){clearTimeout(t);t=setTimeout(function(){if(data)return run();fetch("assets/search.json").then(function(r){return r.json()}).then(function(d){data=d;run();});},150);});
   addEventListener("keydown",function(e){if(e.key==="/"&&document.activeElement!==q){e.preventDefault();q.focus();}});
 })();
+(function(){
+  // chọn ngôn ngữ — dùng chung khoá "acca-lang" với trang chủ
+  var sel=document.querySelector(".blang");if(!sel)return;
+  var alts={};try{alts=JSON.parse(sel.getAttribute("data-alts"))}catch(e){}
+  var cur=document.documentElement.lang||"vi";
+  if(cur!=="vi"){try{localStorage.setItem("acca-lang",cur)}catch(e){}}
+  sel.addEventListener("change",function(){var l=sel.value;try{localStorage.setItem("acca-lang",l)}catch(e){}if(alts[l])location.href=alts[l];});
+  // trang chủ blog (tiếng Việt): khách đã chọn ngôn ngữ khác ở trang chủ -> mở blog ngôn ngữ đó
+  if(document.body.getAttribute("data-blog-home")==="1"&&cur==="vi"&&!/[?&]lang=vi/.test(location.search)){
+    var s=null;try{s=localStorage.getItem("acca-lang")}catch(e){}
+    if(s&&s!=="vi"&&alts[s])location.replace(alts[s]);
+  }
+})();
