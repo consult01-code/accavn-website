@@ -328,9 +328,10 @@
     <div class="pay-soon" id="paySoon" hidden data-i18n="pay_soon">Dịch vụ đang hoàn thiện. Thanh toán bây giờ là đăng ký trước; ACCA kích hoạt và báo cho bạn ngay khi dịch vụ ra mắt.</div>
     <div class="field"><label for="payMonths" data-i18n="pay_term">Thời hạn sử dụng</label>
       <select id="payMonths"><option value="1">1 tháng</option><option value="3">3 tháng</option><option value="6">6 tháng</option><option value="12" selected>12 tháng</option></select></div>
+    <div class="field"><label for="payName">Họ tên người mua *</label><input type="text" id="payName" placeholder="Nguyễn Văn A" autocomplete="name"></div>
+    <div class="field"><label for="payPhone">Số điện thoại *</label><input type="tel" id="payPhone" placeholder="09xx xxx xxx" autocomplete="tel" inputmode="tel"></div>
     <div id="payContact">
       <div class="field"><label for="payEmail">Email nhận tài khoản *</label><input type="email" id="payEmail" placeholder="ten@congty.com" autocomplete="email"></div>
-      <div class="field"><label for="payPhone">Số điện thoại *</label><input type="tel" id="payPhone" placeholder="09xx xxx xxx" autocomplete="tel" inputmode="tel"></div>
       <div class="field"><label for="payCo">Tên doanh nghiệp</label><input type="text" id="payCo" placeholder="Công ty TNHH ..." autocomplete="organization"></div>
     </div>
     <div class="pay-total"><span data-i18n="pay_total">Số tiền thanh toán</span><b id="payAmount">—</b></div>
@@ -343,7 +344,7 @@
         <dt data-i18n="pay_content">Nội dung chuyển khoản</dt><dd><b id="payContent"></b> <button class="cp" type="button" data-copy="payContent">Sao chép</button></dd>
       </dl>
     </div>
-    <p class="pay-note" data-i18n="pay_note">Quét mã bằng ứng dụng ngân hàng, giữ nguyên nội dung chuyển khoản để ACCA đối chiếu. Dịch vụ được kích hoạt sau khi ACCA xác nhận đã nhận tiền.</p>
+    <p class="pay-note" data-i18n="pay_note">Điền họ tên và số điện thoại trước, mã QR và nội dung chuyển khoản (TÊN-SĐT-MÃ) sẽ tự cập nhật. Giữ nguyên nội dung khi chuyển để ACCA đối chiếu và kích hoạt.</p>
     <button class="btn btn-primary" type="button" id="payDone" style="width:100%" data-i18n="pay_done">Tôi đã chuyển khoản</button>
     <div class="msg" id="payMsg"></div>
   </div>
@@ -393,7 +394,7 @@
     pay_acc:{vi:"Số tài khoản",en:"Account number"},
     pay_holder:{vi:"Chủ tài khoản",en:"Account holder"},
     pay_content:{vi:"Nội dung chuyển khoản",en:"Transfer note"},
-    pay_note:{vi:"Quét mã bằng ứng dụng ngân hàng, giữ nguyên nội dung chuyển khoản để ACCA đối chiếu. Dịch vụ được kích hoạt sau khi ACCA xác nhận đã nhận tiền.",en:"Scan with your banking app and keep the transfer note unchanged. The service is activated once ACCA confirms receipt."},
+    pay_note:{vi:"Điền họ tên và số điện thoại trước, mã QR và nội dung chuyển khoản (TÊN-SĐT-MÃ) sẽ tự cập nhật. Giữ nguyên nội dung khi chuyển để ACCA đối chiếu và kích hoạt.",en:"Enter your name and phone first; the QR code and transfer note (NAME-PHONE-CODE) update automatically. Keep the note unchanged when transferring."},
     pay_done:{vi:"Tôi đã chuyển khoản",en:"I have transferred"},
     mode_legend:{vi:"Chọn dịch vụ theo gói của bạn",en:"Choose the service in your plan"},
     mode1_t:{vi:"Phần mềm kế toán ACCA Smart",en:"ACCA Smart accounting software"},
@@ -692,10 +693,12 @@
   (function(){ var m=""; try{m=sessionStorage.getItem("acca_portal_msg")||""; sessionStorage.removeItem("acca_portal_msg");}catch(e){}
     if(m){ var el=$("#loginMsg"); el.className="msg err"; el.textContent=m; } })();
   var CUR_PAY=null;
+  // Nội dung chuyển khoản: TÊN-SĐT-MÃ (tên, SĐT lấy từ ô người mua điền; mã gói viết ngắn)
+  var PAY_CODE={chudn:"BIZ",accounting:"ACC",cash:"CASH",document:"DOC",tax:"TAX",hr:"HR",insurance:"BHXH",manage:"MNG",sales:"SALE",crm:"CRM",finance:"FIN",training:"TRAIN",meeting:"MEET",brand:"BRAND",mba:"MBA",consulting:"CONS",law:"LAW",project:"PROJ",task:"TASK"};
   function payContent(p){
-    var src=STATE.email||($("#payPhone")&&$("#payPhone").value)||($("#payEmail")&&$("#payEmail").value.split("@")[0])||"";
-    var id=String(src).split("@")[0].normalize("NFD").replace(/[^A-Za-z0-9]/g,"").toUpperCase().slice(0,12)||"KHACH";
-    return ("SMART "+p.code.toUpperCase()+" "+id).slice(0,40);
+    var name=String($("#payName").value||"").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[đĐ]/g,"D").replace(/[^A-Za-z ]/g,"").replace(/\s+/g," ").trim().toUpperCase().slice(0,22)||"TEN";
+    var phone=String($("#payPhone").value||"").replace(/\D/g,"").slice(0,11)||"SDT";
+    return name+"-"+phone+"-"+(PAY_CODE[p.code]||p.code.toUpperCase());
   }
   function renderPay(){
     var p=CUR_PAY; if(!p) return; var m=+$("#payMonths").value; var amt=p.price*m; var content=payContent(p);
@@ -711,7 +714,7 @@
     renderPay(); $("#payModal").classList.add("on");
   }
   $("#payMonths").onchange=renderPay;
-  $("#payPhone").addEventListener("input",renderPay); $("#payEmail").addEventListener("input",renderPay);
+  ["#payName","#payPhone","#payEmail"].forEach(function(id){ $(id).addEventListener("input",renderPay); });
   $("#payClose").onclick=function(){ $("#payModal").classList.remove("on"); };
   $("#payModal").addEventListener("click",function(e){ if(e.target.id==="payModal") $("#payModal").classList.remove("on"); });
   $("#payModal").addEventListener("click",function(e){
@@ -721,10 +724,12 @@
   $("#payDone").onclick=function(){
     var p=CUR_PAY, m=+$("#payMonths").value, msg=$("#payMsg");
     var em=$("#payEmail").value.trim(), ph=$("#payPhone").value.trim();
-    if(!STATE.token && (!/^\S+@\S+\.\S+$/.test(em) || ph.replace(/\D/g,"").length<9)){ msg.className="msg err"; msg.textContent="Vui lòng nhập email và số điện thoại để ACCA gửi tài khoản sau khi kích hoạt."; return; }
+    var nm=$("#payName").value.trim();
+    if(!nm || ph.replace(/\D/g,"").length<9){ msg.className="msg err"; msg.textContent="Vui lòng nhập họ tên và số điện thoại để nội dung chuyển khoản đúng cú pháp TÊN-SĐT-MÃ."; return; }
+    if(!STATE.token && !/^\S+@\S+\.\S+$/.test(em)){ msg.className="msg err"; msg.textContent="Vui lòng nhập email để ACCA gửi tài khoản sau khi kích hoạt."; return; }
     $("#payDone").disabled=true;
     var ok=function(){ msg.className="msg ok"; msg.textContent="Đã ghi nhận. ACCA sẽ đối chiếu tiền về tài khoản ACB và kích hoạt "+p.name+" trong giờ làm việc. Cần gấp: gọi/Zalo 0938 847 699."; };
-    api("smart_load",{token:STATE.token, sub:"unlock_request", product:p.code, months:m, amount:p.price*m, content:payContent(p), email:em, phone:ph, company:$("#payCo").value.trim()})
+    api("smart_load",{token:STATE.token, sub:"unlock_request", product:p.code, months:m, amount:p.price*m, content:payContent(p), email:em, phone:ph, company:[nm,$("#payCo").value.trim()].filter(Boolean).join(" · ")})
       .then(function(res){ if(res&&res.ok) ok(); else { msg.className="msg err"; msg.textContent="Chưa ghi nhận được yêu cầu. Vui lòng gửi ảnh chuyển khoản qua Zalo 0938 847 699 để ACCA kích hoạt."; $("#payDone").disabled=false; } })
       .catch(function(){ msg.className="msg err"; msg.textContent=t("err_net"); $("#payDone").disabled=false; });
   };
