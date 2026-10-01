@@ -104,4 +104,12 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://accavn.com/?lang=de"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://accavn.com/"/>
   </url>
+  <url>
+    <loc>https://accavn.com/blog/</loc>
+    <lastmod>2026-10-01</lastmod>
+  </url>
+  <url>
+    <loc>https://accavn.com/blog/bang-gia-dich-vu-ke-toan-tron-goi-2026.html</loc>
+    <lastmod>2026-10-01</lastmod>
+  </url>
 </urlset>
