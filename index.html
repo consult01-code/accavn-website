@@ -292,7 +292,13 @@
     .brand>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .brand small{font-size:.66rem}
     .mark{width:34px;height:34px;font-size:1.05rem}
+    .brand>span.bname{white-space:normal;overflow:visible;line-height:1.15;max-width:9.5em}
+    .brand small{display:none}
   }
+  @media(max-width:860px){.nav-cta{display:none}}
+  .zalo-card .zt{min-width:0}
+  @media(max-width:360px){.zalo-card{flex-wrap:wrap}}
+  @media(max-width:420px){.theme-btn{display:none}.lang-sel{padding:0 4px;font-size:.8rem;max-width:84px}.nav-blog{padding:0 10px}.brand{font-size:.84rem}}
 
   .hero{padding-block:64px 40px;overflow:hidden}
   .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
@@ -367,7 +373,7 @@
   .pm-tbl tr.t td{font-weight:700;background:var(--surface-2)}
   .pm-ok{font-size:.72rem;font-weight:600;color:var(--primary)}
   @media(max-width:900px){.pm-grid{grid-template-columns:1fr}}
-  @media(max-width:560px){.pm-in{grid-template-columns:1fr}.pm-side{display:none}}
+  @media(max-width:560px){.pm-in{grid-template-columns:minmax(0,1fr)}.pm-side{display:none}}
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
   .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px}
   .step .n{font-size:1.05rem;font-weight:800;color:#fff;background:var(--primary);width:36px;height:36px;border-radius:10px;display:grid;place-items:center;margin-bottom:14px;font-variant-numeric:tabular-nums}
@@ -458,7 +464,7 @@
   .legal{margin-top:30px;padding-top:20px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
 
   @media(max-width:900px){
-    .hero-grid,.contact-grid{grid-template-columns:1fr;gap:34px}
+    .hero-grid,.contact-grid{grid-template-columns:minmax(0,1fr);gap:34px}
     .svc-grid,.why-grid,.steps,.foot-grid{grid-template-columns:1fr 1fr}
   }
   @media(max-width:560px){
@@ -475,7 +481,7 @@
   <div class="wrap nav">
     <a class="brand" href="#top">
       <span class="mark">A</span>
-      <span>ACCA Consulting Vietnam<small data-i18n="brand_sub">Kế toán · Thuế · Doanh nghiệp</small></span>
+      <span class="bname">ACCA Consulting Vietnam<small data-i18n="brand_sub">Kế toán · Thuế · Doanh nghiệp</small></span>
     </a>
     <nav class="nav-links">
       <a href="#dichvu" data-i18n="nav_services">Dịch vụ</a>
@@ -1132,6 +1138,6 @@
   })();
 </script>
 <script src="chat/acca-chat.js" defer></script>
-<script src="vn-wrap.js?v=2" defer></script>
+<script src="vn-wrap.js?v=4" defer></script>
 </body>
 </html>
