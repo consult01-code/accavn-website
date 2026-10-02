@@ -5,7 +5,8 @@
   var RX=new RegExp("(^|[^\\p{L}\\p{N}])("+W.join("|")+")(?![\\p{L}\\p{N}])","giu");
   var NUM=/(\d)\s+(đ|đồng|VNĐ|triệu|tỷ|%|ngày|tháng|năm|bài|người|phút)(?![\p{L}])/gu;
   var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,INPUT:1,SELECT:1,OPTION:1,CODE:1,PRE:1};
-  function fix(t){return t.replace(RX,function(m,a,b){return a+b.replace(/ /g,NB);}).replace(NUM,"$1"+NB+"$2").replace(/& /g,"&"+NB).replace(/ ([–—]) /g,NB+"$1 ");}
+  var DOT=/(\p{Lu})\.(?=[\p{Lu}\p{N}])/gu;
+  function fix(t){return t.replace(DOT,"$1.⁠").replace(RX,function(m,a,b){return a+b.replace(/ /g,NB);}).replace(NUM,"$1"+NB+"$2").replace(/& /g,"&"+NB).replace(/ ([–—]) /g,NB+"$1 ");}
   function walk(root){
     var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:function(n){for(var p=n.parentNode;p&&p!==root.parentNode;p=p.parentNode){if(SKIP[p.nodeName]||(p.isContentEditable))return 2;}return n.data.indexOf(" ")<0?2:1;}}),n,list=[];
     while(n=w.nextNode())list.push(n);
