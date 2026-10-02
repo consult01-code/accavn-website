@@ -345,7 +345,7 @@
         <dt data-i18n="pay_content">Nội dung chuyển khoản</dt><dd><b id="payContent"></b> <button class="cp" type="button" data-copy="payContent">Sao chép</button></dd>
       </dl>
     </div>
-    <p class="pay-note" data-i18n="pay_note">Điền họ tên và số điện thoại trước, mã QR và nội dung chuyển khoản (TÊN-SĐT-MÃ-TÊN GÓI) sẽ tự cập nhật. Giữ nguyên nội dung khi chuyển để ACCA đối chiếu và kích hoạt.</p>
+    <p class="pay-note" data-i18n="pay_note">Điền họ tên và số điện thoại trước, mã QR và nội dung chuyển khoản (TÊN-SĐT-PM-TÊN GÓI) sẽ tự cập nhật. Giữ nguyên nội dung khi chuyển để ACCA đối chiếu và kích hoạt.</p>
     <button class="btn btn-primary" type="button" id="payDone" style="width:100%" data-i18n="pay_done">Tôi đã chuyển khoản</button>
     <div class="msg" id="payMsg"></div>
   </div>
@@ -395,7 +395,7 @@
     pay_acc:{vi:"Số tài khoản",en:"Account number"},
     pay_holder:{vi:"Chủ tài khoản",en:"Account holder"},
     pay_content:{vi:"Nội dung chuyển khoản",en:"Transfer note"},
-    pay_note:{vi:"Điền họ tên và số điện thoại trước, mã QR và nội dung chuyển khoản (TÊN-SĐT-MÃ-TÊN GÓI) sẽ tự cập nhật. Giữ nguyên nội dung khi chuyển để ACCA đối chiếu và kích hoạt.",en:"Enter your name and phone first; the QR code and transfer note (NAME-PHONE-CODE-PACKAGE) update automatically. Keep the note unchanged when transferring."},
+    pay_note:{vi:"Điền họ tên và số điện thoại trước, mã QR và nội dung chuyển khoản (TÊN-SĐT-PM-TÊN GÓI) sẽ tự cập nhật. Giữ nguyên nội dung khi chuyển để ACCA đối chiếu và kích hoạt.",en:"Enter your name and phone first; the QR code and transfer note (NAME-PHONE-CODE-PACKAGE) update automatically. Keep the note unchanged when transferring."},
     pay_done:{vi:"Tôi đã chuyển khoản",en:"I have transferred"},
     mode_legend:{vi:"Chọn dịch vụ theo gói của bạn",en:"Choose the service in your plan"},
     mode1_t:{vi:"Phần mềm kế toán ACCA Smart",en:"ACCA Smart accounting software"},
@@ -694,15 +694,15 @@
   (function(){ var m=""; try{m=sessionStorage.getItem("acca_portal_msg")||""; sessionStorage.removeItem("acca_portal_msg");}catch(e){}
     if(m){ var el=$("#loginMsg"); el.className="msg err"; el.textContent=m; } })();
   var CUR_PAY=null;
-  // Nội dung chuyển khoản: TÊN-SĐT-MÃ-TÊN GÓI, mã có tiền tố PM- (phần mềm) hoặc KH- (khóa học)
+  // Nội dung chuyển khoản: TÊN-SĐT-PM-TÊN GÓI (PM- = phần mềm, KH- = khóa học), ví dụ NGUYEN THI NHAM-0938847699-PM-ACCOUNTING
   var PAY_CODE={chudn:"BIZ",accounting:"ACC",cash:"CASH",document:"DOC",tax:"TAX",hr:"HR",insurance:"BHXH",manage:"MNG",sales:"SALE",crm:"CRM",finance:"FIN",training:"TRAIN",meeting:"MEET",brand:"BRAND",mba:"MBA",consulting:"CONS",law:"LAW",project:"PROJ",task:"TASK"};
   // Tiền tố loại sản phẩm: PM- = phần mềm, KH- = khóa học (dùng khi mở bán khóa học)
-  function payCode(p){ return (p.kind==="course"?"KH-":"PM-")+(PAY_CODE[p.code]||p.code.toUpperCase()); }
+  function payCode(p){ return (p.kind==="course"?"KH-":"PM-")+payShort(p); }
   function payShort(p){ return p.name.replace(/^ACCA Smart-/,"").normalize("NFD").replace(/[^A-Za-z ]/g,"").toUpperCase(); }
   function payContent(p){
     var name=String($("#payName").value||"").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[đĐ]/g,"D").replace(/[^A-Za-z ]/g,"").replace(/\s+/g," ").trim().toUpperCase().slice(0,22)||"TEN";
     var phone=String($("#payPhone").value||"").replace(/\D/g,"").slice(0,11)||"SDT";
-    return name+"-"+phone+"-"+payCode(p)+"-"+payShort(p);
+    return name+"-"+phone+"-"+payCode(p);
   }
   function renderPay(){
     var p=CUR_PAY; if(!p) return; var m=+$("#payMonths").value; var amt=p.price*m; var content=payContent(p);
@@ -712,7 +712,7 @@
   }
   function openPay(code){
     CUR_PAY=PRODUCTS.filter(function(p){return p.code===code;})[0]; if(!CUR_PAY) return;
-    $("#payTitle").textContent=CUR_PAY.name; $("#paySub").textContent="Mã gói: "+payCode(CUR_PAY)+" · Tên gói: "+CUR_PAY.name+" · "+money(CUR_PAY.price)+"/tháng. "+CUR_PAY.sub;
+    $("#payTitle").textContent=CUR_PAY.name; $("#paySub").textContent="Mã gói: "+payCode(CUR_PAY)+" · "+money(CUR_PAY.price)+"/tháng. "+CUR_PAY.sub;
     $("#paySoon").hidden=!!CUR_PAY.live; $("#payMsg").className="msg"; $("#payDone").disabled=false;
     $("#payContact").hidden=!!STATE.token;
     renderPay(); $("#payModal").classList.add("on");
@@ -729,7 +729,7 @@
     var p=CUR_PAY, m=+$("#payMonths").value, msg=$("#payMsg");
     var em=$("#payEmail").value.trim(), ph=$("#payPhone").value.trim();
     var nm=$("#payName").value.trim();
-    if(!nm || ph.replace(/\D/g,"").length<9){ msg.className="msg err"; msg.textContent="Vui lòng nhập họ tên và số điện thoại để nội dung chuyển khoản đúng cú pháp TÊN-SĐT-MÃ-TÊN GÓI."; return; }
+    if(!nm || ph.replace(/\D/g,"").length<9){ msg.className="msg err"; msg.textContent="Vui lòng nhập họ tên và số điện thoại để nội dung chuyển khoản đúng cú pháp TÊN-SĐT-PM-TÊN GÓI."; return; }
     if(!STATE.token && !/^\S+@\S+\.\S+$/.test(em)){ msg.className="msg err"; msg.textContent="Vui lòng nhập email để ACCA gửi tài khoản sau khi kích hoạt."; return; }
     $("#payDone").disabled=true;
     var ok=function(){ msg.className="msg ok"; msg.textContent="Đã ghi nhận. ACCA sẽ đối chiếu tiền về tài khoản ACB và kích hoạt "+p.name+" trong giờ làm việc. Cần gấp: gọi/Zalo 0938 847 699."; };
