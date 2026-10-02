@@ -313,10 +313,15 @@
   .btn-primary:hover{background:var(--primary-600)}
   .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
   .btn-ghost:hover{border-color:var(--primary);color:var(--primary)}
-  .hero-trust{display:flex;gap:26px;margin-top:34px;flex-wrap:wrap}
-  .hero-trust div{display:flex;flex-direction:column}
-  .hero-trust b{font-size:1.7rem;color:var(--ink);font-variant-numeric:tabular-nums;font-weight:800}
-  .hero-trust span{font-size:.82rem;color:var(--muted)}
+  .hero-trust{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:30px;max-width:560px}
+  .hero-trust>div{display:flex;flex-direction:column;gap:4px;padding:14px 14px 12px;border-radius:14px;background:var(--surface);border:1px solid var(--line);box-shadow:0 10px 24px -20px rgba(14,77,60,.5);min-width:0}
+  .hero-trust b{font-size:clamp(1.9rem,3.4vw,2.5rem);line-height:1;color:var(--primary);font-variant-numeric:tabular-nums;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+  .hero-trust b i{font-style:normal;color:var(--gold);margin-left:1px}
+  .hero-trust>div>span{font-size:.8rem;line-height:1.35;color:var(--muted)}
+  .hero-trust>div{flex-direction:row;align-items:center;gap:12px}
+  .hero-trust b{min-width:4.2ch}
+  .hero-trust>div>span{font-size:.84rem}
+  @media(max-width:620px){.hero-trust>div{flex-direction:column;align-items:flex-start;gap:6px}}
 
   .hero-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:26px}
   .hero-card h3{font-size:1.05rem;margin-bottom:4px}
@@ -535,9 +540,10 @@
           <a class="btn btn-ghost" href="#dichvu" data-i18n="hero_cta2">Xem dịch vụ</a>
         </div>
         <div class="hero-trust">
-          <div><b>10+</b><span data-i18n="trust1">năm kinh nghiệm kế toán – thuế</span></div>
-          <div><b>1:1</b><span data-i18n="trust2">chuyên viên phụ trách riêng hồ sơ</span></div>
-          <div><b>0</b><span data-i18n="trust3">phí ẩn — báo giá minh bạch</span></div>
+          <div><b><span data-count="10">10</span><i>+</i></b><span data-i18n="trust1">năm kinh nghiệm kế toán – thuế</span></div>
+          <div><b><span data-count="1000" data-i18n="trust2_n">1.000</span><i>+</i></b><span data-i18n="trust2">bài kiến thức kế toán, thuế miễn phí</span></div>
+          <div><b><span data-count="19">19</span></b><span data-i18n="trust3">phần mềm ACCA Smart cho doanh nghiệp</span></div>
+          <div><b><span data-count="399">399</span><i>K</i></b><span data-i18n="trust4">phí khởi điểm/tháng, không phí ẩn</span></div>
         </div>
       </div>
       <aside class="hero-card">
@@ -897,6 +903,8 @@
 
 <script>
   var I18N={
+    trust4:{"vi": "phí khởi điểm/tháng, không phí ẩn", "en": "VND starting monthly fee, no hidden costs", "zh": "越南盾起/月，无隐藏费用", "ko": "동부터/월, 숨은 비용 없음", "ja": "ドンから/月、隠れ費用なし", "fr": "VND/mois dès, sans frais cachés", "ru": "донгов/мес. от, без скрытых платежей", "de": "VND/Monat ab, keine versteckten Kosten"},
+    trust2_n:{"vi": "1.000", "en": "1,000", "zh": "1,000", "ko": "1,000", "ja": "1,000", "fr": "1 000", "ru": "1 000", "de": "1.000"},
     fi_eyebrow:{"vi": "Dành cho nhà đầu tư nước ngoài", "en": "For foreign investors", "zh": "外国投资者专区", "ko": "외국인 투자자를 위한 서비스", "ja": "外国人投資家の皆さまへ", "fr": "Pour les investisseurs étrangers", "ru": "Для иностранных инвесторов", "de": "Für ausländische Investoren"},
     fi_h2:{"vi": "Đầu tư vào Việt Nam? Chúng tôi giữ doanh nghiệp của bạn tuân thủ ngay từ ngày đầu", "en": "Investing in Vietnam? We keep your company compliant from day one", "zh": "投资越南？我们从第一天起确保您的公司合规经营", "ko": "베트남에 투자하시나요? 첫날부터 법규를 준수하도록 관리해 드립니다", "ja": "ベトナムへ投資をお考えですか？設立初日からコンプライアンスを支えます", "fr": "Vous investissez au Vietnam ? Votre société en conformité dès le premier jour", "ru": "Инвестируете во Вьетнам? Обеспечим соответствие требованиям с первого дня", "de": "Investieren in Vietnam? Wir sorgen vom ersten Tag an für Compliance"},
     fi_p:{"vi": "Kế toán, thuế và tuân thủ pháp lý cho doanh nghiệp có vốn nước ngoài, văn phòng đại diện và chủ sở hữu ở nước ngoài — tổ chức để bạn quản lý pháp nhân tại Việt Nam từ xa.", "en": "Accounting, tax and corporate compliance for foreign-invested companies, representative offices and overseas owners — organised so you can manage your Vietnam entity remotely.", "zh": "为外资企业、代表处及境外股东提供会计、税务与合规服务——让您远程也能掌控在越南的公司。", "ko": "외국인 투자 법인, 대표사무소, 해외 소유주를 위한 회계·세무·법규 준수 서비스 — 베트남 법인을 원격으로도 관리할 수 있도록 운영합니다.", "ja": "外資系企業、駐在員事務所、海外オーナーのための会計・税務・コンプライアンス。ベトナム法人を遠隔でも管理できる体制を整えます。", "fr": "Comptabilité, fiscalité et conformité pour les sociétés à capitaux étrangers, bureaux de représentation et actionnaires à l’étranger — organisées pour piloter votre entité vietnamienne à distance.", "ru": "Бухгалтерия, налоги и корпоративное соответствие для компаний с иностранным капиталом, представительств и зарубежных владельцев — так, чтобы вы могли управлять вьетнамской компанией удалённо.", "de": "Buchhaltung, Steuern und Compliance für Unternehmen mit ausländischem Kapital, Repräsentanzen und Eigentümer im Ausland — so organisiert, dass Sie Ihre vietnamesische Gesellschaft aus der Ferne steuern können."},
@@ -917,8 +925,8 @@
     fi_cta:{"vi": "Trao đổi về doanh nghiệp FDI của bạn →", "en": "Discuss your Vietnam entity →", "zh": "咨询您的越南公司事宜 →", "ko": "베트남 법인 상담하기 →", "ja": "ベトナム法人について相談する →", "fr": "Parlons de votre entité au Vietnam →", "ru": "Обсудить вашу компанию во Вьетнаме →", "de": "Über Ihre Gesellschaft in Vietnam sprechen →"},
     fi_guides:{"vi": "Đọc cẩm nang FDI", "en": "Read our FDI guides", "zh": "阅读外资企业指南", "ko": "FDI 가이드 읽기", "ja": "FDIガイドを読む", "fr": "Lire nos guides IDE", "ru": "Читать руководства по ПИИ", "de": "FDI-Leitfäden lesen"},
     trust1:{"vi": "năm kinh nghiệm kế toán – thuế", "en": "years in accounting & tax", "zh": "年会计税务经验", "ko": "년 회계·세무 경력", "ja": "年の会計・税務実績", "fr": "ans d’expertise comptable et fiscale", "ru": "лет в бухгалтерии и налогах", "de": "Jahre Erfahrung in Buchhaltung & Steuern"},
-    trust2:{"vi": "chuyên viên phụ trách riêng hồ sơ", "en": "dedicated specialist for your books", "zh": "专属会计负责您的账务", "ko": "전담 담당자가 장부 관리", "ja": "専任担当者が帳簿を管理", "fr": "un expert dédié à votre dossier", "ru": "персональный специалист", "de": "fester Ansprechpartner für Ihre Bücher"},
-    trust3:{"vi": "phí ẩn — báo giá minh bạch", "en": "hidden fees — transparent quotes", "zh": "隐藏费用——报价透明", "ko": "숨은 비용 없음 — 투명한 견적", "ja": "隠れた費用なし・明朗な見積もり", "fr": "frais cachés — devis transparents", "ru": "скрытых платежей — прозрачные цены", "de": "versteckte Kosten — transparente Angebote"},
+    trust2:{"vi": "bài kiến thức kế toán, thuế miễn phí", "en": "free accounting & tax articles", "zh": "篇免费会计税务文章", "ko": "개의 무료 회계·세무 글", "ja": "本の無料会計・税務記事", "fr": "articles gratuits comptabilité & fiscalité", "ru": "бесплатных статей по учёту и налогам", "de": "kostenlose Artikel zu Buchhaltung & Steuern"},
+    trust3:{"vi": "phần mềm ACCA Smart cho doanh nghiệp", "en": "ACCA Smart business software apps", "zh": "款 ACCA Smart 企业软件", "ko": "개 ACCA Smart 기업용 소프트웨어", "ja": "種類の ACCA Smart 業務ソフト", "fr": "logiciels ACCA Smart pour l'entreprise", "ru": "программ ACCA Smart для бизнеса", "de": "ACCA Smart Business-Softwarelösungen"},
     why2_b:{"vi": "Đúng hạn, chủ động", "en": "On time, proactive", "zh": "准时、主动", "ko": "기한 준수, 선제적 관리", "ja": "期限厳守・先回り対応", "fr": "Ponctuels et proactifs", "ru": "Вовремя и проактивно", "de": "Pünktlich und proaktiv"},
     why2_p:{"vi": "Mọi tờ khai và báo cáo được nộp đúng thời hạn, chủ động nhắc lịch để chủ doanh nghiệp luôn yên tâm.", "en": "Every filing and report submitted on time, with proactive reminders so you always have peace of mind.", "zh": "所有申报与报告按时提交，主动提醒，让您始终安心。", "ko": "모든 신고와 보고를 기한 내 제출하고 일정을 미리 알려드려 늘 안심하실 수 있습니다.", "ja": "すべての申告・報告を期限内に提出し、スケジュールを先回りでお知らせ。いつも安心です。", "fr": "Chaque déclaration et rapport déposé à temps, avec des rappels proactifs pour votre tranquillité.", "ru": "Все декларации и отчёты подаются вовремя, с заблаговременными напоминаниями — вы всегда спокойны.", "de": "Jede Meldung und jeder Bericht fristgerecht, mit proaktiven Erinnerungen — für Ihre Sorgenfreiheit."},
     svc2_3:{"vi": "Rà soát kỹ trước khi nộp, số liệu chuẩn xác", "en": "Careful pre-filing review for accurate figures", "zh": "申报前仔细审核，数据准确", "ko": "신고 전 꼼꼼한 검토로 정확한 수치", "ja": "申告前の入念なチェックで正確な数値", "fr": "Revue soignée avant dépôt, chiffres exacts", "ru": "Тщательная проверка перед подачей", "de": "Sorgfältige Prüfung vor der Abgabe"},
@@ -1199,5 +1207,19 @@
 </script>
 <script src="chat/acca-chat.js" defer></script>
 <script src="vn-wrap.js?v=7" defer></script>
+<script>
+(function(){
+  var els=[].slice.call(document.querySelectorAll('.hero-trust [data-count]'));
+  if(!els.length||!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function run(el){
+    var end=+el.getAttribute('data-count'), fin=el.textContent, t0=null, dur=1400;
+    function step(t){ if(!t0) t0=t; var k=Math.min(1,(t-t0)/dur), v=Math.round(end*(1-Math.pow(1-k,3)));
+      el.textContent = k<1 ? v.toLocaleString(document.documentElement.lang||'vi') : fin; if(k<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.unobserve(e.target); run(e.target); } }); },{threshold:.4});
+  els.forEach(function(el){ io.observe(el); });
+})();
+</script>
 </body>
 </html>
