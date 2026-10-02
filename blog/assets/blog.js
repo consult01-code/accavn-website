@@ -43,3 +43,5 @@
     if(s&&s!=="vi"&&alts[s])location.replace(alts[s]);
   }
 })();
+
+(function(){try{var w=document.querySelector(".chips .wrap"),a=w&&w.querySelector("a.on");if(a&&w.scrollWidth>w.clientWidth){w.scrollLeft=a.offsetLeft-(w.clientWidth-a.offsetWidth)/2;}}catch(e){}})();
