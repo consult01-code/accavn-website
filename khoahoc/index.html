@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Khoá học ACCA Academy — 99 khoá kế toán, thuế, doanh nghiệp</title>
+<meta name="description" content="99 khoá học online về kế toán, thuế, nhân sự – BHXH, pháp lý doanh nghiệp, tài chính và công cụ số của ACCA Consulting Vietnam. Học thử bài 1 miễn phí, mở khoá bằng chuyển khoản.">
+<link rel="canonical" href="https://accavn.com/khoahoc/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --bg:#F7F4EC;--surface:#FFFFFF;--surface-2:#F1ECE0;
+    --ink:#182b24;--muted:#54655d;--line:#e2dccd;
+    --primary:#0E4D3C;--primary-600:#0b5f49;--primary-050:#e6efe9;
+    --gold:#B4842A;--gold-soft:#f3e6c8;--good:#1f7a52;--bad:#c0392b;
+    --shadow:0 1px 2px rgba(16,40,30,.05),0 12px 30px -18px rgba(16,40,30,.35);
+    --radius:16px;color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+    --bg:#0e1613;--surface:#16221d;--surface-2:#1c2a24;
+    --ink:#eae4d6;--muted:#a3b1a8;--line:#2a3a32;
+    --primary:#4bbf97;--primary-600:#5fd0a8;--primary-050:#17281f;
+    --gold:#d9ad55;--gold-soft:#2b2a1c;--good:#4bbf97;--bad:#e57373;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -22px rgba(0,0,0,.7);color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0e1613;--surface:#16221d;--surface-2:#1c2a24;
+    --ink:#eae4d6;--muted:#a3b1a8;--line:#2a3a32;
+    --primary:#4bbf97;--primary-600:#5fd0a8;--primary-050:#17281f;
+    --gold:#d9ad55;--gold-soft:#2b2a1c;--good:#4bbf97;--bad:#e57373;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -22px rgba(0,0,0,.7);color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  [hidden]{display:none!important}
+  h1,h2,h3{line-height:1.2;margin:0;font-weight:700;letter-spacing:-.01em}
+  p{margin:0}
+  a{color:inherit}
+  .wrap{width:100%;max-width:1180px;margin-inline:auto;padding-inline:20px}
+  @media(max-width:520px){.wrap{padding-inline:16px}}
+
+  header.site{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;gap:14px;height:64px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:700;text-decoration:none;min-width:0}
+  .mark{width:38px;height:38px;border-radius:10px;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:700;font-size:1.15rem;flex:none}
+  .brand b{font-size:.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+  .brand small{display:block;font-weight:500;font-size:.7rem;color:var(--muted)}
+  .nav-links{display:flex;gap:18px;margin-left:18px;font-size:.9rem;font-weight:600}
+  .nav-links a{text-decoration:none;color:var(--muted);white-space:nowrap}
+  .nav-links a:hover,.nav-links a.on{color:var(--primary)}
+  .nav-tools{display:flex;align-items:center;gap:8px;margin-left:auto}
+  .theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);height:38px;width:38px;border-radius:10px;cursor:pointer;font-size:1rem;display:grid;place-items:center}
+  .who{font-size:.8rem;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  @media(max-width:860px){.nav-links{display:none}.who{display:none}}
+  @media(max-width:560px){.brand>span:last-child{display:none}.nav{gap:8px}.nav-tools{gap:6px}}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:11px;font-weight:600;text-decoration:none;font-size:.9rem;border:1px solid transparent;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .btn-primary{background:var(--primary);color:#fff}
+  .btn-primary:hover{background:var(--primary-600)}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--primary);color:var(--primary)}
+  .btn-gold{background:var(--gold);color:#fff}
+  .btn-sm{padding:7px 12px;font-size:.84rem;border-radius:9px}
+  .btn[disabled]{opacity:.55;cursor:not-allowed}
+  :root[data-theme="dark"] .btn-primary,:root[data-theme="dark"] .mark,:root[data-theme="dark"] .btn-gold{color:#0e1613}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn-primary,:root:not([data-theme="light"]) .mark,:root:not([data-theme="light"]) .btn-gold{color:#0e1613}}
+
+  /* hero */
+  .hero{padding:44px 0 26px}
+  .eyebrow{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:700}
+  .hero h1{font-size:clamp(1.7rem,3.6vw,2.6rem);margin:8px 0 10px;max-width:22ch}
+  .hero p.lead{color:var(--muted);max-width:62ch;font-size:1rem}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:120px}
+  .stat b{display:block;font-size:1.3rem;color:var(--primary);font-variant-numeric:tabular-nums}
+  .stat span{font-size:.78rem;color:var(--muted)}
+
+  /* toolbar */
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0 14px}
+  .search{flex:1 1 260px;min-width:0;height:44px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:11px;padding:0 14px;font:inherit;font-size:.92rem}
+  .search:focus,.sel:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-050)}
+  .sel{height:44px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:11px;padding:0 10px;font:inherit;font-size:.88rem}
+  .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;scrollbar-width:thin}
+  .chip{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:.84rem;font-weight:600;cursor:pointer}
+  .chip span{color:var(--muted);font-weight:500;margin-left:4px}
+  .chip.on{background:var(--primary);border-color:var(--primary);color:#fff}
+  .chip.on span{color:inherit;opacity:.8}
+  :root[data-theme="dark"] .chip.on{color:#0e1613}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .chip.on{color:#0e1613}}
+  .count{font-size:.85rem;color:var(--muted);margin-bottom:12px}
+
+  /* grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:14px;margin-bottom:40px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:8px;min-width:0;box-shadow:var(--shadow)}
+  .card-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .kcode{font-size:.74rem;font-weight:700;color:var(--gold);letter-spacing:.04em}
+  .lv{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+  .lv.l1{background:var(--primary-050);color:var(--primary)}
+  .lv.l4,.lv.l5{background:var(--gold-soft);color:var(--gold)}
+  .card h3{font-size:1rem;line-height:1.35}
+  .card .fld{font-size:.78rem;color:var(--muted)}
+  .card .meta{font-size:.8rem;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+  .card .price{font-weight:800;color:var(--primary);font-size:1.05rem;font-variant-numeric:tabular-nums;margin-top:auto}
+  .owned{font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--primary-050);color:var(--primary)}
+  .card .acts{display:flex;gap:8px}
+  .card .acts .btn{flex:1}
+  .empty{padding:40px;text-align:center;color:var(--muted);grid-column:1/-1}
+
+  /* modal */
+  .modal-bd{position:fixed;inset:0;background:rgba(10,20,16,.55);display:none;z-index:80;padding:20px;overflow-y:auto}
+  .modal-bd.on{display:block}
+  .modal{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);width:100%;max-width:560px;padding:24px;margin:4vh auto}
+  .modal.sm{max-width:420px}
+  .modal h3{font-size:1.2rem;margin-bottom:4px}
+  .mx{float:right;cursor:pointer;color:var(--muted);border:none;background:none;font-size:1.4rem;line-height:1;padding:0 0 0 10px}
+  .sub{color:var(--muted);font-size:.88rem;margin:4px 0 14px}
+  .dt-h{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gold);margin:16px 0 6px}
+  .outs{margin:0;padding-left:18px;font-size:.9rem}
+  .outs li{margin:3px 0}
+  .syl{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .syl li{display:flex;gap:10px;align-items:baseline;padding:9px 12px;font-size:.88rem;border-top:1px solid var(--line)}
+  .syl li:first-child{border-top:none}
+  .syl .n{color:var(--muted);font-variant-numeric:tabular-nums;flex:none;width:22px}
+  .syl .tag{margin-left:auto;font-size:.7rem;font-weight:700;color:var(--primary);background:var(--primary-050);padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .syl .lock{margin-left:auto;color:var(--muted);font-size:.8rem}
+  .m-acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .m-acts .btn{flex:1 1 180px}
+  .field{margin-bottom:13px}
+  .field label{display:block;font-size:.84rem;font-weight:600;margin-bottom:5px}
+  .field input{width:100%;height:44px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:11px;padding:0 13px;font:inherit;font-size:.95rem}
+  .field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-050)}
+  .msg{font-size:.86rem;margin-top:12px;padding:10px 12px;border-radius:10px;display:none}
+  .msg.err{display:block;background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+  .msg.ok{display:block;background:var(--primary-050);color:var(--primary)}
+  .pay-total{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:14px}
+  .pay-total b{font-size:1.4rem;color:var(--primary);font-variant-numeric:tabular-nums}
+  .pay-box{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}
+  .pay-box img{width:200px;height:200px;border-radius:12px;border:1px solid var(--line);background:#fff;max-width:100%}
+  .pay-box dl{margin:0;flex:1 1 200px;min-width:0;font-size:.86rem}
+  .pay-box dt{color:var(--muted);font-size:.76rem;margin-top:8px}.pay-box dt:first-child{margin-top:0}
+  .pay-box dd{margin:2px 0 0;overflow-wrap:anywhere}
+  .cp{border:1px solid var(--line);background:var(--surface);color:var(--primary);font-size:.72rem;font-weight:600;border-radius:7px;padding:2px 8px;cursor:pointer;margin-left:4px}
+  .note{font-size:.8rem;color:var(--muted);margin:0 0 14px}
+
+  /* learn */
+  .learn{display:grid;grid-template-columns:300px 1fr;gap:22px;padding:24px 0 50px;align-items:start}
+  @media(max-width:900px){.learn{grid-template-columns:1fr}}
+  .side{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;position:sticky;top:80px}
+  @media(max-width:900px){.side{position:static}}
+  .side h2{font-size:1rem;line-height:1.35;margin:6px 0 8px}
+  .bar{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+  .bar i{display:block;height:100%;background:var(--primary);width:0}
+  .prog{font-size:.78rem;color:var(--muted)}
+  .lsn{list-style:none;margin:12px 0 0;padding:0}
+  .lsn li button{all:unset;box-sizing:border-box;display:flex;gap:9px;width:100%;padding:8px 10px;border-radius:9px;font-size:.86rem;cursor:pointer;align-items:baseline}
+  .lsn li button:hover{background:var(--surface-2)}
+  .lsn li button.on{background:var(--primary-050);color:var(--primary);font-weight:600}
+  .lsn li button:focus-visible{outline:2px solid var(--primary)}
+  .lsn .st{flex:none;width:18px;color:var(--muted)}
+  .lsn .done .st{color:var(--good)}
+  .main{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;min-width:0;box-shadow:var(--shadow)}
+  @media(max-width:520px){.main{padding:20px}}
+  .main .crumb{font-size:.8rem;color:var(--muted);margin-bottom:6px}
+  .main h1{font-size:clamp(1.3rem,2.6vw,1.7rem);margin-bottom:12px}
+  .main .sum{font-size:1rem;color:var(--ink);background:var(--surface-2);border-left:4px solid var(--primary);padding:14px 16px;border-radius:0 12px 12px 0;margin-bottom:20px}
+  .main h4{font-size:.95rem;margin:20px 0 10px}
+  .pts{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .pts li{display:flex;gap:12px;font-size:.95rem}
+  .pts li b{flex:none;width:26px;height:26px;border-radius:8px;background:var(--primary-050);color:var(--primary);display:grid;place-items:center;font-size:.8rem}
+  .prac{margin-top:20px;background:var(--gold-soft);border-radius:12px;padding:14px 16px;font-size:.93rem}
+  .prac b{color:var(--gold);display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+  .nav-l{display:flex;justify-content:space-between;gap:10px;margin-top:26px;flex-wrap:wrap}
+  .locked-box{text-align:center;padding:30px 10px}
+  .locked-box .ic{font-size:2.2rem}
+  .locked-box h3{margin:8px 0 6px}
+  .locked-box p{color:var(--muted);font-size:.92rem;margin-bottom:16px}
+  .locked-box .m-acts{justify-content:center}
+  .locked-box .m-acts .btn{flex:0 1 220px}
+  footer{border-top:1px solid var(--line);padding:22px 0;font-size:.8rem;color:var(--muted)}
+  .trust{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:22px}
+  .trust div{display:flex;gap:10px;align-items:flex-start;font-size:.84rem;color:var(--muted)}
+  .trust div b{display:block;color:var(--ink);font-size:.9rem}
+  .trust i{flex:none;width:30px;height:30px;border-radius:9px;background:var(--primary-050);color:var(--primary);display:grid;place-items:center;font-style:normal;font-weight:800;font-size:.8rem}
+  .card .hook{font-size:.84rem;color:var(--muted);line-height:1.5}
+  .dHook{font-size:1rem;font-weight:600;color:var(--primary);margin:6px 0 10px}
+  .why{display:grid;gap:8px}
+  .why div{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.88rem}
+  .dlv{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:.88rem}
+  .dlv li{display:flex;gap:8px}.dlv li::before{content:"✓";color:var(--good);font-weight:800}
+  .case{margin-top:20px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:.93rem}
+  .case b,.trend b{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;color:var(--primary)}
+  .trend{margin-top:14px;background:var(--primary-050);border-radius:12px;padding:14px 16px;font-size:.93rem}
+  .take{margin-top:18px;font-size:1.02rem;font-weight:600;text-align:center;padding:14px;border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="../"><span class="mark">A</span><span><b>ACCA Academy</b><small>Khoá học kế toán · thuế · doanh nghiệp</small></span></a>
+    <nav class="nav-links">
+      <a href="../">Trang chủ</a>
+      <a href="./" class="on" id="navCourses">Khoá học</a>
+      <a href="../portal.html">Kho phần mềm online</a>
+      <a href="../blog/">Blog</a>
+    </nav>
+    <div class="nav-tools">
+      <span class="who" id="who"></span>
+      <button class="btn btn-ghost btn-sm" type="button" id="mineBtn" hidden>Khoá của tôi</button>
+      <button class="btn btn-primary btn-sm" type="button" id="loginBtn">Đăng nhập</button>
+      <button class="btn btn-ghost btn-sm" type="button" id="logoutBtn" hidden>Đăng xuất</button>
+      <button class="theme-btn" type="button" id="themeBtn" aria-label="Đổi giao diện sáng/tối">◐</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- CATALOG -->
+  <section id="catView">
+    <div class="wrap hero">
+      <span class="eyebrow">ACCA Academy</span>
+      <h1>99 khoá học kế toán, thuế và quản trị doanh nghiệp</h1>
+      <p class="lead">Kiến thức nền vững, cập nhật quy định từ 2026, gắn với xu hướng AI, dữ liệu, số hóa và phát triển bền vững. Mỗi bài có tình huống thực tế của doanh nghiệp Việt Nam, bài thực hành và mẫu dùng ngay. Bài 1 học thử miễn phí; bấm Unlock, chuyển khoản theo QR, ACCA mở quyền học trên tài khoản của bạn.</p>
+      <div class="stats">
+        <div class="stat"><b id="stCourses">99</b><span>khoá học</span></div>
+        <div class="stat"><b id="stLessons">792</b><span>bài học</span></div>
+        <div class="stat"><b>6</b><span>lĩnh vực</span></div>
+        <div class="stat"><b>99k–499k</b><span>học phí một lần</span></div>
+      </div>
+      <div class="trust">
+        <div><i>26</i><span><b>Cập nhật luật 2026</b>Thuế TNDN, TNCN, GTGT, hóa đơn, BHXH, chế độ kế toán mới</span></div>
+        <div><i>AI</i><span><b>Xu hướng 2026–2030</b>AI agent, tự động hóa, dữ liệu, ESG, quản lý thuế số</span></div>
+        <div><i>VN</i><span><b>Tình huống thật</b>Ví dụ có số liệu từ doanh nghiệp Việt Nam, xử lý từng bước</span></div>
+        <div><i>10+</i><span><b>ACCA Consulting Vietnam</b>Hơn 10 năm tư vấn kế toán – thuế cho doanh nghiệp trong và ngoài nước</span></div>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="toolbar">
+        <input class="search" id="q" type="search" placeholder="Tìm khoá học: thuế TNCN, BHXH, báo cáo tài chính…" aria-label="Tìm khoá học">
+        <select class="sel" id="lvSel" aria-label="Cấp độ">
+          <option value="">Mọi cấp độ</option><option value="1">Nhập môn</option><option value="2">Cơ bản</option><option value="3">Trung cấp</option><option value="4">Nâng cao</option><option value="5">Chuyên gia</option>
+        </select>
+      </div>
+      <div class="chips" id="chips" role="tablist" aria-label="Lĩnh vực"></div>
+      <div class="count" id="count"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <!-- LEARN -->
+  <section id="learnView" hidden>
+    <div class="wrap learn">
+      <aside class="side">
+        <button class="btn btn-ghost btn-sm" type="button" id="backBtn">← Tất cả khoá học</button>
+        <div class="kcode" id="lCode" style="margin-top:12px"></div>
+        <h2 id="lTitle"></h2>
+        <div class="bar"><i id="lBar"></i></div>
+        <div class="prog" id="lProg"></div>
+        <ul class="lsn" id="lList"></ul>
+      </aside>
+      <article class="main" id="lMain"></article>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">© <span id="yr"></span> ACCA Consulting Vietnam · MST 0316119996 · Hỗ trợ học viên: Zalo/WhatsApp +84 938 847 699 · info@accavn.com</div></footer>
+
+<!-- DETAIL -->
+<div class="modal-bd" id="detModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+  <button class="mx" type="button" data-close aria-label="Đóng">×</button>
+  <span class="kcode" id="dCode"></span>
+  <h3 id="dTitle"></h3>
+  <p class="sub" id="dMeta"></p>
+  <p class="dHook" id="dHook"></p>
+  <p id="dDesc" style="font-size:.93rem"></p>
+  <p id="dAud" style="font-size:.86rem;color:var(--muted);margin-top:6px"></p>
+  <div id="dWhyBox"><div class="dt-h">Vì sao nên học ngay từ 2026</div><div class="why" id="dWhy"></div></div>
+  <div class="dt-h">Bạn sẽ đạt được</div>
+  <ul class="outs" id="dOut"></ul>
+  <div id="dDlBox"><div class="dt-h">Tài liệu và công cụ nhận được</div><ul class="dlv" id="dDl"></ul></div>
+  <div class="dt-h">Nội dung khoá học</div>
+  <ul class="syl" id="dSyl"></ul>
+  <div class="m-acts" id="dActs"></div>
+</div></div>
+
+<!-- LOGIN -->
+<div class="modal-bd" id="loginModal"><div class="modal sm" role="dialog" aria-modal="true" aria-labelledby="lgTitle">
+  <button class="mx" type="button" data-close aria-label="Đóng">×</button>
+  <h3 id="lgTitle">Đăng nhập học viên</h3>
+  <p class="sub">Dùng tài khoản ACCA đã cấp (chung với Kho phần mềm online). Chưa có tài khoản: bấm Unlock một khoá học, ACCA gửi tài khoản qua email sau khi kích hoạt.</p>
+  <form id="loginForm">
+    <div class="field"><label for="lgEmail">Email</label><input type="email" id="lgEmail" autocomplete="username" required></div>
+    <div class="field"><label for="lgPass">Mật khẩu</label><input type="password" id="lgPass" autocomplete="current-password" required></div>
+    <button class="btn btn-primary" type="submit" id="lgBtn" style="width:100%">Đăng nhập</button>
+    <div class="msg" id="lgMsg"></div>
+  </form>
+</div></div>
+
+<!-- PAY -->
+<div class="modal-bd" id="payModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="payTitle">
+  <button class="mx" type="button" data-close aria-label="Đóng">×</button>
+  <span class="eyebrow">Mở khoá khoá học</span>
+  <h3 id="payTitle"></h3>
+  <p class="sub" id="paySub"></p>
+  <div class="field"><label for="payName">Họ tên người học *</label><input type="text" id="payName" placeholder="Nguyễn Văn A" autocomplete="name"></div>
+  <div class="field"><label for="payPhone">Số điện thoại *</label><input type="tel" id="payPhone" placeholder="09xx xxx xxx" autocomplete="tel" inputmode="tel"></div>
+  <div id="payContact">
+    <div class="field"><label for="payEmail">Email nhận tài khoản học *</label><input type="email" id="payEmail" placeholder="ten@email.com" autocomplete="email"></div>
+  </div>
+  <div class="pay-total"><span>Học phí (một lần)</span><b id="payAmount"></b></div>
+  <div class="pay-box">
+    <img id="payQr" alt="Mã QR chuyển khoản ACB" width="200" height="200">
+    <dl>
+      <dt>Ngân hàng</dt><dd>ACB – Ngân hàng TMCP Á Châu (PGD Minh Phụng)</dd>
+      <dt>Số tài khoản</dt><dd><b id="payAccNo"></b> <button class="cp" type="button" data-copy="payAccNo">Sao chép</button></dd>
+      <dt>Chủ tài khoản</dt><dd id="payHolder"></dd>
+      <dt>Nội dung chuyển khoản</dt><dd><b id="payContent"></b> <button class="cp" type="button" data-copy="payContent">Sao chép</button></dd>
+    </dl>
+  </div>
+  <p class="note">Điền họ tên và số điện thoại trước, mã QR và nội dung chuyển khoản (TÊN-SĐT-KH-MÃ KHOÁ) tự cập nhật. Giữ nguyên nội dung khi chuyển để ACCA đối chiếu và mở quyền học.</p>
+  <button class="btn btn-primary" type="button" id="payDone" style="width:100%">Tôi đã chuyển khoản</button>
+  <div class="msg" id="payMsg"></div>
+</div></div>
+
+<script src="courses.js?v=20261002b"></script>
+<script>
+(function(){
+  "use strict";
+  var BACKEND_URL="https://script.google.com/macros/s/AKfycbzcNPAWKicAS9pv_2H0T6I3l1xnJlasKL-Emf0XWyKs-dOb_vvP0M9_q_wV2IWIteyYEQ/exec";
+  var PAY={bin:"970416",accNo:"10688187",holder:"CONG TY TNHH ACCA CONSULTING VIETNAM"};
+  var FIELDS=[["","Tất cả"],["KT","Kế toán"],["THUE","Thuế"],["NS","Nhân sự - Lương - BHXH"],["PL","Pháp lý doanh nghiệp"],["TC","Tài chính - Quản trị"],["CN","Công cụ số & AI"]];
+  var C=window.KH_COURSES||[], BY={};
+  C.forEach(function(c){ BY[c.id]=c; });
+  var S={token:"",email:"",access:[],field:"",mine:false};
+  var $=function(s){return document.querySelector(s);};
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m];}); }
+  function money(n){ return Math.round(n).toLocaleString("vi-VN")+" đ"; }
+  function store(k,v){ try{ if(v==null) sessionStorage.removeItem(k); else sessionStorage.setItem(k,v); }catch(e){} }
+  function read(k){ try{ return sessionStorage.getItem(k)||""; }catch(e){ return ""; } }
+  function api(action,payload){
+    return fetch(BACKEND_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({action:action},payload||{}))}).then(function(r){return r.json();});
+  }
+  function owns(c){ return S.access.indexOf(c.code)>=0 || S.access.indexOf("khall")>=0; }
+
+  /* ---------- catalog ---------- */
+  function renderChips(){
+    $("#chips").innerHTML=FIELDS.map(function(f){
+      var n=f[0]?C.filter(function(c){return c.f===f[0];}).length:C.length;
+      return '<button class="chip'+(S.field===f[0]?' on':'')+'" type="button" role="tab" aria-selected="'+(S.field===f[0])+'" data-f="'+f[0]+'">'+esc(f[1])+'<span>'+n+'</span></button>';
+    }).join("");
+  }
+  function norm(s){ return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/đ/g,"d"); }
+  function renderGrid(){
+    var q=norm($("#q").value.trim()), lv=$("#lvSel").value;
+    var list=C.filter(function(c){
+      if(S.field&&c.f!==S.field) return false;
+      if(lv&&String(c.lv)!==lv) return false;
+      if(S.mine&&!owns(c)) return false;
+      if(q&&norm(c.id+" "+c.t+" "+c.fn+" "+(c.d||"")+" "+c.ls.join(" ")).indexOf(q)<0) return false;
+      return true;
+    });
+    $("#count").textContent=(S.mine?"Khoá của tôi: ":"")+list.length+" khoá học";
+    if(!list.length){ $("#grid").innerHTML='<div class="empty">'+(S.mine?"Bạn chưa mở khoá khoá học nào. Chọn một khoá và bấm Unlock.":"Không tìm thấy khoá học phù hợp.")+'</div>'; return; }
+    $("#grid").innerHTML=list.map(function(c){
+      var o=owns(c);
+      return '<div class="card"><div class="card-top"><span class="kcode">KH-'+c.id.slice(2)+'</span>'+(o?'<span class="owned">Đã mở khoá</span>':'<span class="lv l'+c.lv+'">'+esc(c.ln)+'</span>')+'</div>'+
+        '<h3>'+esc(c.t)+'</h3><div class="fld">'+esc(c.fn)+'</div>'+(c.k?'<p class="hook">'+esc(c.k)+'</p>':'')+
+        '<div class="meta"><span>'+c.ls.length+' bài</span><span>'+c.h+' giờ</span>'+(o?'<span>'+esc(c.ln)+'</span>':'')+'</div>'+
+        '<div class="price">'+(o?'':money(c.p))+'</div>'+
+        '<div class="acts"><button class="btn btn-ghost btn-sm" type="button" data-det="'+c.id+'">Xem khoá</button>'+
+        (o?'<button class="btn btn-primary btn-sm" type="button" data-learn="'+c.id+'">Vào học</button>'
+          :'<button class="btn btn-primary btn-sm" type="button" data-unlock="'+c.id+'">🔒 Unlock</button>')+'</div></div>';
+    }).join("");
+  }
+  $("#chips").addEventListener("click",function(e){ var b=e.target.closest("[data-f]"); if(!b) return; S.field=b.getAttribute("data-f"); renderChips(); renderGrid(); });
+  $("#q").addEventListener("input",renderGrid);
+  $("#lvSel").addEventListener("change",renderGrid);
+  document.addEventListener("click",function(e){
+    var t;
+    if((t=e.target.closest("[data-det]"))){ openDetail(t.getAttribute("data-det")); return; }
+    if((t=e.target.closest("[data-unlock]"))){ closeAll(); openPay(t.getAttribute("data-unlock")); return; }
+    if((t=e.target.closest("[data-learn]"))){ closeAll(); location.hash="hoc/"+t.getAttribute("data-learn")+(t.getAttribute("data-l")?"/"+t.getAttribute("data-l"):""); return; }
+    if((t=e.target.closest("[data-login]"))){ closeAll(); openLogin(); return; }
+    if(e.target.closest("[data-close]")||e.target.classList.contains("modal-bd")){ closeAll(); return; }
+    if((t=e.target.closest("[data-copy]"))){ var txt=$("#"+t.getAttribute("data-copy")).textContent;
+      if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ t.textContent="Đã chép"; setTimeout(function(){t.textContent="Sao chép";},1500); }); }
+  });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeAll(); });
+  function closeAll(){ document.querySelectorAll(".modal-bd.on").forEach(function(m){ m.classList.remove("on"); }); }
+  function openModal(id){ closeAll(); $(id).classList.add("on"); }
+
+  /* ---------- detail ---------- */
+  function openDetail(id){
+    var c=BY[id]; if(!c) return; var o=owns(c);
+    $("#dCode").textContent="Mã khoá: KH-"+c.id.slice(2)+" · "+c.fn;
+    $("#dTitle").textContent=c.t;
+    $("#dMeta").textContent=c.ln+" · "+c.ls.length+" bài · "+c.h+" giờ học · "+(o?"Đã mở khoá":money(c.p));
+    $("#dDesc").textContent=c.d||""; $("#dAud").textContent=c.a?(/^dành cho/i.test(c.a)?c.a:("Dành cho: "+c.a)):"";
+    $("#dHook").textContent=c.k||""; $("#dHook").hidden=!c.k;
+    $("#dWhy").innerHTML=(c.w||[]).map(function(x){return "<div>"+esc(x)+"</div>";}).join(""); $("#dWhyBox").hidden=!(c.w&&c.w.length);
+    $("#dOut").innerHTML=(c.o||[]).map(function(x){return "<li>"+esc(x)+"</li>";}).join("");
+    $("#dDl").innerHTML=(c.dl||[]).map(function(x){return "<li><span>"+esc(x)+"</span></li>";}).join(""); $("#dDlBox").hidden=!(c.dl&&c.dl.length);
+    $("#dSyl").innerHTML=c.ls.map(function(x,i){
+      return '<li><span class="n">'+(i+1)+'.</span><span>'+esc(x)+'</span>'+(i===0?'<span class="tag">Học thử miễn phí</span>':(o?'':'<span class="lock">🔒</span>'))+'</li>';
+    }).join("");
+    $("#dActs").innerHTML=o?'<button class="btn btn-primary" type="button" data-learn="'+c.id+'">Vào học</button>'
+      :'<button class="btn btn-ghost" type="button" data-learn="'+c.id+'">Học thử bài 1</button><button class="btn btn-primary" type="button" data-unlock="'+c.id+'">🔒 Unlock · '+money(c.p)+'</button>';
+    openModal("#detModal");
+  }
+
+  /* ---------- pay ---------- */
+  var CUR=null;
+  function payCode(c){ return "KH-"+c.id.slice(2); }
+  function payContent(){
+    var name=String($("#payName").value||"").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[đĐ]/g,"D").replace(/[^A-Za-z ]/g,"").replace(/\s+/g," ").trim().toUpperCase().slice(0,22)||"TEN";
+    var phone=String($("#payPhone").value||"").replace(/\D/g,"").slice(0,11)||"SDT";
+    return name+"-"+phone+"-"+payCode(CUR);
+  }
+  function renderPay(){
+    if(!CUR) return; var content=payContent();
+    $("#payAmount").textContent=money(CUR.p); $("#payContent").textContent=content;
+    $("#payAccNo").textContent=PAY.accNo; $("#payHolder").textContent=PAY.holder;
+    $("#payQr").src="https://img.vietqr.io/image/"+PAY.bin+"-"+PAY.accNo+"-compact2.png?amount="+CUR.p+"&addInfo="+encodeURIComponent(content)+"&accountName="+encodeURIComponent(PAY.holder);
+  }
+  function openPay(id){
+    CUR=BY[id]; if(!CUR) return;
+    $("#payTitle").textContent=CUR.t;
+    $("#paySub").textContent="Mã khoá: "+payCode(CUR)+" · "+CUR.ln+" · "+CUR.ls.length+" bài · "+CUR.h+" giờ. Thanh toán một lần, học trên tài khoản ACCA của bạn.";
+    $("#payContact").hidden=!!S.token; $("#payMsg").className="msg"; $("#payDone").disabled=false;
+    renderPay(); openModal("#payModal");
+  }
+  ["#payName","#payPhone"].forEach(function(id){ $(id).addEventListener("input",renderPay); });
+  $("#payDone").onclick=function(){
+    var msg=$("#payMsg"), nm=$("#payName").value.trim(), ph=$("#payPhone").value.trim(), em=$("#payEmail").value.trim();
+    if(!nm||ph.replace(/\D/g,"").length<9){ msg.className="msg err"; msg.textContent="Vui lòng nhập họ tên và số điện thoại để nội dung chuyển khoản đúng cú pháp TÊN-SĐT-KH-MÃ KHOÁ."; return; }
+    if(!S.token&&!/^\S+@\S+\.\S+$/.test(em)){ msg.className="msg err"; msg.textContent="Vui lòng nhập email để ACCA gửi tài khoản học sau khi kích hoạt."; return; }
+    $("#payDone").disabled=true;
+    api("smart_load",{token:S.token||null,sub:"unlock_request",product:CUR.code,months:0,amount:CUR.p,content:payContent(),email:em,phone:ph,company:nm+" · "+CUR.id+" "+CUR.t})
+      .then(function(res){
+        if(res&&res.ok){ msg.className="msg ok"; msg.textContent="Đã ghi nhận. ACCA đối chiếu tiền về tài khoản ACB và mở quyền học "+payCode(CUR)+" trong giờ làm việc"+(S.token?"":", tài khoản học gửi về email của bạn")+". Cần gấp: Zalo 0938 847 699."; }
+        else { msg.className="msg err"; msg.textContent="Chưa ghi nhận được yêu cầu. Vui lòng gửi ảnh chuyển khoản qua Zalo +84 938 847 699 để ACCA mở quyền học."; $("#payDone").disabled=false; }
+      }).catch(function(){ msg.className="msg err"; msg.textContent="Không kết nối được máy chủ. Vui lòng gửi ảnh chuyển khoản qua Zalo +84 938 847 699."; $("#payDone").disabled=false; });
+  };
+
+  /* ---------- login ---------- */
+  function openLogin(){ $("#lgMsg").className="msg"; openModal("#loginModal"); setTimeout(function(){ $("#lgEmail").focus(); },30); }
+  $("#loginBtn").onclick=openLogin;
+  $("#loginForm").addEventListener("submit",function(e){
+    e.preventDefault(); var em=$("#lgEmail").value.trim().toLowerCase(), msg=$("#lgMsg"), b=$("#lgBtn");
+    b.disabled=true; msg.className="msg";
+    api("login",{email:em,password:$("#lgPass").value,mode:""}).then(function(res){
+      b.disabled=false;
+      if(res&&res.ok&&res.token){ S.token=res.token; S.email=em; store("acca_portal_tok",S.token); store("acca_portal_email",em); setAccess(res.access); closeAll(); $("#loginForm").reset(); route(); }
+      else { msg.className="msg err"; msg.textContent=(res&&res.error)||"Email hoặc mật khẩu chưa đúng."; }
+    }).catch(function(){ b.disabled=false; msg.className="msg err"; msg.textContent="Không kết nối được máy chủ. Vui lòng thử lại."; });
+  });
+  $("#logoutBtn").onclick=function(){ S.token="";S.email="";S.access=[];S.mine=false; store("acca_portal_tok",null); store("acca_portal_email",null); KEYS={}; setAccess([]); route(); };
+  $("#mineBtn").onclick=function(){ S.mine=!S.mine; if(location.hash) location.hash=""; else route(); };
+  function setAccess(a){
+    S.access=(a||[]).map(function(x){return String(x).toLowerCase();});
+    var logged=!!S.token;
+    $("#loginBtn").hidden=logged; $("#logoutBtn").hidden=!logged; $("#mineBtn").hidden=!logged;
+    $("#mineBtn").textContent=S.mine?"Tất cả khoá học":"Khoá của tôi";
+    $("#who").textContent=logged?S.email:"";
+  }
+
+  /* ---------- learn ---------- */
+  var KEYS={}, CACHE={};
+  function b64(s){ var b=atob(s), u=new Uint8Array(b.length); for(var i=0;i<b.length;i++) u[i]=b.charCodeAt(i); return u; }
+  function loadFull(c){
+    if(CACHE[c.id]) return Promise.resolve(CACHE[c.id]);
+    var keyP=KEYS[c.id]?Promise.resolve(KEYS[c.id]):api("smart_load",{sub:"course_key",token:S.token,course:c.code}).then(function(r){
+      if(!r||!r.ok||!r.key) throw new Error((r&&r.error)||"Chưa mở quyền học khoá này.");
+      KEYS[c.id]=r.key; return r.key; });
+    return Promise.all([keyP, fetch("c/"+c.id+".json",{cache:"no-cache"}).then(function(r){ return r.json(); })]).then(function(x){
+      return crypto.subtle.importKey("raw",b64(x[0]),{name:"AES-GCM"},false,["decrypt"]).then(function(k){
+        return crypto.subtle.decrypt({name:"AES-GCM",iv:b64(x[1].iv)},k,b64(x[1].ct));
+      }).then(function(buf){ var d=JSON.parse(new TextDecoder().decode(buf)); CACHE[c.id]=d; return d; });
+    });
+  }
+  function progKey(c){ return "kh_prog_"+(S.email||"guest")+"_"+c.id; }
+  function getProg(c){ try{ return JSON.parse(localStorage.getItem(progKey(c))||"[]"); }catch(e){ return []; } }
+  function setProg(c,p){ try{ localStorage.setItem(progKey(c),JSON.stringify(p)); }catch(e){} }
+  function renderSide(c,idx){
+    var o=owns(c), done=getProg(c);
+    $("#lCode").textContent="KH-"+c.id.slice(2)+" · "+c.ln+" · "+c.fn;
+    $("#lTitle").textContent=c.t;
+    var pct=Math.round(done.length/c.ls.length*100);
+    $("#lBar").style.width=pct+"%"; $("#lProg").textContent="Hoàn thành "+done.length+"/"+c.ls.length+" bài ("+pct+"%)";
+    $("#lList").innerHTML=c.ls.map(function(t,i){
+      var d=done.indexOf(i)>=0, lock=!o&&i>0;
+      return '<li class="'+(d?'done':'')+'"><button type="button" class="'+(i===idx?'on':'')+'" data-learn="'+c.id+'" data-l="'+(i+1)+'"><span class="st">'+(d?'✓':(lock?'🔒':(i+1)+'.'))+'</span><span>'+esc(t)+'</span></button></li>';
+    }).join("");
+  }
+  function lessonHtml(c,i,L){
+    var last=i===c.ls.length-1, done=getProg(c).indexOf(i)>=0;
+    return '<div class="crumb">Bài '+(i+1)+' / '+c.ls.length+(i===0&&!owns(c)?' · Học thử miễn phí':'')+'</div>'+
+      '<h1>'+esc(L.t||c.ls[i])+'</h1>'+
+      '<div class="sum">'+esc(L.sum)+'</div>'+
+      '<h4>Nội dung chính</h4><ul class="pts">'+(L.points||[]).map(function(p,k){ return '<li><b>'+(k+1)+'</b><span>'+esc(p)+'</span></li>'; }).join("")+'</ul>'+
+      (L.case?'<div class="case"><b>Tình huống thực tế</b>'+esc(L.case)+'</div>':'')+
+      (L.trend?'<div class="trend"><b>Xu hướng 2026–2030</b>'+esc(L.trend)+'</div>':'')+
+      (L.practice?'<div class="prac"><b>Bài tập thực hành</b>'+esc(L.practice)+'</div>':'')+
+      (L.takeaway?'<div class="take">“'+esc(L.takeaway)+'”</div>':'')+
+      '<div class="nav-l">'+(i>0?'<button class="btn btn-ghost" type="button" data-learn="'+c.id+'" data-l="'+i+'">← Bài trước</button>':'<span></span>')+
+      '<span style="display:flex;gap:10px;flex-wrap:wrap">'+(done?'':'<button class="btn btn-ghost" type="button" id="markDone">✓ Đánh dấu đã học</button>')+
+      (last?'':'<button class="btn btn-primary" type="button" data-learn="'+c.id+'" data-l="'+(i+2)+'">Bài tiếp theo →</button>')+'</span></div>';
+  }
+  function lockedHtml(c){
+    return '<div class="locked-box"><div class="ic">🔒</div><h3>Bài này dành cho học viên đã mở khoá</h3>'+
+      '<p>'+(S.token?'Tài khoản '+esc(S.email)+' chưa có khoá '+esc(c.t)+'. Bấm Unlock để thanh toán, ACCA mở quyền học sau khi nhận tiền.':'Bạn đã mua khoá này? Đăng nhập để học tiếp. Chưa mua: bấm Unlock để thanh toán.')+'</p>'+
+      '<div class="m-acts">'+(S.token?'':'<button class="btn btn-ghost" type="button" data-login>Đăng nhập</button>')+'<button class="btn btn-primary" type="button" data-unlock="'+c.id+'">🔒 Unlock · '+money(c.p)+'</button></div></div>';
+  }
+  function showLearn(id,n){
+    var c=BY[id]; if(!c){ location.hash=""; return; }
+    var i=Math.min(Math.max((parseInt(n,10)||1)-1,0),c.ls.length-1);
+    $("#catView").hidden=true; $("#learnView").hidden=false; window.scrollTo(0,0);
+    document.title=c.t+" — ACCA Academy";
+    renderSide(c,i);
+    var main=$("#lMain");
+    function bind(){ var m=$("#markDone"); if(m) m.onclick=function(){ var p=getProg(c); if(p.indexOf(i)<0){ p.push(i); setProg(c,p); } renderSide(c,i); m.remove(); }; }
+    if(i===0&&c.l1){ main.innerHTML=lessonHtml(c,0,c.l1); bind(); return; }
+    if(!owns(c)){ main.innerHTML=lockedHtml(c); return; }
+    main.innerHTML='<p class="crumb">Đang tải bài học…</p>';
+    loadFull(c).then(function(d){ var L=(d.lessons||[])[i]; if(!L) throw new Error("Thiếu nội dung bài."); main.innerHTML=lessonHtml(c,i,L); bind(); })
+      .catch(function(err){ main.innerHTML='<div class="locked-box"><div class="ic">⚠️</div><h3>Chưa tải được bài học</h3><p>'+esc(err&&err.message||"Lỗi kết nối")+' Nếu bạn đã thanh toán, vui lòng nhắn Zalo +84 938 847 699 để ACCA kiểm tra quyền học.</p></div>'; });
+  }
+  $("#backBtn").onclick=function(){ location.hash=""; };
+
+  /* ---------- router ---------- */
+  function route(){
+    closeAll();
+    var m=/^#hoc\/(KH\d{3})(?:\/(\d+))?/.exec(location.hash);
+    if(m){ showLearn(m[1],m[2]); return; }
+    document.title="Khoá học ACCA Academy — 99 khoá kế toán, thuế, doanh nghiệp";
+    $("#learnView").hidden=true; $("#catView").hidden=false;
+    $("#mineBtn").textContent=S.mine?"Tất cả khoá học":"Khoá của tôi";
+    renderChips(); renderGrid();
+    var u=/^#unlock-(KH\d{3})/i.exec(location.hash); if(u) openPay(u[1].toUpperCase());
+  }
+  window.addEventListener("hashchange",route);
+
+  /* ---------- theme ---------- */
+  try{ var th=localStorage.getItem("acca_theme"); if(th) document.documentElement.setAttribute("data-theme",th); }catch(e){}
+  $("#themeBtn").onclick=function(){
+    var cur=document.documentElement.getAttribute("data-theme"), dark=window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var next=cur?(cur==="dark"?"light":"dark"):(dark?"light":"dark");
+    document.documentElement.setAttribute("data-theme",next); try{ localStorage.setItem("acca_theme",next); }catch(e){}
+  };
+
+  /* ---------- init ---------- */
+  $("#yr").textContent=new Date().getFullYear();
+  $("#stCourses").textContent=C.length;
+  $("#stLessons").textContent=C.reduce(function(s,c){return s+c.ls.length;},0);
+  S.token=read("acca_portal_tok"); S.email=read("acca_portal_email");
+  setAccess([]); route();
+  if(S.token){
+    api("dashboard",{token:S.token}).then(function(res){
+      if(res&&res.ok){ setAccess(res.access); route(); }
+      else { S.token=""; store("acca_portal_tok",null); setAccess([]); route(); }
+    }).catch(function(){});
+  }
+})();
+</script>
+</body>
+</html>

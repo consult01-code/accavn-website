@@ -285,6 +285,7 @@
   @media(max-width:1360px){.nav-links{gap:14px;font-size:.88rem}}
   .nav-blog{display:none;align-items:center;height:38px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);text-decoration:none;font-weight:600;font-size:.85rem;white-space:nowrap}
   @media(max-width:1200px){.nav-links{display:none}.nav-tools{margin-left:auto}.nav-blog{display:inline-flex}}
+  @media(max-width:560px){.nav-blog.nav-kh{display:none}}
   @media(max-width:620px){
     .nav{gap:8px;height:60px}
     .nav-cta{display:none}
@@ -507,12 +508,14 @@
       <a href="#dichvu" data-i18n="nav_services">Dịch vụ</a>
       <a href="#banggia" data-i18n="nav_pricing">Bảng giá</a>
       <a href="blog/" data-i18n="nav_blog">Blog</a>
+      <a href="khoahoc/" data-i18n="nav_courses">Khoá học</a>
       <a href="#vaisao" data-i18n="nav_why">Vì sao chọn ACCA</a>
       <a href="portal.html" data-i18n="nav_portal">Kho phần mềm online</a>
     </nav>
     <a class="nav-cta" href="#lienhe" data-i18n="nav_cta">Tư vấn online miễn phí tại đây</a>
     <div class="nav-tools">
       <a class="nav-blog" href="blog/" data-i18n="nav_blog">Blog</a>
+      <a class="nav-blog nav-kh" href="khoahoc/" data-i18n="nav_courses">Khoá học</a>
       <select class="lang-sel" id="langSel" aria-label="Language">
         <option value="vi">🇻🇳 VI</option>
         <option value="en">🇬🇧 EN</option>
@@ -892,6 +895,7 @@
         <a href="tel:+84938847699">+84 938 847 699</a>
         <a href="https://wa.me/84938847699" target="_blank" rel="noopener">WhatsApp</a>
         <a href="portal.html" data-i18n="nav_portal">Kho phần mềm online</a>
+        <a href="khoahoc/" data-i18n="nav_courses">Khoá học</a>
         <a href="#quytrinh" data-i18n="proc_eyebrow">Quy trình làm việc</a>
         <a href="#faq" data-i18n="faq_eyebrow">Câu hỏi thường gặp</a>
         <a href="blog/" data-i18n="nav_blog">Blog</a>
@@ -949,6 +953,7 @@
     blog_h2:{"vi": "Kiến thức kế toán – thuế cho chủ doanh nghiệp", "en": "Accounting & tax insights for business owners", "zh": "企业主的会计与税务知识", "ko": "사업주를 위한 회계·세무 지식", "ja": "経営者のための会計・税務ナレッジ", "fr": "Comptabilité et fiscalité : l'essentiel pour les dirigeants", "ru": "Бухгалтерия и налоги: полезное для владельцев бизнеса", "de": "Buchhaltung & Steuern: Wissen für Unternehmer"},
     blog_p:{"vi": "Hơn 1.000 bài viết thực tế về kế toán, thuế, thành lập công ty, FDI, quản trị và ứng dụng AI, cập nhật quy định 2026.", "en": "1,000+ practical articles on accounting, tax, company setup, FDI and management in Vietnam, updated for 2026 — with key guides for foreign investors in English.", "zh": "1000 多篇关于越南会计、税务、公司设立、外资企业与管理的实用文章，已按 2026 年规定更新，并提供外国投资者重点指南。", "ko": "베트남 회계·세무·법인 설립·FDI·경영에 관한 1,000편 이상의 실무 글, 2026년 규정 반영 — 외국인 투자자를 위한 핵심 가이드 포함.", "ja": "ベトナムの会計・税務・会社設立・FDI・経営に関する1,000本以上の実践記事（2026年の規定に対応）。外国人投資家向けの主要ガイドも掲載。", "fr": "Plus de 1 000 articles pratiques sur la comptabilité, la fiscalité, la création d'entreprise, les IDE et la gestion au Vietnam, à jour 2026 — avec des guides clés pour les investisseurs étrangers.", "ru": "Более 1000 практических статей о бухгалтерии, налогах, регистрации компаний, ПИИ и управлении во Вьетнаме, с учётом правил 2026 года, включая ключевые руководства для иностранных инвесторов.", "de": "Über 1.000 Praxisartikel zu Buchhaltung, Steuern, Firmengründung, FDI und Management in Vietnam, Stand 2026 — inklusive zentraler Leitfäden für ausländische Investoren."},
     blog_more:{"vi": "Xem tất cả bài viết →", "en": "View all articles →", "zh": "查看全部文章 →", "ko": "모든 글 보기 →", "ja": "すべての記事を見る →", "fr": "Voir tous les articles →", "ru": "Все статьи →", "de": "Alle Artikel ansehen →"},
+    nav_courses:{"vi": "Khoá học", "en": "Courses", "zh": "课程", "ko": "강좌", "ja": "講座", "fr": "Formations", "ru": "Курсы", "de": "Kurse"},
     nav_blog:{"vi": "Blog", "en": "Blog", "zh": "博客", "ko": "블로그", "ja": "ブログ", "fr": "Blog", "ru": "Блог", "de": "Blog"},
     pm_eyebrow:{"vi":"Phần mềm kế toán online ACCA Smart-Accounting","en":"ACCA Smart-Accounting online accounting software","zh":"ACCA Smart-Accounting 在线会计软件","ko":"ACCA Smart-Accounting 온라인 회계 소프트웨어","ja":"ACCA Smart-Accounting オンライン会計ソフト","fr":"Logiciel comptable en ligne ACCA Smart-Accounting","ru":"Онлайн-бухгалтерия ACCA Smart-Accounting","de":"Online-Buchhaltung ACCA Smart-Accounting"},
     nav_software:{"vi": "Phần mềm kế toán", "en": "Accounting software", "zh": "会计软件", "ko": "회계 소프트웨어", "ja": "会計ソフト", "fr": "Logiciel comptable", "ru": "Бухгалтерская программа", "de": "Buchhaltungssoftware"},

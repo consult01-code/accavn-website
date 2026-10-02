@@ -109,6 +109,11 @@
   .svc-code{font-size:.74rem;font-weight:700;color:var(--gold);letter-spacing:.03em}
   .svc-card p{font-size:.85rem;color:var(--muted);margin:0;flex:1}
   .svc-card .btn{width:100%;margin-top:4px}
+  .kh-band{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;text-decoration:none;margin-bottom:30px;box-shadow:var(--shadow)}
+  .kh-band:hover{border-color:var(--primary)}
+  .kh-band b{display:block}.kh-band small{display:block;color:var(--muted);font-size:.84rem}
+  .kh-go{margin-left:auto;font-weight:700;color:var(--primary);white-space:nowrap;font-size:.9rem}
+  @media(max-width:600px){.kh-band{flex-wrap:wrap}.kh-go{margin-left:0}}
   .back-btn{margin-bottom:16px}
   #payModal{overflow-y:auto;place-items:start center}
   .modal.pay{max-width:520px;margin-block:4vh}
@@ -257,6 +262,7 @@
       </div>
       <p class="svc-lead" data-i18n="svc_lead">Dịch vụ đã kích hoạt mở được ngay. Dịch vụ chưa kích hoạt bấm Unlock để xem giá và thanh toán.</p>
       <div class="svc-grid" id="svcGrid"></div>
+      <a class="kh-band" href="khoahoc/"><span class="svc-ic">KH</span><span><b>ACCA Academy · 99 khoá học</b><small>Kế toán, thuế, nhân sự – BHXH, pháp lý, tài chính. Học thử bài 1 miễn phí, Unlock từng khoá. Dùng chung tài khoản này.</small></span><span class="kh-go">Xem khoá học →</span></a>
     </section>
     <div id="bizView" hidden>
     <button class="btn btn-ghost btn-sm back-btn" type="button" id="bizBack" data-i18n="svc_back">← Tất cả dịch vụ</button>
