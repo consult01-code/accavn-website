@@ -110,6 +110,15 @@ tr.void td{color:var(--muted);text-decoration:line-through}
 .err{color:var(--red);font-size:.88rem;white-space:pre-line}
 @media (max-width:900px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.steps a:nth-child(2){border-right:0}.steps a:nth-child(-n+2){border-bottom:1px solid var(--line)}}
 @media (max-width:820px){.app{grid-template-columns:1fr}.rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 16px;gap:10px}nav{flex-direction:row;overflow-x:auto}nav a{white-space:nowrap}.rail .foot{margin-top:0}main{padding:16px 16px 40px}}
+.task{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.say{font-family:var(--f-display);font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:650;line-height:1.15;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.say.pay{color:var(--accent)}
+.btn.big{min-height:44px;padding:9px 20px;font-size:1rem}
+ol.plain{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;line-height:1.6}
+.hint{font-size:.82rem}
+details.adv>summary,details>summary{cursor:pointer;font-weight:600}
+details.adv[open]>summary{margin-bottom:6px}
+label.ck{flex-direction:row;align-items:center;gap:6px;font-size:.8rem;color:var(--fg)}
 .one{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--r);padding:18px 20px}
 .one div{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1 1 320px}
 .one .btn{min-height:48px;padding:10px 22px;font-size:1.02rem}
@@ -122,14 +131,14 @@ tr.void td{color:var(--muted);text-decoration:line-through}
 <body>
 <div class="app">
   <aside class="rail">
-    <div class="brand"><b><a href="../portal.html" title="Về Kho phần mềm online">ACCA Smart-Tax</a></b><span id="co-name">Chưa khai báo người nộp thuế</span></div>
-    <nav id="nav" aria-label="Các bước khai thuế">
-      <a href="#tongquan" data-v="tongquan"><i>◎</i>Tổng quan</a>
-      <a href="#ketnoi" data-v="ketnoi"><i>1</i>Kết nối &amp; lấy hóa đơn</a>
-      <a href="#hoadon" data-v="hoadon"><i>2</i>Bảng kê hóa đơn</a>
-      <a href="#tokhai" data-v="tokhai"><i>3</i>Tờ khai 01/GTGT</a>
-      <a href="#nop" data-v="nop"><i>4</i>Nộp &amp; thông báo</a>
-      <a href="#hoso" data-v="hoso"><i>⚙</i>Hồ sơ người nộp thuế</a>
+    <div class="brand"><b><a href="../portal.html" title="Về Kho phần mềm online">ACCA Smart-Tax</a></b><span id="co-name">Chưa nhập thông tin công ty</span></div>
+    <nav id="nav" aria-label="Mục lục">
+      <a href="#viec" data-v="viec"><i>◎</i>Việc cần làm</a>
+      <a href="#gtgt" data-v="gtgt"><i>1</i>Thuế GTGT</a>
+      <a href="#tncn" data-v="tncn"><i>2</i>Thuế TNCN từ lương</a>
+      <a href="#hoadon" data-v="hoadon"><i>▤</i>Hóa đơn</a>
+      <a href="#nop" data-v="nop"><i>➜</i>Nộp &amp; kết quả</a>
+      <a href="#congty" data-v="congty"><i>⚙</i>Thông tin công ty</a>
     </nav>
     <div class="foot">
       <a href="../portal.html" class="link">← Kho phần mềm online</a>
@@ -142,6 +151,7 @@ tr.void td{color:var(--muted);text-decoration:line-through}
 <div id="toast" class="toast" hidden></div>
 <div id="busy" class="busy" hidden><div id="busy-msg" role="status">Đang xử lý…</div></div>
 <input type="file" id="file-tb" accept=".xml,.html,.htm,.txt,.pdf" hidden>
+<input type="file" id="file-prof" accept=".xml,text/xml,application/xml" hidden>
 <input type="file" id="file-restore" accept=".json,application/json" hidden>
 <div id="auth" class="auth" hidden>
   <form class="auth-card" id="auth-form" autocomplete="on">
@@ -152,7 +162,7 @@ tr.void td{color:var(--muted);text-decoration:line-through}
     <label for="auth-pass">Mật khẩu<input id="auth-pass" type="password" autocomplete="current-password" required></label>
     <button class="btn primary" type="submit" id="auth-btn">Đăng nhập</button>
     <p class="err" id="auth-msg" role="alert"></p>
-    <p class="muted" style="font-size:.84rem;line-height:1.7">Chưa có tài khoản? <a href="../portal.html#unlock-tax">Mua gói ACCA Smart-Tax</a><br><a href="?demo=1#tongquan">Xem bản dùng thử với dữ liệu mẫu</a> (không lưu)</p>
+    <p class="muted" style="font-size:.84rem;line-height:1.7">Chưa có tài khoản? <a href="../portal.html#unlock-tax">Mua gói ACCA Smart-Tax</a><br><a href="?demo=1#viec">Xem bản dùng thử với dữ liệu mẫu</a> (không lưu)</p>
   </form>
 </div>
 
@@ -178,11 +188,11 @@ let AUTH={email:'',token:''};
 function api(action,payload){return fetch(BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({action},payload||{}))}).then(r=>{if(!r.ok)throw new Error('Máy chủ trả lỗi '+r.status);return r.json();});}
 
 /* ===================== dữ liệu (lưu trên trình duyệt theo tài khoản) ===================== */
-let DB={profile:{},periods:{}};
+let DB={profile:{},periods:{},staff:[]};
 const dbKey=()=> 'acca.tax.'+(DEMO?'demo':(AUTH.email||'anon'));
-function load(){try{const raw=DEMO?null:localStorage.getItem(dbKey());if(raw)DB=Object.assign({profile:{},periods:{}},JSON.parse(raw));}catch(e){}}
+function load(){try{const raw=DEMO?null:localStorage.getItem(dbKey());if(raw)DB=Object.assign({profile:{},periods:{},staff:[]},JSON.parse(raw));}catch(e){}}
 function save(){if(DEMO)return;try{localStorage.setItem(dbKey(),JSON.stringify(DB));}catch(e){toast('Không lưu được vào trình duyệt (bộ nhớ đầy hoặc chế độ ẩn danh).');}}
-const P=()=>Object.assign({mst:'',ten:'',dchi:'',kieuKy:'Q',maCQT:'',tenCQT:'',nganh:'',nguoiKy:'',maTinh:'',tenTinh:'',maXa:'',tenXa:'',dthoai:'',email:'',pbanDVu:'5.6.7',pbanXML:'2.8.3'},DB.profile||{});
+const P=()=>Object.assign({mst:'',ten:'',dchi:'',kieuKy:'Q',maCQT:'',tenCQT:'',nganh:'',nguoiKy:'',maTinh:'',tenTinh:'',maXa:'',tenXa:'',dthoai:'',email:'',pbanDVu:'5.6.7',pbanXML:'2.8.3',pbanKK:'2.9.3'},DB.profile||{});
 
 /* ===================== kỳ kê khai ===================== */
 const now=new Date();
@@ -196,7 +206,7 @@ function perInfo(){
   const m1=(n-1)*3+1,m3=m1+2;const dm=new Date(y,m3+1,0);
   return {key:`${y}-Q${n}`,label:`Quý ${n}/${y}`,kieu:'Q',ky:`${n}/${y}`,from:`${y}-${z2(m1)}-01`,to:`${y}-${z2(m3)}-${lastDay(y,m3)}`,months:[[y,m1],[y,m1+1],[y,m3]],due:ymd(dm)};
 }
-function cur(){const k=perInfo().key;if(!DB.periods[k])DB.periods[k]={in:[],out:[],adj:{},status:{}};const p=DB.periods[k];p.adj=p.adj||{};p.status=p.status||{};p.in=p.in||[];p.out=p.out||[];return p;}
+function cur(){const k=perInfo().key;if(!DB.periods[k])DB.periods[k]={in:[],out:[],adj:{},st:{},excl:{},pay:{}};const p=DB.periods[k];p.adj=p.adj||{};p.st=p.st||{};p.excl=p.excl||{};p.pay=p.pay||{};p.in=p.in||[];p.out=p.out||[];return p;}
 
 /* ===================== cổng hóa đơn điện tử (gọi thẳng từ trình duyệt của người dùng) ===================== */
 // Mật khẩu cổng thuế chỉ gửi tới hoadondientu.gdt.gov.vn, không lưu, không qua máy chủ ACCA. Phiên đăng nhập chỉ giữ trong bộ nhớ của tab này.
@@ -258,47 +268,85 @@ async function gdtFetchPeriod(){
   return {nIn:c.in.length,nOut:c.out.length,nErr};
 }
 
-/* ===================== tính tờ khai 01/GTGT (Thông tư 80/2021) ===================== */
+/* ===================== tính thuế GTGT – tờ khai 01/GTGT (Thông tư 80/2021) ===================== */
 const VOID=x=>x.tthai===4||x.tthai===6;   // đã bị thay thế / đã bị hủy: không kê khai
 const TTHAI={1:'Hóa đơn mới',2:'Thay thế',3:'Điều chỉnh',4:'Đã bị thay thế',5:'Đã bị điều chỉnh',6:'Đã bị hủy'};
 const RLAB={'10':'10%','8':'8%','5':'5%','0':'0%','KCT':'Không chịu thuế','KKK':'Không kê khai','KHAC':'Khác'};
 function sumRates(list){const o={};for(const x of list){if(VOID(x))continue;for(const r of x.rates){o[r.r]=o[r.r]||{base:0,tax:0};o[r.r].base+=r.base;o[r.r].tax+=r.tax;}}return o;}
-function calc01(){
-  const c=cur(),a=c.adj,si=sumRates(c.in),so=sumRates(c.out),g=(o,k,f)=>(o[k]?o[k][f]:0);
+function prevOf(y,n,kieu){if(kieu==='M')return n>1?{y,n:n-1}:{y:y-1,n:12};return n>1?{y,n:n-1}:{y:y-1,n:4};}
+const keyOf=(y,n,kieu)=>kieu==='M'?`${y}-M${z2(n)}`:`${y}-Q${n}`;
+function hasNum(v){return v!=null&&v!=='';}
+// số thuế còn được trừ kỳ trước chuyển sang: lấy số người dùng nhập, nếu không thì lấy [43] của kỳ liền trước đã có trong phần mềm
+function carryIn(y,n,kieu,depth){
+  const c=DB.periods[keyOf(y,n,kieu)];if(c&&c.adj&&hasNum(c.adj.ct22))return {v:+c.adj.ct22,auto:false};
+  if(depth>12)return {v:0,auto:false};
+  const pv=prevOf(y,n,kieu),pc=DB.periods[keyOf(pv.y,pv.n,kieu)];
+  if(!pc||!((pc.in||[]).length+(pc.out||[]).length))return {v:0,auto:false};
+  return {v:calcP(pc,pv.y,pv.n,kieu,depth+1).ct43,auto:true};
+}
+function calcP(c,y,n,kieu,depth){
+  const a=c.adj||{},ex=c.excl||{},si=sumRates(c.in||[]),so=sumRates(c.out||[]),g=(o,k,f)=>(o[k]?o[k][f]:0);
   const t={};
-  t.ct23=Object.values(si).reduce((s,v)=>s+v.base,0);t.ct24=Object.values(si).reduce((s,v)=>s+v.tax,0);
   t.ct23a=+a.ct23a||0;t.ct24a=+a.ct24a||0;
-  t.ct25=a.ct25!=null&&a.ct25!==''?+a.ct25:t.ct24;
+  t.ct23=Object.values(si).reduce((s,v)=>s+v.base,0)+t.ct23a;t.ct24=Object.values(si).reduce((s,v)=>s+v.tax,0)+t.ct24a;
+  t.excl=(c.in||[]).reduce((s,x)=>s+(!VOID(x)&&ex[x.id]?x.tax:0),0);
+  t.ct25=hasNum(a.ct25)?+a.ct25:Math.max(0,t.ct24-t.excl);
   t.ct26=g(so,'KCT','base');t.ct29=g(so,'0','base');t.ct30=g(so,'5','base');t.ct31=g(so,'5','tax');
   t.ct32=g(so,'10','base')+g(so,'8','base')+g(so,'KHAC','base');t.ct33=g(so,'10','tax')+g(so,'8','tax')+g(so,'KHAC','tax');
   t.ct32a=g(so,'KKK','base');
   t.ct27=t.ct29+t.ct30+t.ct32+t.ct32a;t.ct28=t.ct31+t.ct33;t.ct34=t.ct26+t.ct27;t.ct35=t.ct28;
-  t.ct36=t.ct35-t.ct25;t.ct22=+a.ct22||0;t.ct37=+a.ct37||0;t.ct38=+a.ct38||0;t.ct39a=+a.ct39a||0;t.ct40b=+a.ct40b||0;t.ct42=+a.ct42||0;
+  t.ct36=t.ct35-t.ct25;
+  const ci=carryIn(y,n,kieu,depth||0);t.ct22=ci.v;t.ct22auto=ci.auto;
+  t.ct37=+a.ct37||0;t.ct38=+a.ct38||0;t.ct39a=+a.ct39a||0;t.ct40b=+a.ct40b||0;t.ct42=+a.ct42||0;
   const net=t.ct36-t.ct22+t.ct37-t.ct38-t.ct39a;
   t.ct40a=net>0?net:0;t.ct40=Math.max(0,t.ct40a-t.ct40b);t.ct41=net<0?-net:0;t.ct43=Math.max(0,t.ct41-t.ct42);
-  t.ct21=(c.in.length+c.out.length===0&&!t.ct22)?1:0;
+  t.ct21=((c.in||[]).length+(c.out||[]).length===0&&!t.ct23a)?1:0;
   t.r8={base:g(so,'8','base'),tax:g(so,'8','tax')};t.khac={inn:g(si,'KHAC','base'),out:g(so,'KHAC','base')};
   return t;
 }
+const calc01=()=>calcP(cur(),PER.y,PER.n,P().kieuKy,0);
 function checks(){
-  const c=cur(),w=[];
-  const big=c.in.filter(x=>!VOID(x)&&x.total>=5e6);
-  if(big.length)w.push({t:'Từ 5 triệu đồng',d:`${big.length} hóa đơn mua vào từ 5 triệu đồng trở lên. Thuế đầu vào chỉ được khấu trừ khi có chứng từ thanh toán không dùng tiền mặt. Rà lại trước khi khai chỉ tiêu [25].`});
+  const c=cur(),w=[],t=calc01();
+  const big=c.in.filter(x=>!VOID(x)&&x.total>=5e6&&!(c.excl||{})[x.id]);
+  if(big.length)w.push({t:'Cần xem',d:`Có ${big.length} hóa đơn mua vào từ 5 triệu đồng trở lên. Hóa đơn loại này phải trả bằng chuyển khoản mới được trừ thuế. Nếu có hóa đơn trả tiền mặt, vào mục Hóa đơn và đánh dấu "Trả tiền mặt".`,go:'hoadon'});
   const vIn=c.in.filter(VOID).length,vOut=c.out.filter(VOID).length;
-  if(vIn+vOut)w.push({lv:'info',t:'Đã loại',d:`${vIn} hóa đơn mua vào và ${vOut} hóa đơn bán ra ở trạng thái đã bị hủy hoặc đã bị thay thế, không tính vào tờ khai.`});
-  const t=calc01();
-  if(t.r8.base)w.push({lv:'info',t:'Thuế suất 8%',d:`Doanh thu thuế suất 8%: ${fmt(t.r8.base)} đ, thuế ${fmt(t.r8.tax)} đ. Đang cộng vào chỉ tiêu [32]/[33]; lập thêm phụ lục giảm thuế GTGT theo hướng dẫn hiện hành.`});
-  if(t.khac.inn||t.khac.out)w.push({t:'Thuế suất khác',d:'Có hóa đơn mang thuế suất không thuộc 0/5/8/10/KCT. Kiểm tra từng hóa đơn ở Bảng kê trước khi nộp.'});
+  if(vIn+vOut)w.push({lv:'info',t:'Đã tự xử lý',d:`Phần mềm đã bỏ ra ${vIn+vOut} hóa đơn bị hủy hoặc bị thay thế.`});
+  if(t.r8.base)w.push({lv:'info',t:'Thuế suất 8%',d:`Có ${fmt(t.r8.base)} đ doanh thu đang được giảm thuế còn 8%. Khi nộp trên trang thuế, cần kèm phụ lục giảm thuế. Phần mềm chưa tự lập phụ lục này.`});
+  if(t.khac.inn||t.khac.out)w.push({t:'Cần xem',d:'Có hóa đơn ghi thuế suất lạ (không phải 0%, 5%, 8%, 10%). Nhờ kế toán xem lại các hóa đơn này ở mục Hóa đơn.',go:'hoadon'});
   const adj=c.in.concat(c.out).filter(x=>x.tthai===3||x.tthai===5).length;
-  if(adj)w.push({t:'Hóa đơn điều chỉnh',d:`${adj} hóa đơn điều chỉnh hoặc đã bị điều chỉnh. Đối chiếu giá trị tăng, giảm trước khi nộp.`});
+  if(adj)w.push({t:'Cần xem',d:`Có ${adj} hóa đơn điều chỉnh. Kiểm tra lại số tiền tăng, giảm ở mục Hóa đơn.`,go:'hoadon'});
   return w;
 }
+
+/* ===================== tính thuế TNCN từ tiền lương – tờ khai 05/KK-TNCN ===================== */
+// Từ kỳ tính thuế 2026: giảm trừ 15,5 triệu/người nộp thuế, 6,2 triệu/người phụ thuộc, biểu thuế 5 bậc. Trước 2026: 11 triệu, 4,4 triệu, biểu 7 bậc.
+function pitRule(y){return y>=2026?{self:15.5e6,dep:6.2e6,b:[[10e6,.05],[30e6,.1],[60e6,.2],[100e6,.3],[Infinity,.35]]}:{self:11e6,dep:4.4e6,b:[[5e6,.05],[10e6,.1],[18e6,.15],[32e6,.2],[52e6,.25],[80e6,.3],[Infinity,.35]]};}
+function pitMonth(loai,inc,bh,npt,y){
+  inc=+inc||0;if(inc<=0)return 0;
+  if(loai==='kct')return Math.round(inc*.2);
+  if(loai==='tv')return inc>=2e6?Math.round(inc*.1):0;
+  const R=pitRule(y);let t=inc-(+bh||0)-R.self-(+npt||0)*R.dep;if(t<=0)return 0;
+  let tax=0,lo=0;for(const [hi,r] of R.b){if(t>lo){tax+=(Math.min(t,hi)-lo)*r;lo=hi;}else break;}
+  return Math.round(tax);
+}
+const LOAI={hd:'Nhân viên có hợp đồng từ 3 tháng',tv:'Thời vụ, cộng tác viên, khoán việc',kct:'Người nước ngoài không cư trú'};
+function staffRow(s){const c=cur(),pi=perInfo(),p=(c.pay||{})[s.id]||{inc:[],bh:[]};let inc=0,tax=0;
+  pi.months.forEach((m,i)=>{const v=+p.inc[i]||0;inc+=v;tax+=pitMonth(s.loai,v,p.bh[i],s.npt,pi.months[i][0]);});return {inc,tax};}
+function calc05(){
+  const t={ct15:0,ct16:0,ct17:0,ct18:0,ct19:0,ct20:0,ct21:0,ct22:0,ct23:0,ct24:0,ct25:0,ct25_1:0,ct26:0,ct27:0,ct28:0,ct29:0,ct30:0,ct31:0,ct32:0};
+  for(const s of (DB.staff||[])){const r=staffRow(s);if(r.inc<=0)continue;const res=s.loai!=='kct';
+    t.ct16++;if(s.loai==='hd')t.ct17++;
+    t.ct21+=r.inc;if(res)t.ct22+=r.inc;else t.ct23+=r.inc;
+    if(r.tax>0){t.ct18++;if(res){t.ct19++;t.ct27+=r.inc;t.ct30+=r.tax;}else{t.ct20++;t.ct28+=r.inc;t.ct31+=r.tax;}}}
+  t.ct26=t.ct27+t.ct28;t.ct29=t.ct30+t.ct31;return t;
+}
+
+/* ===================== tệp XML theo khuôn HTKK ===================== */
 function xmlEsc(s){return String(s??'').replace(/[<>&'"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&apos;','"':'&quot;'}[c]));}
-function buildXML(){
-  const p=P(),pi=perInfo(),t=calc01(),today=ymd(new Date()),n=v=>String(Math.round(v||0));
-  const d=s=>dmy(s);
+function xmlHead(ma,ten,pban){
+  const p=P(),pi=perInfo(),today=ymd(new Date());
   return `<?xml version="1.0" encoding="UTF-8"?>
-<HSoThueDTu xmlns="http://kekhaithue.gdt.gov.vn/TKhaiThue" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<HSoThueDTu xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://kekhaithue.gdt.gov.vn/TKhaiThue">
   <HSoKhaiThue id="ID_1">
     <TTinChung>
       <TTinDVu>
@@ -309,26 +357,26 @@ function buildXML(){
       </TTinDVu>
       <TTinTKhaiThue>
         <TKhaiThue>
-          <maTKhai>842</maTKhai>
-          <tenTKhai>TỜ KHAI THUẾ GIÁ TRỊ GIA TĂNG (Mẫu số 01/GTGT)</tenTKhai>
+          <maTKhai>${ma}</maTKhai>
+          <tenTKhai>${ten}</tenTKhai>
           <moTaBMau>(Ban hành kèm theo Thông tư số 80/2021/TT-BTC ngày 29 tháng 9 năm 2021 của Bộ trưởng Bộ Tài chính)</moTaBMau>
-          <pbanTKhaiXML>${xmlEsc(p.pbanXML)}</pbanTKhaiXML>
+          <pbanTKhaiXML>${xmlEsc(pban)}</pbanTKhaiXML>
           <loaiTKhai>C</loaiTKhai>
           <soLan>0</soLan>
           <KyKKhaiThue>
             <kieuKy>${pi.kieu}</kieuKy>
             <kyKKhai>${pi.ky}</kyKKhai>
-            <kyKKhaiTuNgay>${d(pi.from)}</kyKKhaiTuNgay>
-            <kyKKhaiDenNgay>${d(pi.to)}</kyKKhaiDenNgay>
-            <kyKKhaiTuThang/>
-            <kyKKhaiDenThang/>
+            <kyKKhaiTuNgay>${dmy(pi.from)}</kyKKhaiTuNgay>
+            <kyKKhaiDenNgay>${dmy(pi.to)}</kyKKhaiDenNgay>
+            <kyKKhaiTuThang />
+            <kyKKhaiDenThang />
           </KyKKhaiThue>
           <maCQTNoiNop>${xmlEsc(p.maCQT)}</maCQTNoiNop>
           <tenCQTNoiNop>${xmlEsc(p.tenCQT)}</tenCQTNoiNop>
           <ngayLapTKhai>${today}</ngayLapTKhai>
           <GiaHan>
-            <maLyDoGiaHan/>
-            <lyDoGiaHan/>
+            <maLyDoGiaHan />
+            <lyDoGiaHan />
           </GiaHan>
           <nguoiKy>${xmlEsc(p.nguoiKy)}</nguoiKy>
           <ngayKy>${today}</ngayKy>
@@ -340,30 +388,34 @@ function buildXML(){
           <dchiNNT>${xmlEsc(p.dchi)}</dchiNNT>
           <tenXaNNT>${xmlEsc(p.tenXa)}</tenXaNNT>
           <maXaNNT>${xmlEsc(p.maXa)}</maXaNNT>
-          <maHuyenNNT/>
-          <tenHuyenNNT/>
+          <maHuyenNNT />
+          <tenHuyenNNT />
           <maTinhNNT>${xmlEsc(p.maTinh)}</maTinhNNT>
           <tenTinhNNT>${xmlEsc(p.tenTinh)}</tenTinhNNT>
           <dthoaiNNT>${xmlEsc(p.dthoai)}</dthoaiNNT>
-          <faxNNT/>
+          <faxNNT />
           <emailNNT>${xmlEsc(p.email)}</emailNNT>
         </NNT>
       </TTinTKhaiThue>
     </TTinChung>
-    <CTieuTKhaiChinh>
+`;
+}
+function buildXML(){
+  const p=P(),t=calc01(),n=v=>String(Math.round(v||0));
+  return xmlHead('842','TỜ KHAI THUẾ GIÁ TRỊ GIA TĂNG (Mẫu số 01/GTGT)',p.pbanXML)+`    <CTieuTKhaiChinh>
       <ma_NganhNghe>00</ma_NganhNghe>
       <ten_NganhNghe>Hoạt động sản xuất kinh doanh thông thường</ten_NganhNghe>
       <tieuMucHachToan>1701</tieuMucHachToan>
       <Header>
-        <ct09/>
-        <ct10/>
+        <ct09 />
+        <ct10 />
         <DiaChiHDSXKDKhacTinhNDTSC>
-          <ct11a_phuongXa_ma/>
-          <ct11a_phuongXa_ten/>
-          <ct11b_quanHuyen_ma/>
-          <ct11b_quanHuyen_ten/>
-          <ct11c_tinhTP_ma/>
-          <ct11c_tinhTP_ten/>
+          <ct11a_phuongXa_ma />
+          <ct11a_phuongXa_ten />
+          <ct11b_quanHuyen_ma />
+          <ct11b_quanHuyen_ten />
+          <ct11c_tinhTP_ma />
+          <ct11c_tinhTP_ten />
         </DiaChiHDSXKDKhacTinhNDTSC>
       </Header>
       <ct21>${t.ct21}</ct21>
@@ -410,112 +462,86 @@ function buildXML(){
   </HSoKhaiThue>
 </HSoThueDTu>`;
 }
+function buildXML05(){
+  const p=P(),t=calc05();
+  const keys=['ct15','ct16','ct17','ct18','ct19','ct20','ct21','ct22','ct23','ct24','ct25','ct25_1','ct26','ct27','ct28','ct29','ct30','ct31','ct32'];
+  return xmlHead('864','TK khấu trừ thuế thu nhập cá nhân Mẫu 05/KK-TNCN (TT80/2021)',p.pbanKK)+`    <CTieuTKhaiChinh>
+      <mst_cu>${xmlEsc(p.mst)}</mst_cu>
+${keys.map(k=>`      <${k}>${Math.round(t[k]||0)}</${k}>`).join('\n')}
+    </CTieuTKhaiChinh>
+  </HSoKhaiThue>
+</HSoThueDTu>`;
+}
+const FORMS={gtgt:{ten:'Thuế GTGT',mau:'01/GTGT',file:'01_GTGT_TT80',build:buildXML},tncn:{ten:'Thuế TNCN từ tiền lương',mau:'05/KK-TNCN',file:'05_KK_TNCN_TT80',build:buildXML05}};
+function profOK(){const p=P();return !!(p.mst&&p.ten&&p.maCQT);}
+function dlXML(form,quiet){const p=P(),f=FORMS[form];
+  if(!profOK()){if(!quiet){toast('Cần nhập mã số thuế, tên công ty và cơ quan thuế trước khi tải tệp nộp.');location.hash='congty';}return false;}
+  const pi=perInfo();saveFile(`${p.mst}-${f.file}-${pi.kieu==='Q'?'Q'+PER.n:'M'+z2(PER.n)}${PER.y}-L00.xml`,f.build(),'application/xml');return true;}
 
 /* ===================== giao diện ===================== */
-const VIEWS={tongquan:'Tổng quan',ketnoi:'Kết nối & lấy hóa đơn',hoadon:'Bảng kê hóa đơn',tokhai:'Tờ khai 01/GTGT',nop:'Nộp & thông báo',hoso:'Hồ sơ người nộp thuế'};
-let view=(location.hash||'').replace('#','');if(!VIEWS[view])view='tongquan';
-let ui={tab:'in',q:'',auto:false};
+const VIEWS={viec:'Việc cần làm',gtgt:'Thuế GTGT',tncn:'Thuế TNCN từ tiền lương',hoadon:'Hóa đơn',nop:'Nộp & kết quả',congty:'Thông tin công ty'};
+let view=(location.hash||'').replace('#','');if(!VIEWS[view])view='viec';
+let ui={tab:'in',q:'',auto:false,form:'gtgt'};
 window.addEventListener('hashchange',()=>{const v=location.hash.replace('#','');if(VIEWS[v]){view=v;render();window.scrollTo(0,0);}});
+const ST=f=>{const c=cur();c.st=c.st||{};c.st[f]=c.st[f]||{};return c.st[f];};
+function stChip(f){const s=ST(f);if(s.tb)return s.tb.kq==='ok'?'<span class="chip ok">Cơ quan thuế đã chấp nhận</span>':'<span class="chip red">Bị trả lại, cần nộp lại</span>';
+  if(s.nop)return '<span class="chip ok">Đã nộp '+dmy(s.nop)+'</span>';if(s.lap)return '<span class="chip amber">Đã lập, chưa nộp</span>';return '<span class="chip">Chưa làm</span>';}
 function periodHTML(){
   const kq=P().kieuKy,ys=[];for(let y=now.getFullYear()+1;y>=2022;y--)ys.push(y);
   const opts=kq==='M'?Array.from({length:12},(_,i)=>`<option value="${i+1}" ${PER.n===i+1?'selected':''}>Tháng ${i+1}</option>`):[1,2,3,4].map(q=>`<option value="${q}" ${PER.n===q?'selected':''}>Quý ${q}</option>`);
-  return `<div class="period"><span class="muted">Kỳ kê khai</span><select id="per-n" aria-label="Kỳ">${opts.join('')}</select><select id="per-y" aria-label="Năm">${ys.map(y=>`<option ${PER.y===y?'selected':''}>${y}</option>`).join('')}</select></div>`;
+  return `<div class="period"><span class="muted">Đang làm cho</span><select id="per-n" aria-label="Kỳ">${opts.join('')}</select><select id="per-y" aria-label="Năm">${ys.map(y=>`<option ${PER.y===y?'selected':''}>${y}</option>`).join('')}</select></div>`;
 }
 function render(){
-  const p=P(),pi=perInfo(),c=cur();
-  $('#co-name').textContent=p.ten?(p.ten+(p.mst?' · MST '+p.mst:'')):'Chưa khai báo người nộp thuế';
+  const keep=document.activeElement&&document.activeElement.id;
+  const p=P(),pi=perInfo();
+  $('#co-name').textContent=p.ten?(p.ten+(p.mst?' · MST '+p.mst:'')):'Chưa nhập thông tin công ty';
   document.querySelectorAll('#nav a').forEach(a=>{if(a.dataset.v===view)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
-  const st=c.status;
-  $('#nav [data-v="ketnoi"]').classList.toggle('done',c.in.length+c.out.length>0);
-  $('#nav [data-v="tokhai"]').classList.toggle('done',!!st.lap);
-  $('#nav [data-v="nop"]').classList.toggle('done',!!(st.tb&&st.tb.kq==='ok'));
   $('#who').innerHTML=DEMO?'Bản dùng thử: dữ liệu mẫu, không lưu. <a class="link" href="./">Đăng nhập</a>':(AUTH.email?`Tài khoản: <b>${esc(AUTH.email)}</b> <button class="link" data-act="logout">Đăng xuất</button>`:'');
-  $('#gdt-state').textContent=GDT.token?('Cổng hóa đơn: đã đăng nhập '+GDT.user):'Cổng hóa đơn: chưa đăng nhập';
+  $('#gdt-state').textContent=GDT.token?('Đang kết nối cổng hóa đơn: '+GDT.user):'';
   let body='';
-  try{body=({tongquan:vHome,ketnoi:vConnect,hoadon:vInvoices,tokhai:vForm,nop:vSubmit,hoso:vProfile})[view]();}catch(e){console.error(e);body=`<div class="alert red"><b>Lỗi hiển thị</b>${esc(e.message)}</div>`;}
-  $('#main').innerHTML=`<header class="topbar"><div><span class="eyebrow">${esc(pi.label)} · hạn nộp ${dmy(pi.due)}</span><h1>${VIEWS[view]}</h1></div>${view==='hoso'?'':periodHTML()}</header>${body}`;
-  if(view==='ketnoi'){if(!GDT.token)gdtCaptcha();const el=$('#gdt-log');if(el)el.textContent=GDT.log.join('\n');}
+  try{body=({viec:vHome,gtgt:vGtgt,tncn:vTncn,hoadon:vInvoices,nop:vSubmit,congty:vProfile})[view]();}catch(e){console.error(e);body=`<div class="alert red"><b>Lỗi hiển thị</b>${esc(e.message)}</div>`;}
+  $('#main').innerHTML=`<header class="topbar"><div><span class="eyebrow">${esc(pi.label)} · hạn nộp ${dmy(pi.due)}</span><h1>${VIEWS[view]}</h1></div>${view==='congty'?'':periodHTML()}</header>${body}`;
+  if(view==='hoadon'){if(!GDT.token&&!DEMO)gdtCaptcha();const el=$('#gdt-log');if(el)el.textContent=GDT.log.join('\n');}
+  if(keep){const e=document.getElementById(keep);if(e&&e!==document.activeElement)e.focus();}
+}
+function gtgtSay(t,c){
+  if(!(c.in.length+c.out.length)&&!t.ct23a)return {big:'Chưa có số liệu',sub:'Bấm "Lập ngay" để phần mềm tự lấy hóa đơn của kỳ và tính thuế.'};
+  if(t.ct40>0)return {big:fmt(t.ct40)+' đ',sub:`Đây là số thuế GTGT công ty phải nộp cho ${perInfo().label}, hạn chót ${dmy(perInfo().due)}.`,pay:true};
+  return {big:'Không phải nộp',sub:t.ct43>0?`Kỳ này thuế mua vào nhiều hơn thuế bán ra. Còn ${fmt(t.ct43)} đ được trừ tiếp vào kỳ sau. Vẫn phải nộp tờ khai trước ${dmy(perInfo().due)}.`:`Kỳ này không phát sinh thuế GTGT phải nộp. Vẫn phải nộp tờ khai trước ${dmy(perInfo().due)}.`};
+}
+function tncnSay(t){
+  if(!t.ct16)return {big:'Chưa có số liệu',sub:'Nhập lương đã trả cho từng người trong kỳ, phần mềm tự tính thuế phải khấu trừ.'};
+  if(t.ct29>0)return {big:fmt(t.ct29)+' đ',sub:`Đây là thuế TNCN công ty đã trừ vào lương của ${t.ct18} người và phải nộp thay họ, hạn chót ${dmy(perInfo().due)}.`,pay:true};
+  return {big:'Không phải nộp',sub:`Đã trả lương cho ${t.ct16} người, chưa ai tới mức phải đóng thuế TNCN trong kỳ này.`};
 }
 function vHome(){
-  const p=P(),pi=perInfo(),c=cur(),t=calc01(),st=c.status;
+  const pi=perInfo(),c=cur(),t=calc01(),t5=calc05(),g=gtgtSay(t,c),n=tncnSay(t5);
   const days=Math.round((new Date(pi.due)-new Date(ymd(new Date())))/864e5);
-  const kpi=(l,v,s)=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}</span><span class="s">${s}</span></div>`;
-  const need=!p.mst||!p.ten;
-  return `${need?`<div class="alert"><b>Bước đầu</b><span>Chưa có thông tin người nộp thuế. <a class="link" href="#hoso">Khai báo hồ sơ</a> để tờ khai và tệp XML có đủ MST, tên, cơ quan thuế.</span></div>`:''}
-  <section class="one"><div><h2>Lập tờ khai ${esc(pi.label)} chỉ với một lần bấm</h2><span class="muted">Phần mềm tự lấy hóa đơn mua vào, bán ra của kỳ, tính tờ khai 01/GTGT và tải tệp XML để nộp. ${GDT.token||DEMO?'':'Lần đầu trong phiên cần đăng nhập cổng hóa đơn và gõ mã xác nhận.'}</span></div>
-   <button class="btn primary" data-act="one">Lập tờ khai ngay</button></section>
-  <nav class="steps" aria-label="Quy trình">
-    <a href="#ketnoi"><small>Bước 1</small><b>Kết nối &amp; lấy hóa đơn</b><span>${c.in.length+c.out.length?`Đã lấy ${c.in.length} mua vào, ${c.out.length} bán ra`:'Đăng nhập cổng hóa đơn, tự gõ mã xác nhận'}</span></a>
-    <a href="#hoadon"><small>Bước 2</small><b>Bảng kê hóa đơn</b><span>Tách theo thuế suất, loại hóa đơn hủy</span></a>
-    <a href="#tokhai"><small>Bước 3</small><b>Tờ khai 01/GTGT</b><span>${st.lap?'Đã lập '+dmy(st.lap):'Tự điền chỉ tiêu [21] đến [43]'}</span></a>
-    <a href="#nop"><small>Bước 4</small><b>Nộp &amp; thông báo</b><span>${st.tb?(st.tb.kq==='ok'?'Đã được chấp nhận':'Không được chấp nhận'):(st.nop?'Đã nộp '+dmy(st.nop):'Xuất XML, nộp eTax, đọc thông báo')}</span></a>
-  </nav>
-  <section class="kpis">
-    ${kpi('Hóa đơn mua vào',fmt(c.in.filter(x=>!VOID(x)).length),'Giá trị '+fmt(t.ct23)+' đ')}
-    ${kpi('Thuế GTGT đầu vào [24]',fmt(t.ct24),'Được khấu trừ [25]: '+fmt(t.ct25))}
-    ${kpi('Hóa đơn bán ra',fmt(c.out.filter(x=>!VOID(x)).length),'Doanh thu [34]: '+fmt(t.ct34)+' đ')}
-    ${kpi('Thuế GTGT đầu ra [35]',fmt(t.ct35),'Phát sinh [36]: '+fmt(t.ct36))}
-    ${kpi(t.ct40>0?'Thuế phải nộp [40]':'Còn được khấu trừ [43]',fmt(t.ct40>0?t.ct40:t.ct43),'Kỳ '+esc(pi.label))}
-    ${kpi('Hạn nộp',dmy(pi.due),days>=0?`còn ${days} ngày`:`đã quá ${-days} ngày`)}
-  </section>
-  <section class="panel"><h2>Kiểm tra trước khi nộp</h2>${checks().map(w=>`<div class="alert ${w.lv||''}"><b>${esc(w.t)}</b><span>${esc(w.d)}</span></div>`).join('')||'<div class="alert info"><b>Ổn</b><span>Chưa phát hiện điểm cần lưu ý trong kỳ này.</span></div>'}</section>`;
+  const task=(f,title,say,btn)=>`<section class="task"><div class="row between"><h2>${title}</h2>${stChip(f)}</div>
+    <div class="say ${say.pay?'pay':''}">${esc(say.big)}</div><p class="muted">${esc(say.sub)}</p><div class="row">${btn}</div></section>`;
+  const ws=checks();
+  return `${!profOK()?`<div class="alert"><b>Bước đầu tiên</b><span>Nhập thông tin công ty (làm một lần, khoảng 2 phút). Có tệp tờ khai cũ thì phần mềm tự điền giúp. <a class="link" href="#congty">Nhập thông tin công ty</a></span></div>`:''}
+  <div class="alert ${days<0?'red':days<=7?'':'info'}"><b>Hạn nộp</b><span>${esc(pi.label)}: nộp tờ khai và tiền thuế trước ngày <b style="color:inherit">${dmy(pi.due)}</b> (${days>=0?'còn '+days+' ngày':'đã quá hạn '+(-days)+' ngày'}).</span></div>
+  <div class="grid2">
+   ${task('gtgt','Thuế GTGT',g,`<button class="btn primary big" data-act="one">Lập ngay</button><a class="btn" href="#gtgt">Xem chi tiết</a>${ST('gtgt').lap?'<a class="btn" href="#nop" data-form="gtgt">Hướng dẫn nộp</a>':''}`)}
+   ${task('tncn','Thuế TNCN từ tiền lương',n,`<a class="btn primary big" href="#tncn">${t5.ct16?'Xem và lập tờ khai':'Nhập lương'}</a>${ST('tncn').lap?'<a class="btn" href="#nop" data-form="tncn">Hướng dẫn nộp</a>':''}`)}
+  </div>
+  ${ws.length?`<section class="panel"><h2>Phần mềm nhắc</h2>${ws.map(w=>`<div class="alert ${w.lv||''}"><b>${esc(w.t)}</b><span>${esc(w.d)}${w.go?` <a class="link" href="#${w.go}">Mở mục này</a>`:''}</span></div>`).join('')}</section>`:''}
+  <section class="panel"><h2>Phần mềm làm gì cho bạn</h2><ol class="plain"><li><b>Tự lấy hóa đơn</b> mua vào, bán ra từ cổng hóa đơn điện tử của cơ quan thuế.</li><li><b>Tự tính thuế</b> và điền sẵn tờ khai, không cần biết chỉ tiêu nào ghi vào đâu.</li><li><b>Tạo tệp để nộp</b> lên trang thuế điện tử, kèm hướng dẫn từng bước.</li><li><b>Theo dõi kết quả</b>: đã nộp chưa, cơ quan thuế đã chấp nhận chưa.</li></ol></section>`;
 }
-function vConnect(){
-  const c=cur(),pi=perInfo();
-  return `<div class="grid2">
-  <section class="panel"><h2>Cổng hóa đơn điện tử của Tổng cục Thuế</h2>
-   <p class="muted">Đăng nhập bằng tài khoản hoadondientu.gdt.gov.vn của doanh nghiệp. Mật khẩu chỉ gửi thẳng tới cổng thuế, phần mềm không lưu lại. Mã xác nhận do bạn tự nhập.</p>
-   ${GDT.token?`<div class="alert info"><b>Đã đăng nhập</b><span>Tài khoản ${esc(GDT.user)}. Phiên chỉ giữ trong tab này và tự hết hạn theo cổng thuế.</span></div>
-   <div class="row"><button class="btn primary" data-act="gdt-fetch" id="btn-fetch">Lấy hóa đơn ${esc(pi.label)}</button><button class="btn" data-act="gdt-out">Thoát cổng hóa đơn</button></div>`
-   :`<form id="gdt-form" class="panel" style="padding:0;border:0" autocomplete="off">
-     <div class="grid2"><label for="g-user">Tên đăng nhập (mã số thuế)<input id="g-user" value="${esc(P().mst)}" inputmode="numeric" autocomplete="off" required></label>
-     <label for="g-pass">Mật khẩu cổng hóa đơn<input id="g-pass" type="password" autocomplete="off" required></label></div>
-     <div class="captcha"><div class="img" id="cap-img" aria-label="Mã xác nhận của cổng thuế">Đang tải mã…</div><button class="btn sm" type="button" data-act="cap-new">Đổi mã</button>
-       <label for="g-cap" style="flex:1 1 160px">Nhập mã xác nhận trong hình<input id="g-cap" autocomplete="off" autocapitalize="characters" required></label></div>
-     <div class="row"><button class="btn primary" type="submit" id="g-btn">Đăng nhập cổng hóa đơn</button></div>
-     ${ui.auto?'<p class="muted">Sau khi đăng nhập, phần mềm tự lấy hóa đơn và lập tờ khai.</p>':''}
-     <p class="err" id="g-err" role="alert"></p></form>`}
-  </section>
-  <section class="panel"><h2>Kết quả lấy dữ liệu</h2>
-   <div class="kpis"><div class="kpi"><span class="l">Mua vào đã lấy</span><span class="v">${fmt(c.in.length)}</span></div><div class="kpi"><span class="l">Bán ra đã lấy</span><span class="v">${fmt(c.out.length)}</span></div></div>
-   <p class="muted">${c.fetchedAt?'Lần lấy gần nhất: '+new Date(c.fetchedAt).toLocaleString('vi-VN'):'Chưa lấy dữ liệu cho kỳ này.'}</p>
-   <div class="log" id="gdt-log" aria-live="polite"></div>
-   <p class="muted" style="font-size:.8rem">Phần mềm lấy hóa đơn đã cấp mã, không mã và hóa đơn từ máy tính tiền, theo từng tháng của kỳ. Lấy lại sẽ thay toàn bộ danh sách của kỳ đang chọn.</p>
-  </section></div>`;
-}
-function invTable(list,kind){
-  if(!list.length)return `<div class="panel" style="text-align:center;color:var(--muted)"><h3 style="color:var(--fg)">Chưa có hóa đơn ${kind==='in'?'mua vào':'bán ra'} trong kỳ</h3><p>Vào bước 1 để đăng nhập cổng hóa đơn và lấy dữ liệu.</p><div><a class="btn primary" href="#ketnoi">Kết nối &amp; lấy hóa đơn</a></div></div>`;
-  const q=ui.q.trim().toLowerCase();const rows=q?list.filter(x=>[x.mst,x.ten,x.kh,x.so].join(' ').toLowerCase().includes(q)):list;
-  let tb=0,tt=0;rows.forEach(x=>{if(!VOID(x)){tb+=x.base;tt+=x.tax;}});
-  return `<div class="tbl-wrap"><table><thead><tr><th>Ngày</th><th>Ký hiệu</th><th>Số</th><th>${kind==='in'?'Người bán':'Người mua'}</th><th>MST</th><th>Thuế suất</th><th class="num">Chưa thuế</th><th class="num">Thuế GTGT</th><th>Trạng thái</th></tr></thead><tbody>
-  ${rows.slice(0,1500).map(x=>`<tr class="${VOID(x)?'void':''}"><td>${dmy(x.ngay)}</td><td class="code">${esc(x.mau)}${esc(x.kh)}</td><td class="code">${esc(x.so)}</td><td>${esc(x.ten)}</td><td class="code">${esc(x.mst)}</td><td>${x.rates.map(r=>esc(RLAB[r.r]||r.r)).join(', ')}</td><td class="num">${fmt(x.base)}</td><td class="num">${fmt(x.tax)}</td><td><span class="chip ${VOID(x)?'red':x.tthai>1?'amber':''}">${esc(TTHAI[x.tthai]||'')}</span>${!VOID(x)&&kind==='in'&&x.total>=5e6?' <span class="chip amber">≥ 5 triệu</span>':''}</td></tr>`).join('')}
-  <tr class="total"><td colspan="6">Cộng ${rows.filter(x=>!VOID(x)).length} hóa đơn hợp lệ</td><td class="num">${fmt(tb)}</td><td class="num">${fmt(tt)}</td><td></td></tr></tbody></table></div>${rows.length>1500?'<p class="muted">Đang hiện 1.500 dòng đầu. Tải CSV để xem đủ.</p>':''}`;
-}
-function vInvoices(){
-  const c=cur(),list=ui.tab==='in'?c.in:c.out,s=sumRates(list);
-  const order=['10','8','5','0','KCT','KKK','KHAC'].filter(k=>s[k]);
-  return `<div class="row between"><div class="row"><button class="btn ${ui.tab==='in'?'primary':''}" data-act="tab" data-k="in">Mua vào (${c.in.length})</button><button class="btn ${ui.tab==='out'?'primary':''}" data-act="tab" data-k="out">Bán ra (${c.out.length})</button>
-   <input id="inv-q" placeholder="Tìm tên, MST, số hóa đơn" value="${esc(ui.q)}" style="min-width:min(260px,100%)"></div><button class="btn sm" data-act="csv">Tải CSV</button></div>
-  ${order.length?`<div class="tbl-wrap"><table><thead><tr><th>Thuế suất</th><th class="num">Giá trị chưa thuế</th><th class="num">Thuế GTGT</th></tr></thead><tbody>${order.map(k=>`<tr><td>${esc(RLAB[k])}</td><td class="num">${fmt(s[k].base)}</td><td class="num">${fmt(s[k].tax)}</td></tr>`).join('')}</tbody></table></div>`:''}
-  <div id="inv-list">${invTable(list,ui.tab)}</div>`;
-}
-function vForm(){
-  const p=P(),pi=perInfo(),c=cur(),t=calc01(),a=c.adj;
+function formTable(t){
   const ro=(ct,label,base,tax)=>`<tr><td class="ct">${ct}</td><td>${label}</td><td class="num">${base==null?'':fmt(base)}</td><td class="num">${tax==null?'':fmt(tax)}</td></tr>`;
-  const inp=(k,v)=>`<input data-adj="${k}" inputmode="numeric" value="${v?fmt(v):''}" aria-label="Chỉ tiêu ${k}">`;
-  return `<section class="panel"><div class="rep-h"><div><b>${esc(p.ten||'Người nộp thuế: ……')}</b><br>MST: ${esc(p.mst||'……')}</div><div style="text-align:right"><b>Mẫu số 01/GTGT</b><br><span class="muted">Thông tư 80/2021/TT-BTC</span></div>
-   <div class="c"><h2>Tờ khai thuế giá trị gia tăng</h2><span>Kỳ tính thuế: ${esc(pi.label)} · Lần đầu</span><span class="muted">Đơn vị tiền: đồng Việt Nam</span></div></div>
-   ${checks().filter(w=>!w.lv).map(w=>`<div class="alert"><b>${esc(w.t)}</b><span>${esc(w.d)}</span></div>`).join('')}
-   <div class="tbl-wrap"><table class="form01"><thead><tr><th>Chỉ tiêu</th><th>Nội dung</th><th class="num">Giá trị HHDV</th><th class="num">Thuế GTGT</th></tr></thead><tbody>
+  const a=cur().adj;const inp=(k)=>`<input id="adj-${k}" data-adj="${k}" inputmode="numeric" value="${hasNum(a[k])&&+a[k]?fmt(a[k]):''}" aria-label="Chỉ tiêu ${k}">`;
+  return `<div class="tbl-wrap"><table class="form01"><thead><tr><th>Chỉ tiêu</th><th>Nội dung</th><th class="num">Giá trị HHDV</th><th class="num">Thuế GTGT</th></tr></thead><tbody>
    <tr><td class="ct">[21]</td><td>Không phát sinh hoạt động mua, bán trong kỳ</td><td colspan="2" class="num">${t.ct21?'Có (không phát sinh)':'Không'}</td></tr>
-   <tr><td class="ct">[22]</td><td>Thuế GTGT còn được khấu trừ kỳ trước chuyển sang</td><td></td><td class="num">${inp('ct22',t.ct22)}</td></tr>
+   ${ro('[22]','Thuế GTGT còn được khấu trừ kỳ trước chuyển sang',null,t.ct22)}
    <tr class="grp"><td colspan="4">I. Hàng hóa, dịch vụ mua vào trong kỳ</td></tr>
    ${ro('[23] [24]','Giá trị và thuế GTGT của HHDV mua vào',t.ct23,t.ct24)}
-   <tr><td class="ct">[23a] [24a]</td><td>Trong đó: hàng hóa, dịch vụ nhập khẩu</td><td class="num">${inp('ct23a',t.ct23a)}</td><td class="num">${inp('ct24a',t.ct24a)}</td></tr>
-   <tr><td class="ct">[25]</td><td>Tổng số thuế GTGT được khấu trừ kỳ này <span class="muted">(để trống = bằng [24])</span></td><td></td><td class="num">${inp('ct25',a.ct25!=null&&a.ct25!==''?+a.ct25:0)}</td></tr>
+   ${ro('[23a] [24a]','Trong đó: hàng hóa, dịch vụ nhập khẩu',t.ct23a,t.ct24a)}
+   <tr><td class="ct">[25]</td><td>Tổng số thuế GTGT được khấu trừ kỳ này <span class="muted">(phần mềm tính: ${fmt(Math.max(0,t.ct24-t.excl))}; nhập số khác nếu cần)</span></td><td></td><td class="num">${inp('ct25')}</td></tr>
    <tr class="grp"><td colspan="4">II. Hàng hóa, dịch vụ bán ra trong kỳ</td></tr>
    ${ro('[26]','HHDV bán ra không chịu thuế GTGT',t.ct26,null)}
-   ${ro('[27] [28]','HHDV bán ra chịu thuế GTGT ([27]=[29]+[30]+[32]+[32a]; [28]=[31]+[33])',t.ct27,t.ct28)}
+   ${ro('[27] [28]','HHDV bán ra chịu thuế GTGT',t.ct27,t.ct28)}
    ${ro('[29]','HHDV bán ra chịu thuế suất 0%',t.ct29,null)}
    ${ro('[30] [31]','HHDV bán ra chịu thuế suất 5%',t.ct30,t.ct31)}
    ${ro('[32] [33]','HHDV bán ra chịu thuế suất 10% (gồm phần được giảm còn 8%)',t.ct32,t.ct33)}
@@ -523,56 +549,148 @@ function vForm(){
    ${ro('[34] [35]','Tổng doanh thu và thuế GTGT của HHDV bán ra',t.ct34,t.ct35)}
    <tr class="grp"><td colspan="4">III. Thuế GTGT phát sinh và phải nộp</td></tr>
    ${ro('[36]','Thuế GTGT phát sinh trong kỳ ([36]=[35]-[25])',null,t.ct36)}
-   <tr><td class="ct">[37]</td><td>Điều chỉnh giảm thuế GTGT còn được khấu trừ của các kỳ trước</td><td></td><td class="num">${inp('ct37',t.ct37)}</td></tr>
-   <tr><td class="ct">[38]</td><td>Điều chỉnh tăng thuế GTGT còn được khấu trừ của các kỳ trước</td><td></td><td class="num">${inp('ct38',t.ct38)}</td></tr>
-   <tr><td class="ct">[39a]</td><td>Thuế GTGT nhận bàn giao được khấu trừ trong kỳ</td><td></td><td class="num">${inp('ct39a',t.ct39a)}</td></tr>
+   <tr><td class="ct">[37]</td><td>Điều chỉnh giảm thuế còn được khấu trừ của các kỳ trước</td><td></td><td class="num">${inp('ct37')}</td></tr>
+   <tr><td class="ct">[38]</td><td>Điều chỉnh tăng thuế còn được khấu trừ của các kỳ trước</td><td></td><td class="num">${inp('ct38')}</td></tr>
+   <tr><td class="ct">[39a]</td><td>Thuế GTGT nhận bàn giao được khấu trừ trong kỳ</td><td></td><td class="num">${inp('ct39a')}</td></tr>
    ${ro('[40a]','Thuế GTGT phải nộp của hoạt động SXKD trong kỳ',null,t.ct40a)}
-   <tr><td class="ct">[40b]</td><td>Thuế GTGT mua vào của dự án đầu tư được bù trừ</td><td></td><td class="num">${inp('ct40b',t.ct40b)}</td></tr>
-   <tr class="total"><td class="ct">[40]</td><td>Thuế GTGT còn phải nộp trong kỳ ([40]=[40a]-[40b])</td><td></td><td class="num">${fmt(t.ct40)}</td></tr>
+   <tr><td class="ct">[40b]</td><td>Thuế GTGT mua vào của dự án đầu tư được bù trừ</td><td></td><td class="num">${inp('ct40b')}</td></tr>
+   <tr class="total"><td class="ct">[40]</td><td>Thuế GTGT còn phải nộp trong kỳ</td><td></td><td class="num">${fmt(t.ct40)}</td></tr>
    ${ro('[41]','Thuế GTGT chưa khấu trừ hết kỳ này',null,t.ct41)}
-   <tr><td class="ct">[42]</td><td>Thuế GTGT đề nghị hoàn</td><td></td><td class="num">${inp('ct42',t.ct42)}</td></tr>
-   <tr class="total"><td class="ct">[43]</td><td>Thuế GTGT còn được khấu trừ chuyển kỳ sau ([43]=[41]-[42])</td><td></td><td class="num">${fmt(t.ct43)}</td></tr>
+   <tr><td class="ct">[42]</td><td>Thuế GTGT đề nghị hoàn</td><td></td><td class="num">${inp('ct42')}</td></tr>
+   <tr class="total"><td class="ct">[43]</td><td>Thuế GTGT còn được khấu trừ chuyển kỳ sau</td><td></td><td class="num">${fmt(t.ct43)}</td></tr>
+   </tbody></table></div>`;
+}
+function vGtgt(){
+  const p=P(),pi=perInfo(),c=cur(),t=calc01(),a=c.adj,say=gtgtSay(t,c);
+  const line=(l,v,s)=>`<tr><td>${l}</td><td class="num">${s||''}${fmt(v)}</td></tr>`;
+  return `<div class="grid2">
+  <section class="panel"><div class="row between"><h2>Kết quả ${esc(pi.label)}</h2>${stChip('gtgt')}</div>
+   <div class="say ${say.pay?'pay':''}">${esc(say.big)}</div><p class="muted">${esc(say.sub)}</p>
+   <div class="tbl-wrap"><table><tbody>
+    ${line(`Thuế trên ${c.out.filter(x=>!VOID(x)).length} hóa đơn bán ra`,t.ct35)}
+    ${line(`Thuế trên hóa đơn mua vào được trừ`,t.ct25,'− ')}
+    ${line('Thuế còn được trừ từ kỳ trước',t.ct22,'− ')}
+    <tr class="total"><td>${t.ct40>0?'Phải nộp kỳ này':'Còn được trừ, chuyển sang kỳ sau'}</td><td class="num">${fmt(t.ct40>0?t.ct40:t.ct43)}</td></tr>
    </tbody></table></div>
-   <div class="row between"><span class="muted">Ô nhập là các chỉ tiêu phần mềm không tự biết (số chuyển kỳ, điều chỉnh, nhập khẩu). Các chỉ tiêu còn lại tính từ bảng kê hóa đơn.</span>
-    <div class="row"><button class="btn" data-act="print">In / lưu PDF</button><button class="btn" data-act="xml">Tải tệp XML tờ khai</button><button class="btn primary" data-act="mark-lap">${c.status.lap?'Đã lập '+dmy(c.status.lap)+' · cập nhật':'Đánh dấu đã lập tờ khai'}</button></div></div>
-  </section>`;
+   <div class="row"><button class="btn primary big" data-act="one">${c.in.length+c.out.length?'Lấy lại hóa đơn và tính lại':'Lập ngay'}</button><button class="btn" data-act="xml" data-form="gtgt">Tải tệp để nộp</button><a class="btn" href="#nop" data-form="gtgt">Hướng dẫn nộp</a></div>
+  </section>
+  <section class="panel"><h2>Hai câu hỏi phần mềm cần bạn trả lời</h2>
+   <label for="adj-ct22">1. Kỳ trước còn bao nhiêu tiền thuế được trừ chuyển sang?
+    <input id="adj-ct22" data-adj="ct22" inputmode="numeric" value="${hasNum(a.ct22)?fmt(a.ct22):''}" placeholder="${t.ct22auto?fmt(t.ct22)+' (phần mềm tự lấy từ kỳ trước)':'Không có thì để trống'}"></label>
+   <p class="muted hint">${t.ct22auto?'Phần mềm đã tự lấy số này từ kỳ trước, không cần nhập.':'Lần đầu dùng phần mềm: mở tờ khai GTGT kỳ trước, lấy số ở dòng cuối cùng (ô số 43). Các kỳ sau phần mềm tự nhớ.'}</p>
+   <label for="adj-ct23a">2. Trong kỳ có nhập khẩu hàng từ nước ngoài không? Nếu có, ghi giá trị hàng nhập khẩu
+    <input id="adj-ct23a" data-adj="ct23a" inputmode="numeric" value="${+a.ct23a?fmt(a.ct23a):''}" placeholder="Không nhập khẩu thì để trống"></label>
+   <label for="adj-ct24a">Tiền thuế GTGT đã nộp ở hải quan cho hàng nhập khẩu đó
+    <input id="adj-ct24a" data-adj="ct24a" inputmode="numeric" value="${+a.ct24a?fmt(a.ct24a):''}" placeholder="Không nhập khẩu thì để trống"></label>
+   <p class="muted hint">Hàng nhập khẩu không có trên cổng hóa đơn điện tử nên phần mềm không tự biết. Số tiền lấy trên giấy nộp tiền hải quan.</p>
+  </section></div>
+  ${checks().map(w=>`<div class="alert ${w.lv||''}"><b>${esc(w.t)}</b><span>${esc(w.d)}${w.go?` <a class="link" href="#${w.go}">Mở mục này</a>`:''}</span></div>`).join('')}
+  <details class="panel adv"><summary>Xem tờ khai đầy đủ theo mẫu 01/GTGT (dành cho kế toán)</summary>
+   <div class="rep-h"><div><b>${esc(p.ten||'Người nộp thuế: ……')}</b><br>MST: ${esc(p.mst||'……')}</div><div style="text-align:right"><b>Mẫu số 01/GTGT</b><br><span class="muted">Thông tư 80/2021/TT-BTC</span></div>
+   <div class="c"><h2>Tờ khai thuế giá trị gia tăng</h2><span>Kỳ tính thuế: ${esc(pi.label)} · Lần đầu</span><span class="muted">Đơn vị tiền: đồng Việt Nam</span></div></div>
+   ${formTable(t)}
+   <div class="row"><button class="btn" data-act="print">In / lưu PDF</button></div></details>`;
+}
+function vTncn(){
+  const pi=perInfo(),c=cur(),t=calc05(),say=tncnSay(t),staff=DB.staff||[],R=pitRule(PER.y);
+  const mh=pi.months.map(m=>`<th class="num">Lương tháng ${m[1]}</th><th class="num">Bảo hiểm đã trừ</th>`).join('');
+  const rows=staff.map(s=>{const p=(c.pay||{})[s.id]||{inc:[],bh:[]},r=staffRow(s);
+    return `<tr><td><input id="s-${s.id}-ten" data-staff="${s.id}" data-f="ten" value="${esc(s.ten)}" placeholder="Họ và tên" style="min-width:150px"></td>
+     <td><select id="s-${s.id}-loai" data-staff="${s.id}" data-f="loai" aria-label="Loại">${Object.keys(LOAI).map(k=>`<option value="${k}" ${s.loai===k?'selected':''}>${LOAI[k]}</option>`).join('')}</select></td>
+     <td><input id="s-${s.id}-npt" data-staff="${s.id}" data-f="npt" inputmode="numeric" value="${s.npt||''}" placeholder="0" style="width:56px" aria-label="Số người phụ thuộc" ${s.loai==='hd'?'':'disabled'}></td>
+     ${pi.months.map((m,i)=>`<td class="num"><input id="p-${s.id}-inc-${i}" data-pay="${s.id}" data-f="inc" data-i="${i}" inputmode="numeric" value="${+p.inc[i]?fmt(p.inc[i]):''}" style="width:118px;text-align:right" aria-label="Lương tháng ${m[1]}"></td><td class="num"><input id="p-${s.id}-bh-${i}" data-pay="${s.id}" data-f="bh" data-i="${i}" inputmode="numeric" value="${+p.bh[i]?fmt(p.bh[i]):''}" style="width:104px;text-align:right" aria-label="Bảo hiểm tháng ${m[1]}" ${s.loai==='hd'?'':'disabled'}></td>`).join('')}
+     <td class="num"><b>${fmt(r.tax)}</b></td><td><button class="btn sm" data-act="staff-del" data-id="${s.id}" aria-label="Xóa ${esc(s.ten)}">Xóa</button></td></tr>`;}).join('');
+  const ro=(ct,l,v)=>`<tr><td class="ct" style="font-weight:700;color:var(--accent)">${ct}</td><td>${l}</td><td class="num">${fmt(v)}</td></tr>`;
+  return `<section class="panel"><div class="row between"><h2>Kết quả ${esc(pi.label)}</h2>${stChip('tncn')}</div>
+   <div class="say ${say.pay?'pay':''}">${esc(say.big)}</div><p class="muted">${esc(say.sub)}</p>
+   <div class="row"><button class="btn primary big" data-act="lap05" ${t.ct16?'':'disabled'}>Lập tờ khai và tải tệp để nộp</button><a class="btn" href="#nop" data-form="tncn">Hướng dẫn nộp</a></div></section>
+  <section class="panel"><div class="row between"><h2>Lương đã trả trong kỳ</h2><button class="btn" data-act="staff-add">+ Thêm người</button></div>
+   <p class="muted">Ghi tiền lương, thưởng đã trả cho từng người theo từng tháng. Phần mềm tự trừ giảm trừ bản thân ${fmt(R.self)} đ, mỗi người phụ thuộc ${fmt(R.dep)} đ và tự tính thuế. Danh sách người được giữ lại cho các kỳ sau.</p>
+   ${staff.length?`<div class="tbl-wrap"><table><thead><tr><th>Họ và tên</th><th>Thuộc nhóm</th><th>Người phụ thuộc</th>${mh}<th class="num">Thuế phải trừ</th><th></th></tr></thead><tbody>${rows}
+    <tr class="total"><td colspan="${3+pi.months.length*2}">Cộng ${t.ct16} người có lương trong kỳ · tổng lương ${fmt(t.ct21)} đ</td><td class="num">${fmt(t.ct29)}</td><td></td></tr></tbody></table></div>`
+    :`<div style="text-align:center;padding:18px 0" class="muted"><p>Chưa có ai trong danh sách.</p><div style="margin-top:10px"><button class="btn primary" data-act="staff-add">Thêm người đầu tiên</button></div></div>`}
+   <p class="muted hint"><b>Lương ghi vào đây</b> là lương và thưởng trước khi trừ thuế, không tính các khoản được miễn như tiền ăn giữa ca, phụ cấp điện thoại theo quy chế. <b>Bảo hiểm đã trừ</b> là phần BHXH, BHYT, BHTN trừ vào lương của người đó (thường 10,5% lương đóng bảo hiểm). Nhóm thời vụ, cộng tác viên: trừ 10% khi trả từ 2 triệu đồng một lần. Người nước ngoài không cư trú: trừ 20%.</p>
+  </section>
+  <details class="panel adv"><summary>Xem tờ khai đầy đủ theo mẫu 05/KK-TNCN (dành cho kế toán)</summary>
+   <div class="tbl-wrap"><table><thead><tr><th>Chỉ tiêu</th><th>Nội dung</th><th class="num">Số</th></tr></thead><tbody>
+   ${ro('[16]','Tổng số người lao động',t.ct16)}${ro('[17]','Trong đó: cá nhân cư trú có hợp đồng lao động',t.ct17)}
+   ${ro('[18]','Tổng số cá nhân đã khấu trừ thuế',t.ct18)}${ro('[19]','Cá nhân cư trú',t.ct19)}${ro('[20]','Cá nhân không cư trú',t.ct20)}
+   ${ro('[21]','Tổng thu nhập chịu thuế trả cho cá nhân',t.ct21)}${ro('[22]','Cá nhân cư trú',t.ct22)}${ro('[23]','Cá nhân không cư trú',t.ct23)}
+   ${ro('[26]','Tổng thu nhập chịu thuế trả cho cá nhân thuộc diện phải khấu trừ thuế',t.ct26)}${ro('[27]','Cá nhân cư trú',t.ct27)}${ro('[28]','Cá nhân không cư trú',t.ct28)}
+   ${ro('[29]','Tổng số thuế TNCN đã khấu trừ',t.ct29)}${ro('[30]','Cá nhân cư trú',t.ct30)}${ro('[31]','Cá nhân không cư trú',t.ct31)}
+   </tbody></table></div><div class="row"><button class="btn" data-act="print">In / lưu PDF</button></div></details>`;
+}
+function invTable(list,kind){
+  if(!list.length)return `<div class="panel" style="text-align:center;color:var(--muted)"><h3 style="color:var(--fg)">Chưa có hóa đơn ${kind==='in'?'mua vào':'bán ra'} trong kỳ</h3><p>Kết nối cổng hóa đơn ở phía trên để phần mềm tự lấy về.</p></div>`;
+  const ex=cur().excl||{},q=ui.q.trim().toLowerCase();const rows=q?list.filter(x=>[x.mst,x.ten,x.kh,x.so].join(' ').toLowerCase().includes(q)):list;
+  let tb=0,tt=0;rows.forEach(x=>{if(!VOID(x)){tb+=x.base;tt+=x.tax;}});
+  return `<div class="tbl-wrap"><table><thead><tr><th>Ngày</th><th>Số hóa đơn</th><th>${kind==='in'?'Người bán':'Người mua'}</th><th>Thuế suất</th><th class="num">Tiền hàng</th><th class="num">Tiền thuế</th><th>Ghi chú</th></tr></thead><tbody>
+  ${rows.slice(0,1500).map(x=>`<tr class="${VOID(x)?'void':''}"><td>${dmy(x.ngay)}</td><td class="code">${esc(x.mau)}${esc(x.kh)} · ${esc(x.so)}</td><td>${esc(x.ten)}<br><span class="muted">${esc(x.mst)}</span></td><td>${x.rates.map(r=>esc(RLAB[r.r]||r.r)).join(', ')}</td><td class="num">${fmt(x.base)}</td><td class="num">${fmt(x.tax)}</td><td>${x.tthai>1?`<span class="chip ${VOID(x)?'red':'amber'}">${esc(TTHAI[x.tthai]||'')}</span> `:''}${!VOID(x)&&kind==='in'&&x.total>=5e6?`<label class="ck"><input type="checkbox" id="ex-${esc(x.id)}" data-excl="${esc(x.id)}" ${ex[x.id]?'checked':''}> Trả tiền mặt (không được trừ thuế)</label>`:''}</td></tr>`).join('')}
+  <tr class="total"><td colspan="4">Cộng ${rows.filter(x=>!VOID(x)).length} hóa đơn hợp lệ</td><td class="num">${fmt(tb)}</td><td class="num">${fmt(tt)}</td><td></td></tr></tbody></table></div>${rows.length>1500?'<p class="muted">Đang hiện 1.500 dòng đầu. Tải CSV để xem đủ.</p>':''}`;
+}
+function vInvoices(){
+  const c=cur(),pi=perInfo(),list=ui.tab==='in'?c.in:c.out;
+  const conn=DEMO?`<div class="alert info"><b>Bản dùng thử</b><span>Đang dùng hóa đơn mẫu. Ở bản chính thức, chỗ này là nơi đăng nhập cổng hóa đơn điện tử để phần mềm tự lấy hóa đơn thật.</span></div>`
+   :GDT.token?`<div class="alert info"><b>Đã kết nối</b><span>Tài khoản ${esc(GDT.user)}.</span></div>
+     <div class="row"><button class="btn primary" data-act="gdt-fetch">Lấy hóa đơn ${esc(pi.label)}</button><button class="btn" data-act="gdt-out">Ngắt kết nối</button></div>`
+   :`<form id="gdt-form" class="panel" style="padding:0;border:0" autocomplete="off">
+     <div class="grid2"><label for="g-user">Tên đăng nhập (thường là mã số thuế)<input id="g-user" value="${esc(P().mst)}" inputmode="numeric" autocomplete="off" required></label>
+     <label for="g-pass">Mật khẩu cổng hóa đơn điện tử<input id="g-pass" type="password" autocomplete="off" required></label></div>
+     <div class="captcha"><div class="img" id="cap-img" aria-label="Mã xác nhận của cổng thuế">Đang tải mã…</div><button class="btn sm" type="button" data-act="cap-new">Đổi mã khác</button>
+       <label for="g-cap" style="flex:1 1 160px">Gõ lại các chữ trong hình<input id="g-cap" autocomplete="off" autocapitalize="characters" required></label></div>
+     <div class="row"><button class="btn primary" type="submit" id="g-btn">${ui.auto?'Kết nối và lập tờ khai':'Kết nối'}</button></div>
+     <p class="err" id="g-err" role="alert"></p></form>`;
+  return `<section class="panel"><h2>Kết nối cổng hóa đơn điện tử</h2>
+   <p class="muted">Dùng tài khoản công ty vẫn đăng nhập ở hoadondientu.gdt.gov.vn. Mật khẩu chỉ gửi thẳng tới cổng thuế, phần mềm không lưu lại.</p>
+   ${conn}
+   <p class="muted">${c.fetchedAt?'Lần lấy gần nhất: '+new Date(c.fetchedAt).toLocaleString('vi-VN')+' · '+c.in.length+' hóa đơn mua vào, '+c.out.length+' hóa đơn bán ra.':'Chưa lấy hóa đơn cho kỳ này.'}</p>
+   <details><summary class="muted">Nhật ký kết nối (gửi cho ACCA khi cần hỗ trợ)</summary><div class="log" id="gdt-log" aria-live="polite"></div></details>
+  </section>
+  <div class="row between"><div class="row"><button class="btn ${ui.tab==='in'?'primary':''}" data-act="tab" data-k="in">Mua vào (${c.in.length})</button><button class="btn ${ui.tab==='out'?'primary':''}" data-act="tab" data-k="out">Bán ra (${c.out.length})</button>
+   <input id="inv-q" placeholder="Tìm tên, mã số thuế, số hóa đơn" value="${esc(ui.q)}" style="min-width:min(260px,100%)" aria-label="Tìm hóa đơn"></div><button class="btn sm" data-act="csv">Tải danh sách (CSV)</button></div>
+  <div id="inv-list">${invTable(list,ui.tab)}</div>`;
 }
 function vSubmit(){
-  const c=cur(),st=c.status,pi=perInfo(),t=calc01(),p=P();
-  const tb=st.tb;
-  const rows=Object.keys(DB.periods).sort().reverse().map(k=>{const s=(DB.periods[k].status)||{};return `<tr><td class="code">${esc(k.replace('-',' · '))}</td><td>${s.lap?dmy(s.lap):'<span class="muted">chưa</span>'}</td><td>${s.nop?dmy(s.nop):'<span class="muted">chưa</span>'}</td><td class="code">${esc(s.maGD||'')}</td><td>${s.tb?`<span class="chip ${s.tb.kq==='ok'?'ok':'red'}">${s.tb.kq==='ok'?'Chấp nhận':'Không chấp nhận'}</span>`:'<span class="muted">chưa có</span>'}</td></tr>`;}).join('');
-  return `<div class="grid2">
-  <section class="panel"><h2>Nộp tờ khai ${esc(pi.label)}</h2>
-   <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">
-    <li>Tải tệp XML tờ khai 01/GTGT. <button class="btn sm" data-act="xml">Tải XML</button></li>
-    <li>Mở <a href="https://thuedientu.gdt.gov.vn" target="_blank" rel="noopener">thuedientu.gdt.gov.vn</a>, vào <b>Khai thuế ▸ Nộp tờ khai XML</b>, chọn tệp, <b>ký bằng chữ ký số</b> rồi nộp.</li>
-    <li>Ghi lại ngày nộp và mã giao dịch:
-      <div class="row" style="margin-top:6px"><label for="s-nop">Ngày nộp<input type="date" id="s-nop" value="${esc(st.nop||'')}"></label><label for="s-gd" style="flex:1 1 180px">Mã giao dịch<input id="s-gd" value="${esc(st.maGD||'')}" placeholder="Số trên thông báo tiếp nhận"></label><button class="btn" data-act="save-nop" style="align-self:flex-end">Lưu</button></div></li>
-    <li>Khi eTax trả thông báo, tải tệp thông báo về rồi nạp vào đây. Phần mềm đọc kết quả chấp nhận hay không chấp nhận. <button class="btn sm" data-act="tb-up">Nạp tệp thông báo</button></li>
+  const f=ui.form,F=FORMS[f],st=ST(f),pi=perInfo(),p=P(),tb=st.tb;
+  const due=f==='gtgt'?calc01().ct40:calc05().ct29;
+  const rows=Object.keys(DB.periods).sort().reverse().flatMap(k=>Object.keys(FORMS).map(ff=>{const s=((DB.periods[k].st)||{})[ff];if(!s||!(s.lap||s.nop||s.tb))return '';
+    return `<tr><td class="code">${esc(k.replace('-',' · '))}</td><td>${FORMS[ff].ten}</td><td>${s.lap?dmy(s.lap):'<span class="muted">chưa</span>'}</td><td>${s.nop?dmy(s.nop):'<span class="muted">chưa</span>'}</td><td>${s.tb?`<span class="chip ${s.tb.kq==='ok'?'ok':'red'}">${s.tb.kq==='ok'?'Chấp nhận':'Bị trả lại'}</span>`:'<span class="muted">chưa có</span>'}</td></tr>`;})).join('');
+  return `<div class="row">${Object.keys(FORMS).map(k=>`<button class="btn ${f===k?'primary':''}" data-act="form" data-k="${k}">${FORMS[k].ten}</button>`).join('')}</div>
+  <div class="grid2">
+  <section class="panel"><div class="row between"><h2>Nộp ${esc(F.ten)} ${esc(pi.label)}</h2>${stChip(f)}</div>
+   <ol class="plain">
+    <li><b>Tải tệp tờ khai về máy.</b><br><button class="btn sm" data-act="xml" data-form="${f}">Tải tệp để nộp</button></li>
+    <li><b>Mở trang thuế điện tử</b> <a href="https://thuedientu.gdt.gov.vn" target="_blank" rel="noopener">thuedientu.gdt.gov.vn</a>, đăng nhập phần Doanh nghiệp và cắm chữ ký số (USB token) vào máy.</li>
+    <li>Chọn <b>Khai thuế</b>, rồi <b>Nộp tờ khai XML</b>. Bấm <b>Chọn tệp tờ khai</b>, chọn tệp vừa tải, bấm <b>Ký điện tử</b>, nhập mã PIN của chữ ký số, rồi bấm <b>Nộp tờ khai</b>.</li>
+    <li><b>Ghi lại ngày đã nộp</b> để phần mềm theo dõi:
+      <div class="row" style="margin-top:6px"><label for="s-nop">Ngày nộp<input type="date" id="s-nop" value="${esc(st.nop||ymd(new Date()))}"></label><label for="s-gd" style="flex:1 1 160px">Mã giao dịch (nếu có)<input id="s-gd" value="${esc(st.maGD||'')}"></label><button class="btn" data-act="save-nop" style="align-self:flex-end">Tôi đã nộp</button></div></li>
+    <li><b>Xem kết quả.</b> Sau vài phút đến một ngày, trang thuế gửi thông báo. Vào <b>Tra cứu</b>, <b>Thông báo</b>, tải thông báo về rồi đưa vào đây, phần mềm đọc giúp là được chấp nhận hay bị trả lại.<br><button class="btn sm" data-act="tb-up">Đưa tệp thông báo vào</button></li>
+    ${due>0?`<li><b>Nộp tiền thuế ${fmt(due)} đ</b> trước ngày ${dmy(pi.due)}: trên cùng trang thuế điện tử, chọn <b>Nộp thuế</b>, <b>Lập giấy nộp tiền</b>.</li>`:''}
    </ol>
-   ${t.ct40>0?`<div class="alert"><b>Phải nộp</b><span>Thuế GTGT phải nộp kỳ này: ${fmt(t.ct40)} đ, hạn ${dmy(pi.due)}.</span></div>`:''}
-   <div class="alert info"><b>Lưu ý phiên bản</b><span>Tệp XML theo mẫu 01/GTGT của HTKK (mã tờ khai 842). Phiên bản HTKK ${esc(p.pbanDVu)}, phiên bản XML ${esc(p.pbanXML)} sửa được ở Hồ sơ người nộp thuế. Nếu eTax báo sai phiên bản, cập nhật hai số này theo HTKK mới nhất.</span></div>
+   ${profOK()?'':'<div class="alert"><b>Còn thiếu</b><span>Chưa có thông tin công ty nên chưa tải được tệp. <a class="link" href="#congty">Nhập thông tin công ty</a></span></div>'}
   </section>
-  <section class="panel"><h2>Thông báo của cơ quan thuế</h2>
-   ${tb?`<div class="alert ${tb.kq==='ok'?'info':'red'}"><b>${tb.kq==='ok'?'Chấp nhận':'Không chấp nhận'}</b><span>${esc(tb.text||'')}${tb.ma?' · Mã giao dịch '+esc(tb.ma):''} · nạp ngày ${dmy(tb.ngay)}</span></div>${tb.ly?`<p><b>Nội dung trích từ thông báo:</b> ${esc(tb.ly)}</p>`:''}`
-      :'<p class="muted">Chưa có thông báo cho kỳ này. Sau khi nộp, eTax gửi thông báo tiếp nhận (bước 1) và thông báo chấp nhận hoặc không chấp nhận (bước 2). Nạp tệp ở mục 4 bên trái.</p>'}
-   <h3>Sổ theo dõi các kỳ</h3>
-   <div class="tbl-wrap"><table><thead><tr><th>Kỳ</th><th>Lập</th><th>Nộp</th><th>Mã giao dịch</th><th>Kết quả</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="muted">Chưa có kỳ nào.</td></tr>'}</tbody></table></div>
+  <section class="panel"><h2>Kết quả từ cơ quan thuế</h2>
+   ${tb?`<div class="alert ${tb.kq==='ok'?'info':'red'}"><b>${tb.kq==='ok'?'Đã chấp nhận':'Bị trả lại'}</b><span>${tb.kq==='ok'?'Tờ khai đã được cơ quan thuế chấp nhận. Kỳ này xong phần tờ khai.':'Tờ khai chưa được chấp nhận. Xem lý do bên dưới, sửa rồi nộp lại, hoặc gửi cho ACCA hỗ trợ.'} Tệp: ${esc(tb.text||'')}${tb.ma?' · mã giao dịch '+esc(tb.ma):''}</span></div>${tb.ly?`<p><b>Trích từ thông báo:</b> ${esc(tb.ly)}</p>`:''}`
+      :'<p class="muted">Chưa có thông báo cho kỳ này. Nộp xong, trang thuế sẽ gửi hai thông báo: đã nhận tờ khai, rồi chấp nhận hoặc không chấp nhận.</p>'}
+   <h3>Sổ theo dõi</h3>
+   <div class="tbl-wrap"><table><thead><tr><th>Kỳ</th><th>Loại thuế</th><th>Lập</th><th>Nộp</th><th>Kết quả</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="muted">Chưa lập tờ khai nào.</td></tr>'}</tbody></table></div>
   </section></div>`;
 }
 function vProfile(){
   const p=P();const f=(id,l,v,ph='',w='')=>`<label for="${id}" ${w}>${l}<input id="${id}" value="${esc(v)}" placeholder="${esc(ph)}"></label>`;
-  return `<form class="panel" id="form-hoso"><h2>Người nộp thuế</h2>
-   <div class="grid4">${f('h-mst','Mã số thuế *',p.mst,'0316119996')}${f('h-ten','Tên người nộp thuế *',p.ten,'CÔNG TY TNHH …','style="grid-column:span 2"')}
-    <label for="h-kieu">Kỳ kê khai GTGT<select id="h-kieu"><option value="Q" ${p.kieuKy==='Q'?'selected':''}>Theo quý</option><option value="M" ${p.kieuKy==='M'?'selected':''}>Theo tháng</option></select></label></div>
+  return `<section class="panel"><h2>Cách nhanh nhất: lấy từ tờ khai cũ</h2><p class="muted">Nếu công ty từng nộp tờ khai bằng HTKK hoặc phần mềm kế toán, chọn một tệp tờ khai cũ (đuôi .xml). Phần mềm tự điền mã số thuế, tên công ty, cơ quan thuế và các mã cần thiết.</p>
+   <div class="row"><button class="btn primary" data-act="prof-xml">Chọn tệp tờ khai cũ</button></div></section>
+  <form class="panel" id="form-hoso"><h2>Thông tin công ty</h2>
+   <div class="grid4">${f('h-mst','Mã số thuế *',p.mst)}${f('h-ten','Tên công ty (viết đúng như trên giấy phép) *',p.ten,'','style="grid-column:span 2"')}
+    <label for="h-kieu">Công ty khai thuế theo<select id="h-kieu"><option value="Q" ${p.kieuKy==='Q'?'selected':''}>Quý (đa số công ty nhỏ)</option><option value="M" ${p.kieuKy==='M'?'selected':''}>Tháng</option></select></label></div>
    <div class="grid4">${f('h-dchi','Địa chỉ trụ sở',p.dchi,'','style="grid-column:span 2"')}${f('h-dthoai','Điện thoại',p.dthoai)}${f('h-email','Email',p.email)}</div>
-   <div class="grid4">${f('h-tenxa','Phường/xã',p.tenXa)}${f('h-maxa','Mã phường/xã',p.maXa)}${f('h-tentinh','Tỉnh/thành phố',p.tenTinh)}${f('h-matinh','Mã tỉnh/thành phố',p.maTinh)}</div>
-   <h3>Cơ quan thuế và người ký</h3>
-   <div class="grid4">${f('h-macqt','Mã cơ quan thuế nơi nộp',p.maCQT,'70113')}${f('h-tencqt','Tên cơ quan thuế',p.tenCQT,'Thuế cơ sở 7 Thành phố Hồ Chí Minh','style="grid-column:span 2"')}${f('h-nguoiky','Người ký tờ khai',p.nguoiKy)}</div>
-   <div class="grid4">${f('h-nganh','Ngành nghề kinh doanh chính',p.nganh,'','style="grid-column:span 2"')}${f('h-pbdv','Phiên bản HTKK',p.pbanDVu,'5.6.7')}${f('h-pbxml','Phiên bản XML tờ khai',p.pbanXML,'2.8.3')}</div>
-   <p class="muted" style="font-size:.8rem">Mã cơ quan thuế, mã phường/xã, mã tỉnh lấy đúng như trên tờ khai gần nhất đã nộp qua HTKK hoặc eTax.</p>
-   <div class="row"><button class="btn primary" type="submit">Lưu hồ sơ</button></div></form>
-  <section class="panel"><h2>Sao lưu dữ liệu</h2><p class="muted">Dữ liệu khai thuế đang lưu trên trình duyệt của máy này, theo tài khoản ACCA. Tải tệp sao lưu để giữ hoặc chuyển sang máy khác.</p>
+   <div class="grid4">${f('h-tencqt','Cơ quan thuế quản lý *',p.tenCQT,'Ví dụ: Thuế cơ sở 7 Thành phố Hồ Chí Minh','style="grid-column:span 2"')}${f('h-macqt','Mã cơ quan thuế *',p.maCQT)}${f('h-nguoiky','Người ký tờ khai (giám đốc)',p.nguoiKy)}</div>
+   <p class="muted hint">Không biết mã cơ quan thuế? Dùng cách lấy từ tờ khai cũ ở trên, hoặc nhắn ACCA điền giúp.</p>
+   <details class="adv"><summary>Thông tin kỹ thuật của tệp nộp (thường không cần sửa)</summary>
+    <div class="grid4" style="margin-top:10px">${f('h-tenxa','Phường/xã',p.tenXa)}${f('h-maxa','Mã phường/xã',p.maXa)}${f('h-tentinh','Tỉnh/thành phố',p.tenTinh)}${f('h-matinh','Mã tỉnh/thành phố',p.maTinh)}</div>
+    <div class="grid4" style="margin-top:10px">${f('h-nganh','Ngành nghề kinh doanh chính',p.nganh)}${f('h-pbdv','Phiên bản HTKK',p.pbanDVu)}${f('h-pbxml','Phiên bản tệp 01/GTGT',p.pbanXML)}${f('h-pbkk','Phiên bản tệp 05/KK-TNCN',p.pbanKK)}</div></details>
+   <div class="row"><button class="btn primary" type="submit">Lưu thông tin</button></div></form>
+  <section class="panel"><h2>Sao lưu dữ liệu</h2><p class="muted">Số liệu đang lưu trên trình duyệt của máy này. Tải tệp sao lưu để giữ lại hoặc chuyển sang máy khác.</p>
    <div class="row"><button class="btn" data-act="backup">Tải tệp sao lưu</button><button class="btn" data-act="restore">Nhập từ tệp sao lưu</button></div></section>`;
 }
 
@@ -591,66 +709,78 @@ function readNotice(text,name){
   return {kq,ma,ly,text:name};
 }
 function busy(on,msg){$('#busy').hidden=!on;if(msg)$('#busy-msg').textContent=msg;}
-function dlXML(quiet){const p=P();if(!p.mst||!p.ten||!p.maCQT){if(!quiet){toast('Khai báo MST, tên và mã cơ quan thuế ở Hồ sơ người nộp thuế trước khi xuất XML.');location.hash='hoso';}return false;}
-  const pi=perInfo();saveFile(`${p.mst}-01_GTGT_TT80-${pi.kieu==='Q'?'Q'+PER.n:'M'+z2(PER.n)}${PER.y}-L00.xml`,buildXML(),'application/xml');return true;}
+function go(v){if(view===v)render();else location.hash=v;}
 async function runAuto(){
   const pi=perInfo();
   if(!DEMO){
-    if(!GDT.token){ui.auto=true;if(view==='ketnoi')render();else location.hash='ketnoi';toast('Đăng nhập cổng hóa đơn một lần, phần mềm tự làm phần còn lại.');return;}
+    if(!GDT.token){ui.auto=true;go('hoadon');toast('Kết nối cổng hóa đơn một lần, phần mềm tự làm phần còn lại.');return;}
     ui.auto=false;busy(true,'Đang lấy hóa đơn '+pi.label+' từ cổng thuế…');
-    try{await gdtFetchPeriod();}catch(e){busy(false);glog('LỖI: '+e.message);toast(e.message);if(view==='ketnoi')render();else location.hash='ketnoi';return;}
+    try{await gdtFetchPeriod();}catch(e){busy(false);glog('LỖI: '+e.message);toast(e.message);go('hoadon');return;}
     busy(false);
   }
-  const c=cur();c.status.lap=ymd(new Date());save();
-  if(view==='tokhai')render();else location.hash='tokhai';
-  const ok=dlXML(true);
-  setTimeout(()=>toast(ok?`Đã lập tờ khai ${pi.label}: ${c.in.length} hóa đơn mua vào, ${c.out.length} bán ra. Tệp XML đã tải về.`:'Đã lập tờ khai. Bổ sung MST, tên, mã cơ quan thuế ở Hồ sơ để tải tệp XML.'),ok?3400:0);
+  const c=cur();ST('gtgt').lap=ymd(new Date());save();go('gtgt');
+  const ok=dlXML('gtgt',true);
+  setTimeout(()=>toast(ok?`Xong. Đã tính thuế từ ${c.in.length} hóa đơn mua vào, ${c.out.length} hóa đơn bán ra và tải tệp để nộp.`:'Đã tính xong thuế. Nhập thông tin công ty để tải tệp nộp.'),ok?3400:0);
 }
 document.addEventListener('click',async e=>{
+  const lk=e.target.closest('a[data-form]');if(lk)ui.form=lk.dataset.form;
   const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,c=cur();
   switch(a){
     case 'logout':try{sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem(EMAIL_KEY);}catch(err){}location.href='../portal.html';break;
     case 'cap-new':gdtCaptcha();break;
-    case 'gdt-out':GDT.token='';GDT.user='';glog('Đã thoát cổng hóa đơn.');render();break;
-    case 'gdt-fetch':{b.disabled=true;b.textContent='Đang lấy hóa đơn…';glog('Bắt đầu lấy hóa đơn '+perInfo().label);
+    case 'gdt-out':GDT.token='';GDT.user='';glog('Đã ngắt kết nối cổng hóa đơn.');render();break;
+    case 'gdt-fetch':{busy(true,'Đang lấy hóa đơn '+perInfo().label+' từ cổng thuế…');glog('Bắt đầu lấy hóa đơn '+perInfo().label);
       try{const r=await gdtFetchPeriod();toast(`Đã lấy ${r.nIn} hóa đơn mua vào, ${r.nOut} hóa đơn bán ra`);}catch(err){glog('LỖI: '+err.message);toast(err.message);}
-      render();break;}
+      busy(false);render();break;}
     case 'tab':ui.tab=b.dataset.k;render();break;
+    case 'form':ui.form=b.dataset.k;render();break;
     case 'csv':csvCurrent();break;
-    case 'xml':dlXML(false);break;
+    case 'xml':{const f=b.dataset.form||ui.form;if(dlXML(f,false)){ST(f).lap=ST(f).lap||ymd(new Date());save();}break;}
     case 'one':runAuto();break;
+    case 'lap05':ST('tncn').lap=ymd(new Date());save();render();if(!dlXML('tncn',true))toast('Đã lập tờ khai. Nhập thông tin công ty để tải tệp nộp.');break;
     case 'print':window.print();break;
-    case 'mark-lap':c.status.lap=ymd(new Date());save();toast('Đã đánh dấu tờ khai kỳ này là đã lập');render();break;
-    case 'save-nop':c.status.nop=$('#s-nop').value;c.status.maGD=$('#s-gd').value.trim();save();toast('Đã lưu thông tin nộp');render();break;
+    case 'staff-add':DB.staff=DB.staff||[];DB.staff.push({id:'s'+Date.now().toString(36),ten:'',mst:'',loai:'hd',npt:0});save();render();{const l=DB.staff[DB.staff.length-1];const el=$('#s-'+l.id+'-ten');if(el)el.focus();}break;
+    case 'staff-del':{const s=(DB.staff||[]).find(x=>x.id===b.dataset.id);if(s&&confirm('Xóa '+(s.ten||'người này')+' khỏi danh sách? Lương đã nhập của người này ở các kỳ cũng bị xóa.')){DB.staff=DB.staff.filter(x=>x.id!==s.id);Object.values(DB.periods).forEach(pp=>{if(pp.pay)delete pp.pay[s.id];});save();render();}break;}
+    case 'save-nop':{const s=ST(ui.form);s.nop=$('#s-nop').value;s.maGD=$('#s-gd').value.trim();s.lap=s.lap||s.nop;save();toast('Đã ghi nhận ngày nộp');render();break;}
     case 'tb-up':$('#file-tb').click();break;
-    case 'backup':saveFile(`acca-smart-tax-${(P().mst||'du-lieu')}-${ymd(new Date())}.json`,JSON.stringify({app:'acca-smart-tax',v:1,db:DB},null,1),'application/json');break;
+    case 'prof-xml':$('#file-prof').click();break;
+    case 'backup':saveFile(`acca-smart-tax-${(P().mst||'du-lieu')}-${ymd(new Date())}.json`,JSON.stringify({app:'acca-smart-tax',v:2,db:DB},null,1),'application/json');break;
     case 'restore':$('#file-restore').click();break;
   }
 });
 $('#file-tb').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
   let text='';try{text=await f.text();}catch(err){toast('Không đọc được tệp.');return;}
-  const r=readNotice(text,f.name);const c=cur();
-  if(!r.kq){toast('Không tìm thấy chữ "chấp nhận" hay "không chấp nhận" trong tệp. Hãy dùng tệp XML hoặc HTML của thông báo, không dùng PDF dạng ảnh.');return;}
-  c.status.tb={kq:r.kq,ma:r.ma,ly:r.ly,text:r.text,ngay:ymd(new Date())};if(r.ma&&!c.status.maGD)c.status.maGD=r.ma;save();
-  toast(r.kq==='ok'?'Thông báo: tờ khai được CHẤP NHẬN':'Thông báo: tờ khai KHÔNG được chấp nhận');render();});
+  const r=readNotice(text,f.name);const s=ST(ui.form);
+  if(!r.kq){toast('Không đọc được kết quả trong tệp này. Hãy tải thông báo dạng XML hoặc HTML từ trang thuế, không dùng ảnh chụp.');return;}
+  s.tb={kq:r.kq,ma:r.ma,ly:r.ly,text:r.text,ngay:ymd(new Date())};if(r.ma&&!s.maGD)s.maGD=r.ma;save();
+  toast(r.kq==='ok'?'Cơ quan thuế đã CHẤP NHẬN tờ khai':'Tờ khai BỊ TRẢ LẠI, xem lý do');render();});
 $('#file-restore').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
-  try{const d=JSON.parse(await f.text());if(!d||d.app!=='acca-smart-tax'||!d.db)throw 0;DB=Object.assign({profile:{},periods:{}},d.db);save();toast('Đã nhập dữ liệu từ tệp sao lưu');render();}catch(err){toast('Đây không phải tệp sao lưu của ACCA Smart-Tax.');}});
-document.addEventListener('change',e=>{const el=e.target;
+  try{const d=JSON.parse(await f.text());if(!d||d.app!=='acca-smart-tax'||!d.db)throw 0;DB=Object.assign({profile:{},periods:{},staff:[]},d.db);save();toast('Đã nhập dữ liệu từ tệp sao lưu');render();}catch(err){toast('Đây không phải tệp sao lưu của ACCA Smart-Tax.');}});
+$('#file-prof').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{const doc=new DOMParser().parseFromString(await f.text(),'application/xml');const g=n=>{const el=doc.getElementsByTagName(n)[0];return el?el.textContent.trim():'';};
+    if(!g('mst')||!g('tenNNT'))throw 0;const o=P(),kk=g('kieuKy');
+    DB.profile=Object.assign(o,{mst:g('mst'),ten:g('tenNNT'),dchi:g('dchiNNT')||o.dchi,tenXa:g('tenXaNNT')||o.tenXa,maXa:g('maXaNNT')||o.maXa,maTinh:g('maTinhNNT')||o.maTinh,tenTinh:g('tenTinhNNT')||o.tenTinh,dthoai:g('dthoaiNNT')||o.dthoai,email:g('emailNNT')||o.email,maCQT:g('maCQTNoiNop')||o.maCQT,tenCQT:g('tenCQTNoiNop')||o.tenCQT,nguoiKy:g('nguoiKy')||o.nguoiKy,nganh:g('nganhNgheKD')||o.nganh,kieuKy:(kk==='Q'||kk==='M')?kk:o.kieuKy});
+    save();defaultPeriod();toast('Đã điền thông tin công ty từ tờ khai cũ. Kiểm tra lại rồi bấm Lưu.');render();
+  }catch(err){toast('Tệp này không phải tờ khai thuế dạng XML. Chọn tệp có đuôi .xml xuất từ HTKK hoặc tải từ trang thuế.');}});
+document.addEventListener('change',e=>{const el=e.target,c=cur();
   if(el.id==='per-n'){PER.n=+el.value;render();}
   else if(el.id==='per-y'){PER.y=+el.value;render();}
-  else if(el.dataset.adj){const c=cur();const v=el.value.trim();if(el.dataset.adj==='ct25'&&v==='')delete c.adj.ct25;else c.adj[el.dataset.adj]=Math.max(0,parseNum(v));save();render();}
+  else if(el.dataset.adj){const v=el.value.trim(),k=el.dataset.adj;if(v==='')delete c.adj[k];else c.adj[k]=Math.max(0,parseNum(v));save();render();}
+  else if(el.dataset.excl){c.excl=c.excl||{};if(el.checked)c.excl[el.dataset.excl]=1;else delete c.excl[el.dataset.excl];save();toast(el.checked?'Đã loại thuế của hóa đơn này khỏi phần được trừ':'Đã tính lại hóa đơn này vào phần được trừ');}
+  else if(el.dataset.staff){const s=(DB.staff||[]).find(x=>x.id===el.dataset.staff);if(!s)return;const f=el.dataset.f;s[f]=f==='npt'?Math.max(0,parseNum(el.value)):el.value.trim();save();render();}
+  else if(el.dataset.pay){c.pay=c.pay||{};const p=c.pay[el.dataset.pay]=c.pay[el.dataset.pay]||{inc:[],bh:[]};p[el.dataset.f][+el.dataset.i]=Math.max(0,parseNum(el.value));save();render();}
 });
 document.addEventListener('input',e=>{const el=e.target;if(el.id==='inv-q'){ui.q=el.value;const c=cur();$('#inv-list').innerHTML=invTable(ui.tab==='in'?c.in:c.out,ui.tab);}});
 document.addEventListener('submit',async e=>{
   e.preventDefault();const f=e.target;
   if(f.id==='gdt-form'){const btn=$('#g-btn'),err=$('#g-err');err.textContent='';btn.disabled=true;
-    try{await gdtLogin($('#g-user').value.trim(),$('#g-pass').value,$('#g-cap').value.trim());$('#g-pass').value='';toast('Đã đăng nhập cổng hóa đơn');if(ui.auto)runAuto();else render();}
-    catch(ex){err.textContent=(ex.message||'Đăng nhập không thành công')+'\nKiểm tra tên đăng nhập, mật khẩu và mã xác nhận rồi thử lại.';glog('Đăng nhập thất bại: '+ex.message);btn.disabled=false;$('#g-cap').value='';gdtCaptcha();}
+    try{await gdtLogin($('#g-user').value.trim(),$('#g-pass').value,$('#g-cap').value.trim());$('#g-pass').value='';toast('Đã kết nối cổng hóa đơn');if(ui.auto)runAuto();else render();}
+    catch(ex){err.textContent=(ex.message||'Kết nối không thành công')+'\nKiểm tra tên đăng nhập, mật khẩu và các chữ trong hình rồi thử lại.';glog('Đăng nhập thất bại: '+ex.message);btn.disabled=false;$('#g-cap').value='';gdtCaptcha();}
     return;}
   if(f.id==='form-hoso'){const g=id=>$('#'+id).value.trim();const old=P().kieuKy;
-    DB.profile={mst:g('h-mst').replace(/\s/g,''),ten:g('h-ten'),kieuKy:$('#h-kieu').value,dchi:g('h-dchi'),dthoai:g('h-dthoai'),email:g('h-email'),tenXa:g('h-tenxa'),maXa:g('h-maxa'),tenTinh:g('h-tentinh'),maTinh:g('h-matinh'),maCQT:g('h-macqt'),tenCQT:g('h-tencqt'),nguoiKy:g('h-nguoiky'),nganh:g('h-nganh'),pbanDVu:g('h-pbdv')||'5.6.7',pbanXML:g('h-pbxml')||'2.8.3'};
-    if(old!==DB.profile.kieuKy){PER.n=DB.profile.kieuKy==='M'?Math.max(1,now.getMonth()):Math.max(1,Math.floor(now.getMonth()/3)||4);}
-    save();toast('Đã lưu hồ sơ người nộp thuế');render();return;}
+    DB.profile={mst:g('h-mst').replace(/\s/g,''),ten:g('h-ten'),kieuKy:$('#h-kieu').value,dchi:g('h-dchi'),dthoai:g('h-dthoai'),email:g('h-email'),tenXa:g('h-tenxa'),maXa:g('h-maxa'),tenTinh:g('h-tentinh'),maTinh:g('h-matinh'),maCQT:g('h-macqt'),tenCQT:g('h-tencqt'),nguoiKy:g('h-nguoiky'),nganh:g('h-nganh'),pbanDVu:g('h-pbdv')||'5.6.7',pbanXML:g('h-pbxml')||'2.8.3',pbanKK:g('h-pbkk')||'2.9.3'};
+    if(old!==DB.profile.kieuKy)defaultPeriod();
+    save();toast('Đã lưu thông tin công ty');go('viec');return;}
   if(f.id==='auth-form'){const btn=$('#auth-btn');btn.disabled=true;$('#auth-msg').textContent='';
     try{const email=$('#auth-email').value.trim().toLowerCase();const r=await api('login',{email,password:$('#auth-pass').value,mode:'tax'});
       if(!r.ok)$('#auth-msg').textContent=r.error||'Đăng nhập không thành công.';
@@ -660,19 +790,19 @@ document.addEventListener('submit',async e=>{
 });
 
 /* ===================== khởi động ===================== */
+function defaultPeriod(){const kq=P().kieuKy,pm=now.getMonth();if(kq==='M'){const d=new Date(now.getFullYear(),pm-1,1);PER={y:d.getFullYear(),n:d.getMonth()+1};}else{let q=Math.floor(pm/3),y=now.getFullYear();if(q===0){q=4;y--;}PER={y,n:q};}}
 function demoData(){
   const y=PER.y,q=PER.n,m=(q-1)*3+1,d=(mm,dd)=>`${y}-${z2(mm)}-${z2(dd)}`;
-  DB.profile={mst:'0000000000',ten:'CÔNG TY MẪU (DỮ LIỆU VÍ DỤ)',kieuKy:'Q',maCQT:'70113',tenCQT:'Thuế cơ sở 7 Thành phố Hồ Chí Minh',dchi:'Dữ liệu ví dụ',nguoiKy:'',pbanDVu:'5.6.7',pbanXML:'2.8.3'};
+  DB.profile={mst:'0000000000',ten:'CÔNG TY MẪU (DỮ LIỆU VÍ DỤ)',kieuKy:'Q',maCQT:'70113',tenCQT:'Thuế cơ sở 7 Thành phố Hồ Chí Minh',dchi:'Dữ liệu ví dụ',nguoiKy:'',pbanDVu:'5.6.7',pbanXML:'2.8.3',pbanKK:'2.9.3'};
   const mk=(id,mst,ten,so,ngay,base,r,tthai)=>({id,mst,ten,mau:1,kh:'C26TAA',so:String(so),ngay,base,tax:Math.round(base*(r==='KCT'?0:+r/100)),total:base+Math.round(base*(r==='KCT'?0:+r/100)),tthai:tthai||1,ttxly:5,rates:[{r,base,tax:Math.round(base*(r==='KCT'?0:+r/100))}]});
   const c=cur();
   c.in=[mk('i1','0300000001','Công ty cho thuê văn phòng (ví dụ)',452,d(m,10),20000000,'10'),mk('i2','0300000002','Công ty văn phòng phẩm (ví dụ)',118,d(m+1,6),3500000,'8'),mk('i3','0300000003','Công ty phần mềm (ví dụ)',77,d(m+2,15),12000000,'10'),mk('i4','0300000004','Nhà cung cấp đã hủy hóa đơn (ví dụ)',9,d(m+2,20),5000000,'10',6)];
   c.out=[mk('o1','0310000001','Công ty TNHH An Phát (ví dụ)',101,d(m,5),60000000,'8'),mk('o2','0310000002','Công ty CP Bình Minh (ví dụ)',102,d(m+1,25),25000000,'8'),mk('o3','0310000003','Khách hàng nước ngoài (ví dụ)',103,d(m+2,12),40000000,'0')];
   c.fetchedAt=new Date().toISOString();
+  DB.staff=[{id:'d1',ten:'Nhân viên A (ví dụ)',mst:'',loai:'hd',npt:1},{id:'d2',ten:'Nhân viên B (ví dụ)',mst:'',loai:'hd',npt:0},{id:'d3',ten:'Cộng tác viên C (ví dụ)',mst:'',loai:'tv',npt:0}];
+  c.pay={d1:{inc:[40e6,40e6,40e6],bh:[2.1e6,2.1e6,2.1e6]},d2:{inc:[12e6,12e6,12e6],bh:[1.26e6,1.26e6,1.26e6]},d3:{inc:[5e6,0,3e6],bh:[]}};
 }
-function start(){load();
-  // kỳ mặc định theo hồ sơ đã lưu
-  const kq=P().kieuKy,pm=now.getMonth();if(kq==='M'){const d=new Date(now.getFullYear(),pm-1,1);PER={y:d.getFullYear(),n:d.getMonth()+1};}else{let q=Math.floor(pm/3),y=now.getFullYear();if(q===0){q=4;y--;}PER={y,n:q};}
-  if(DEMO)demoData();render();}
+function start(){load();DB.staff=DB.staff||[];defaultPeriod();if(DEMO)demoData();render();}
 (async function boot(){
   if(DEMO){start();return;}
   let tok='',em='';try{tok=sessionStorage.getItem(TOKEN_KEY)||'';em=sessionStorage.getItem(EMAIL_KEY)||'';}catch(e){}
