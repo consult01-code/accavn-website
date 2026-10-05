@@ -108,6 +108,7 @@ tr.void td{color:var(--muted);text-decoration:line-through}
 .auth-card{width:min(420px,100%);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;display:flex;flex-direction:column;gap:14px}
 .auth-card input{font-size:1rem}.auth-card .btn{min-height:42px}
 .err{color:var(--red);font-size:.88rem;white-space:pre-line}
+.err.good{color:var(--ok)}
 @media (max-width:900px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.steps a:nth-child(2){border-right:0}.steps a:nth-child(-n+2){border-bottom:1px solid var(--line)}}
 @media (max-width:820px){.app{grid-template-columns:1fr}.rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 16px;gap:10px}nav{flex-direction:row;overflow-x:auto}nav a{white-space:nowrap}.rail .foot{margin-top:0}main{padding:16px 16px 40px}}
 .task{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
@@ -157,12 +158,35 @@ label.ck{flex-direction:row;align-items:center;gap:6px;font-size:.8rem;color:var
   <form class="auth-card" id="auth-form" autocomplete="on">
     <a class="link" href="../portal.html" style="text-decoration:none">← Kho phần mềm online</a>
     <h1>ACCA Smart-Tax</h1>
-    <p class="muted">Đăng nhập bằng tài khoản ACCA cấp cho gói ACCA Smart-Tax.</p>
+    <p class="muted">Đăng nhập bằng email và mật khẩu ACCA đã gửi cho công ty bạn.</p>
     <label for="auth-email">Email đăng nhập<input id="auth-email" type="email" autocomplete="username" required></label>
     <label for="auth-pass">Mật khẩu<input id="auth-pass" type="password" autocomplete="current-password" required></label>
     <button class="btn primary" type="submit" id="auth-btn">Đăng nhập</button>
     <p class="err" id="auth-msg" role="alert"></p>
-    <p class="muted" style="font-size:.84rem;line-height:1.7">Chưa có tài khoản? <a href="../portal.html#unlock-tax">Mua gói ACCA Smart-Tax</a><br><a href="?demo=1#viec">Xem bản dùng thử với dữ liệu mẫu</a> (không lưu)</p>
+    <button class="btn" type="button" data-auth="reg">Chưa có tài khoản? Đăng ký ngay</button>
+    <p class="muted" style="font-size:.84rem;line-height:1.7"><button class="link" type="button" data-auth="rs">Quên mật khẩu</button> · <a href="?demo=1#viec">Xem bản dùng thử với dữ liệu mẫu</a></p>
+  </form>
+  <form class="auth-card" id="reg-form" autocomplete="on" hidden>
+    <button class="link" type="button" data-auth="login" style="text-align:left;text-decoration:none">← Quay lại đăng nhập</button>
+    <h1>Đăng ký tài khoản</h1>
+    <p class="muted">Điền thông tin công ty. Mật khẩu đăng nhập sẽ được gửi ngay về email của bạn. Mỗi mã số thuế chỉ đăng ký được một tài khoản.</p>
+    <label for="reg-co">Tên công ty<input id="reg-co" autocomplete="organization" required minlength="3"></label>
+    <label for="reg-mst">Mã số thuế<input id="reg-mst" inputmode="numeric" autocomplete="off" placeholder="10 số" required></label>
+    <label for="reg-email">Email nhận mật khẩu<input id="reg-email" type="email" autocomplete="email" required></label>
+    <label for="reg-phone">Số điện thoại<input id="reg-phone" type="tel" autocomplete="tel" required></label>
+    <label for="reg-name">Họ tên người liên hệ<input id="reg-name" autocomplete="name"></label>
+    <input id="reg-web" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
+    <button class="btn primary" type="submit" id="reg-btn">Đăng ký và nhận mật khẩu qua email</button>
+    <p class="err" id="reg-msg" role="alert"></p>
+  </form>
+  <form class="auth-card" id="rs-form" hidden>
+    <button class="link" type="button" data-auth="login" style="text-align:left;text-decoration:none">← Quay lại đăng nhập</button>
+    <h1>Quên mật khẩu</h1>
+    <p class="muted">Ghi đúng email và mã số thuế đã đăng ký. Mật khẩu mới sẽ được gửi về email đó.</p>
+    <label for="rs-email">Email đã đăng ký<input id="rs-email" type="email" autocomplete="email" required></label>
+    <label for="rs-mst">Mã số thuế<input id="rs-mst" inputmode="numeric" autocomplete="off" required></label>
+    <button class="btn primary" type="submit" id="rs-btn">Gửi mật khẩu mới</button>
+    <p class="err" id="rs-msg" role="alert"></p>
   </form>
 </div>
 
@@ -184,7 +208,11 @@ function saveFile(name,text,type){try{const b=new Blob([text],{type:type||'text/
 const BACKEND='https://script.google.com/macros/s/AKfycbzcNPAWKicAS9pv_2H0T6I3l1xnJlasKL-Emf0XWyKs-dOb_vvP0M9_q_wV2IWIteyYEQ/exec';
 const TOKEN_KEY='acca_portal_tok', EMAIL_KEY='acca_portal_email';
 const DEMO=new URLSearchParams(location.search).get('demo')==='1';
-let AUTH={email:'',token:''};
+let AUTH={email:'',token:'',mst:'',name:''};
+const MST_KEY='acca_portal_mst';
+function normMst(v){let t=String(v??'').replace(/[^\d-]/g,'');if(/^\d{9}$/.test(t))t='0'+t;return /^(\d{10}|\d{10}-\d{3}|\d{12})$/.test(t)?t:'';}
+// tài khoản đăng ký gắn với đúng một mã số thuế; riêng tài khoản demo dùng chung thì không khóa
+function setAcct(email,client){AUTH.mst=email==='demo@congty.com'?'':normMst(client&&client.mst);AUTH.name=client&&client.name?String(client.name):'';try{sessionStorage.setItem(MST_KEY,JSON.stringify({m:AUTH.mst,n:AUTH.name}));}catch(e){}}
 function api(action,payload){return fetch(BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({action},payload||{}))}).then(r=>{if(!r.ok)throw new Error('Máy chủ trả lỗi '+r.status);return r.json();});}
 
 /* ===================== dữ liệu (lưu trên trình duyệt theo tài khoản) ===================== */
@@ -192,8 +220,9 @@ let DB={profile:{},periods:{},staff:[]};
 const dbKey=()=> 'acca.tax.'+(DEMO?'demo':(AUTH.email||'anon'));
 function load(){try{const raw=DEMO?null:localStorage.getItem(dbKey());if(raw)DB=Object.assign({profile:{},periods:{},staff:[]},JSON.parse(raw));}catch(e){}}
 function save(){if(DEMO)return;try{localStorage.setItem(dbKey(),JSON.stringify(DB));}catch(e){toast('Không lưu được vào trình duyệt (bộ nhớ đầy hoặc chế độ ẩn danh).');}}
-const P=()=>Object.assign({mst:'',ten:'',dchi:'',kieuKy:'Q',maCQT:'',tenCQT:'',nganh:'',nguoiKy:'',maTinh:'',tenTinh:'',maXa:'',tenXa:'',dthoai:'',email:'',pbanDVu:'5.6.7',pbanXML:'2.8.3',pbanKK:'2.9.3'},DB.profile||{});
+const P0=()=>Object.assign({mst:'',ten:'',dchi:'',kieuKy:'Q',maCQT:'',tenCQT:'',nganh:'',nguoiKy:'',maTinh:'',tenTinh:'',maXa:'',tenXa:'',dthoai:'',email:'',pbanDVu:'5.6.7',pbanXML:'2.8.3',pbanKK:'2.9.3'},DB.profile||{});
 
+const P=()=>{const p=P0();if(AUTH.mst){p.mst=AUTH.mst;if(!p.ten)p.ten=AUTH.name;}return p;};
 /* ===================== kỳ kê khai ===================== */
 const now=new Date();
 let PER={y:now.getFullYear(),n:1};
@@ -681,7 +710,7 @@ function vProfile(){
   return `<section class="panel"><h2>Cách nhanh nhất: lấy từ tờ khai cũ</h2><p class="muted">Nếu công ty từng nộp tờ khai bằng HTKK hoặc phần mềm kế toán, chọn một tệp tờ khai cũ (đuôi .xml). Phần mềm tự điền mã số thuế, tên công ty, cơ quan thuế và các mã cần thiết.</p>
    <div class="row"><button class="btn primary" data-act="prof-xml">Chọn tệp tờ khai cũ</button></div></section>
   <form class="panel" id="form-hoso"><h2>Thông tin công ty</h2>
-   <div class="grid4">${f('h-mst','Mã số thuế *',p.mst)}${f('h-ten','Tên công ty (viết đúng như trên giấy phép) *',p.ten,'','style="grid-column:span 2"')}
+   <div class="grid4">${AUTH.mst?`<label for="h-mst">Mã số thuế (theo tài khoản, không đổi được)<input id="h-mst" value="${esc(p.mst)}" readonly></label>`:f('h-mst','Mã số thuế *',p.mst)}${f('h-ten','Tên công ty (viết đúng như trên giấy phép) *',p.ten,'','style="grid-column:span 2"')}
     <label for="h-kieu">Công ty khai thuế theo<select id="h-kieu"><option value="Q" ${p.kieuKy==='Q'?'selected':''}>Quý (đa số công ty nhỏ)</option><option value="M" ${p.kieuKy==='M'?'selected':''}>Tháng</option></select></label></div>
    <div class="grid4">${f('h-dchi','Địa chỉ trụ sở',p.dchi,'','style="grid-column:span 2"')}${f('h-dthoai','Điện thoại',p.dthoai)}${f('h-email','Email',p.email)}</div>
    <div class="grid4">${f('h-tencqt','Cơ quan thuế quản lý *',p.tenCQT,'Ví dụ: Thuế cơ sở 7 Thành phố Hồ Chí Minh','style="grid-column:span 2"')}${f('h-macqt','Mã cơ quan thuế *',p.maCQT)}${f('h-nguoiky','Người ký tờ khai (giám đốc)',p.nguoiKy)}</div>
@@ -708,6 +737,8 @@ function readNotice(text,name){
   const i=low.search(/lý\s+do|ly\s+do/);const ly=i>=0?plain.slice(i,i+260):'';
   return {kq,ma,ly,text:name};
 }
+function authShow(w){$('#auth-form').hidden=w!=='login';$('#reg-form').hidden=w!=='reg';$('#rs-form').hidden=w!=='rs';const el=$(w==='reg'?'#reg-co':w==='rs'?'#rs-email':'#auth-email');if(el)el.focus();}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-auth]');if(b)authShow(b.dataset.auth);});
 function busy(on,msg){$('#busy').hidden=!on;if(msg)$('#busy-msg').textContent=msg;}
 function go(v){if(view===v)render();else location.hash=v;}
 async function runAuto(){
@@ -726,7 +757,7 @@ document.addEventListener('click',async e=>{
   const lk=e.target.closest('a[data-form]');if(lk)ui.form=lk.dataset.form;
   const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,c=cur();
   switch(a){
-    case 'logout':try{sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem(EMAIL_KEY);}catch(err){}location.href='../portal.html';break;
+    case 'logout':try{sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem(EMAIL_KEY);sessionStorage.removeItem(MST_KEY);}catch(err){}location.href='../portal.html';break;
     case 'cap-new':gdtCaptcha();break;
     case 'gdt-out':GDT.token='';GDT.user='';glog('Đã ngắt kết nối cổng hóa đơn.');render();break;
     case 'gdt-fetch':{busy(true,'Đang lấy hóa đơn '+perInfo().label+' từ cổng thuế…');glog('Bắt đầu lấy hóa đơn '+perInfo().label);
@@ -758,7 +789,8 @@ $('#file-restore').addEventListener('change',async e=>{const f=e.target.files[0]
   try{const d=JSON.parse(await f.text());if(!d||d.app!=='acca-smart-tax'||!d.db)throw 0;DB=Object.assign({profile:{},periods:{},staff:[]},d.db);save();toast('Đã nhập dữ liệu từ tệp sao lưu');render();}catch(err){toast('Đây không phải tệp sao lưu của ACCA Smart-Tax.');}});
 $('#file-prof').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
   try{const doc=new DOMParser().parseFromString(await f.text(),'application/xml');const g=n=>{const el=doc.getElementsByTagName(n)[0];return el?el.textContent.trim():'';};
-    if(!g('mst')||!g('tenNNT'))throw 0;const o=P(),kk=g('kieuKy');
+    if(!g('mst')||!g('tenNNT'))throw 0;
+    if(AUTH.mst&&normMst(g('mst'))!==AUTH.mst){toast('Tệp này của mã số thuế '+g('mst')+', không phải công ty của tài khoản này ('+AUTH.mst+').');return;}const o=P(),kk=g('kieuKy');
     DB.profile=Object.assign(o,{mst:g('mst'),ten:g('tenNNT'),dchi:g('dchiNNT')||o.dchi,tenXa:g('tenXaNNT')||o.tenXa,maXa:g('maXaNNT')||o.maXa,maTinh:g('maTinhNNT')||o.maTinh,tenTinh:g('tenTinhNNT')||o.tenTinh,dthoai:g('dthoaiNNT')||o.dthoai,email:g('emailNNT')||o.email,maCQT:g('maCQTNoiNop')||o.maCQT,tenCQT:g('tenCQTNoiNop')||o.tenCQT,nguoiKy:g('nguoiKy')||o.nguoiKy,nganh:g('nganhNgheKD')||o.nganh,kieuKy:(kk==='Q'||kk==='M')?kk:o.kieuKy});
     save();defaultPeriod();toast('Đã điền thông tin công ty từ tờ khai cũ. Kiểm tra lại rồi bấm Lưu.');render();
   }catch(err){toast('Tệp này không phải tờ khai thuế dạng XML. Chọn tệp có đuôi .xml xuất từ HTKK hoặc tải từ trang thuế.');}});
@@ -781,10 +813,27 @@ document.addEventListener('submit',async e=>{
     DB.profile={mst:g('h-mst').replace(/\s/g,''),ten:g('h-ten'),kieuKy:$('#h-kieu').value,dchi:g('h-dchi'),dthoai:g('h-dthoai'),email:g('h-email'),tenXa:g('h-tenxa'),maXa:g('h-maxa'),tenTinh:g('h-tentinh'),maTinh:g('h-matinh'),maCQT:g('h-macqt'),tenCQT:g('h-tencqt'),nguoiKy:g('h-nguoiky'),nganh:g('h-nganh'),pbanDVu:g('h-pbdv')||'5.6.7',pbanXML:g('h-pbxml')||'2.8.3',pbanKK:g('h-pbkk')||'2.9.3'};
     if(old!==DB.profile.kieuKy)defaultPeriod();
     save();toast('Đã lưu thông tin công ty');go('viec');return;}
-  if(f.id==='auth-form'){const btn=$('#auth-btn');btn.disabled=true;$('#auth-msg').textContent='';
+  if(f.id==='reg-form'){const btn=$('#reg-btn'),msg=$('#reg-msg');msg.className='err';msg.textContent='';
+    const mst=normMst($('#reg-mst').value),email=$('#reg-email').value.trim().toLowerCase();
+    if(!mst){msg.textContent='Mã số thuế chưa đúng. Mã số thuế công ty gồm 10 số.';return;}
+    btn.disabled=true;btn.textContent='Đang tạo tài khoản…';
+    try{const r=await api('smart_load',{sub:'register',company:$('#reg-co').value.trim(),mst,email,phone:$('#reg-phone').value.trim(),name:$('#reg-name').value.trim(),website:$('#reg-web').value});
+      if(r.ok&&r.sentTo){authShow('login');$('#auth-email').value=email;const m=$('#auth-msg');m.className='err good';m.textContent='Đã tạo tài khoản. Mật khẩu vừa được gửi tới '+email+'.\nMở email (xem cả mục Thư rác), chép mật khẩu vào ô trên rồi bấm Đăng nhập.';$('#auth-pass').focus();f.reset();}
+      else msg.textContent=r.ok?'Không gửi được đăng ký. Vui lòng thử lại.':((r.error||'Đăng ký không thành công.').indexOf('expired')>=0||r.expired?'Chức năng đăng ký đang được bật. Vui lòng thử lại sau ít phút hoặc liên hệ ACCA.':(r.error||'Đăng ký không thành công.'));}
+    catch(err){msg.textContent='Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.';}
+    btn.disabled=false;btn.textContent='Đăng ký và nhận mật khẩu qua email';return;}
+  if(f.id==='rs-form'){const btn=$('#rs-btn'),msg=$('#rs-msg');msg.className='err';msg.textContent='';
+    const mst=normMst($('#rs-mst').value);if(!mst){msg.textContent='Mã số thuế chưa đúng.';return;}
+    btn.disabled=true;
+    try{const r=await api('smart_load',{sub:'reset_pass',email:$('#rs-email').value.trim().toLowerCase(),mst});
+      if(r.ok&&r.msg){msg.className='err good';msg.textContent=r.msg+'\nXem cả mục Thư rác.';}
+      else msg.textContent=r.expired?'Chức năng này đang được bật. Vui lòng thử lại sau hoặc liên hệ ACCA.':(r.error||'Chưa gửi được. Vui lòng thử lại.');}
+    catch(err){msg.textContent='Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.';}
+    btn.disabled=false;return;}
+  if(f.id==='auth-form'){const btn=$('#auth-btn');btn.disabled=true;$('#auth-msg').className='err';$('#auth-msg').textContent='';
     try{const email=$('#auth-email').value.trim().toLowerCase();const r=await api('login',{email,password:$('#auth-pass').value,mode:'tax'});
       if(!r.ok)$('#auth-msg').textContent=r.error||'Đăng nhập không thành công.';
-      else{$('#auth-pass').value='';try{sessionStorage.setItem(TOKEN_KEY,r.token);sessionStorage.setItem(EMAIL_KEY,email);}catch(err){}AUTH={email,token:r.token};$('#auth').hidden=true;start();}}
+      else{$('#auth-pass').value='';try{sessionStorage.setItem(TOKEN_KEY,r.token);sessionStorage.setItem(EMAIL_KEY,email);}catch(err){}AUTH={email,token:r.token,mst:'',name:''};setAcct(email,r.client);$('#auth').hidden=true;start();}}
     catch(err){$('#auth-msg').textContent='Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.';}
     btn.disabled=false;}
 });
@@ -807,9 +856,10 @@ function start(){load();DB.staff=DB.staff||[];defaultPeriod();if(DEMO)demoData()
   if(DEMO){start();return;}
   let tok='',em='';try{tok=sessionStorage.getItem(TOKEN_KEY)||'';em=sessionStorage.getItem(EMAIL_KEY)||'';}catch(e){}
   if(!tok||!em){$('#auth').hidden=false;setTimeout(()=>$('#auth-email').focus(),30);return;}
-  AUTH={email:em,token:tok};
+  AUTH={email:em,token:tok,mst:'',name:''};try{const o=JSON.parse(sessionStorage.getItem(MST_KEY)||'{}');AUTH.mst=o.m||'';AUTH.name=o.n||'';}catch(e){}
   try{const r=await api('dashboard',{token:tok});
     if(!r.ok){try{sessionStorage.removeItem(TOKEN_KEY);}catch(e){}$('#auth').hidden=false;$('#auth-msg').textContent='Phiên đăng nhập đã hết hạn. Đăng nhập lại.';return;}
+    setAcct(em,r.client);
     if(Array.isArray(r.access)&&r.access.indexOf('tax')<0){$('#auth').hidden=false;$('#auth-msg').textContent='Tài khoản này chưa đăng ký gói ACCA Smart-Tax.';return;}
   }catch(e){/* mất mạng: vẫn cho làm việc với dữ liệu trên máy */}
   start();
