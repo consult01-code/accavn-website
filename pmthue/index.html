@@ -169,16 +169,33 @@ label.ck{flex-direction:row;align-items:center;gap:6px;font-size:.8rem;color:var
   <form class="auth-card" id="reg-form" autocomplete="on" hidden>
     <button class="link" type="button" data-auth="login" style="text-align:left;text-decoration:none">← Quay lại đăng nhập</button>
     <h1>Đăng ký tài khoản</h1>
-    <p class="muted">Điền thông tin công ty. Mật khẩu đăng nhập sẽ được gửi ngay về email của bạn. Mỗi mã số thuế chỉ đăng ký được một tài khoản.</p>
+    <p class="muted">Điền thông tin công ty, thanh toán, rồi ACCA gửi mật khẩu đăng nhập về email của bạn. Mỗi mã số thuế chỉ đăng ký được một tài khoản.</p>
     <label for="reg-co">Tên công ty<input id="reg-co" autocomplete="organization" required minlength="3"></label>
     <label for="reg-mst">Mã số thuế<input id="reg-mst" inputmode="numeric" autocomplete="off" placeholder="10 số" required></label>
     <label for="reg-email">Email nhận mật khẩu<input id="reg-email" type="email" autocomplete="email" required></label>
     <label for="reg-phone">Số điện thoại<input id="reg-phone" type="tel" autocomplete="tel" required></label>
-    <label for="reg-name">Họ tên người liên hệ<input id="reg-name" autocomplete="name"></label>
+    <label for="reg-name">Họ tên người đăng ký<input id="reg-name" autocomplete="name" required minlength="2"></label>
+    <label for="reg-months">Thời gian sử dụng<select id="reg-months"><option value="1">1 tháng · 299.000 đ</option><option value="3">3 tháng · 897.000 đ</option><option value="6">6 tháng · 1.794.000 đ</option><option value="12" selected>12 tháng · 3.588.000 đ</option></select></label>
     <input id="reg-web" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
-    <button class="btn primary" type="submit" id="reg-btn">Đăng ký và nhận mật khẩu qua email</button>
+    <button class="btn primary" type="submit" id="reg-btn">Tiếp tục đến thanh toán</button>
     <p class="err" id="reg-msg" role="alert"></p>
   </form>
+  <div class="auth-card" id="pay-card" hidden>
+    <h1>Thanh toán để nhận tài khoản</h1>
+    <p class="muted">Quét mã bằng ứng dụng ngân hàng. Số tiền và nội dung đã điền sẵn, vui lòng giữ nguyên nội dung để ACCA nhận ra khoản của bạn.</p>
+    <img id="pay-qr" alt="Mã QR chuyển khoản tới ACCA" width="260" height="260" style="align-self:center;max-width:100%;height:auto;border:1px solid var(--line);border-radius:var(--r);background:#fff">
+    <div class="tbl-wrap"><table><tbody>
+      <tr><td>Ngân hàng</td><td><b>ACB</b></td></tr>
+      <tr><td>Số tài khoản</td><td><b>10688187</b></td></tr>
+      <tr><td>Chủ tài khoản</td><td><b>CONG TY TNHH ACCA CONSULTING VIETNAM</b></td></tr>
+      <tr><td>Số tiền</td><td><b id="pay-amt"></b></td></tr>
+      <tr><td>Nội dung</td><td><b id="pay-nd" style="overflow-wrap:anywhere"></b></td></tr>
+    </tbody></table></div>
+    <button class="btn primary" type="button" id="pay-done">Tôi đã chuyển khoản</button>
+    <p class="err" id="pay-msg" role="alert"></p>
+    <p class="muted" style="font-size:.84rem">Sau khi ACCA xác nhận tiền đã về, email và mật khẩu đăng nhập được gửi tới <b id="pay-email"></b>.</p>
+    <button class="link" type="button" data-auth="login" style="text-align:left">Về trang đăng nhập</button>
+  </div>
   <form class="auth-card" id="rs-form" hidden>
     <button class="link" type="button" data-auth="login" style="text-align:left;text-decoration:none">← Quay lại đăng nhập</button>
     <h1>Quên mật khẩu</h1>
@@ -737,7 +754,13 @@ function readNotice(text,name){
   const i=low.search(/lý\s+do|ly\s+do/);const ly=i>=0?plain.slice(i,i+260):'';
   return {kq,ma,ly,text:name};
 }
-function authShow(w){$('#auth-form').hidden=w!=='login';$('#reg-form').hidden=w!=='reg';$('#rs-form').hidden=w!=='rs';const el=$(w==='reg'?'#reg-co':w==='rs'?'#rs-email':'#auth-email');if(el)el.focus();}
+let REG=null;
+document.addEventListener('click',async e=>{if(e.target.id!=='pay-done'||!REG)return;const b=e.target,m=$('#pay-msg');b.disabled=true;m.className='err';m.textContent='';
+  try{const r=await api('smart_load',{sub:'register_paid',email:REG.email,mst:REG.mst});
+    if(r.ok){m.className='err good';m.textContent='Đã ghi nhận. ACCA sẽ kiểm tra khoản chuyển và gửi email kèm mật khẩu tới '+REG.email+' (trong giờ làm việc, thường trong ngày). Nhớ xem cả mục Thư rác.';}
+    else{m.textContent=r.error||'Chưa ghi nhận được. Vui lòng bấm lại.';b.disabled=false;}}
+  catch(err){m.textContent='Không kết nối được máy chủ. Kiểm tra mạng rồi bấm lại.';b.disabled=false;}});
+function authShow(w){$('#auth-form').hidden=w!=='login';$('#reg-form').hidden=w!=='reg';$('#rs-form').hidden=w!=='rs';$('#pay-card').hidden=w!=='pay';const el=$(w==='reg'?'#reg-co':w==='rs'?'#rs-email':'#auth-email');if(el)el.focus();}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-auth]');if(b)authShow(b.dataset.auth);});
 function busy(on,msg){$('#busy').hidden=!on;if(msg)$('#busy-msg').textContent=msg;}
 function go(v){if(view===v)render();else location.hash=v;}
@@ -816,12 +839,14 @@ document.addEventListener('submit',async e=>{
   if(f.id==='reg-form'){const btn=$('#reg-btn'),msg=$('#reg-msg');msg.className='err';msg.textContent='';
     const mst=normMst($('#reg-mst').value),email=$('#reg-email').value.trim().toLowerCase();
     if(!mst){msg.textContent='Mã số thuế chưa đúng. Mã số thuế công ty gồm 10 số.';return;}
-    btn.disabled=true;btn.textContent='Đang tạo tài khoản…';
-    try{const r=await api('smart_load',{sub:'register',company:$('#reg-co').value.trim(),mst,email,phone:$('#reg-phone').value.trim(),name:$('#reg-name').value.trim(),website:$('#reg-web').value});
-      if(r.ok&&r.sentTo){authShow('login');$('#auth-email').value=email;const m=$('#auth-msg');m.className='err good';m.textContent='Đã tạo tài khoản. Mật khẩu vừa được gửi tới '+email+'.\nMở email (xem cả mục Thư rác), chép mật khẩu vào ô trên rồi bấm Đăng nhập.';$('#auth-pass').focus();f.reset();}
-      else msg.textContent=r.ok?'Không gửi được đăng ký. Vui lòng thử lại.':((r.error||'Đăng ký không thành công.').indexOf('expired')>=0||r.expired?'Chức năng đăng ký đang được bật. Vui lòng thử lại sau ít phút hoặc liên hệ ACCA.':(r.error||'Đăng ký không thành công.'));}
+    btn.disabled=true;btn.textContent='Đang ghi nhận đăng ký…';
+    try{const r=await api('smart_load',{sub:'register',months:+$('#reg-months').value,company:$('#reg-co').value.trim(),mst,email,phone:$('#reg-phone').value.trim(),name:$('#reg-name').value.trim(),website:$('#reg-web').value});
+      if(r.ok&&r.pending&&r.amount){REG={email,mst};$('#pay-amt').textContent=fmt(r.amount)+' đ';$('#pay-nd').textContent=r.content;$('#pay-email').textContent=email;
+        $('#pay-qr').src='https://img.vietqr.io/image/970416-10688187-compact2.png?amount='+r.amount+'&addInfo='+encodeURIComponent(r.content)+'&accountName='+encodeURIComponent('CONG TY TNHH ACCA CONSULTING VIETNAM');
+        $('#pay-msg').textContent='';$('#pay-done').disabled=false;authShow('pay');}
+      else msg.textContent=r.expired?'Chức năng đăng ký đang được bật. Vui lòng thử lại sau ít phút hoặc liên hệ ACCA.':(r.error||'Đăng ký không thành công. Vui lòng thử lại.');}
     catch(err){msg.textContent='Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.';}
-    btn.disabled=false;btn.textContent='Đăng ký và nhận mật khẩu qua email';return;}
+    btn.disabled=false;btn.textContent='Tiếp tục đến thanh toán';return;}
   if(f.id==='rs-form'){const btn=$('#rs-btn'),msg=$('#rs-msg');msg.className='err';msg.textContent='';
     const mst=normMst($('#rs-mst').value);if(!mst){msg.textContent='Mã số thuế chưa đúng.';return;}
     btn.disabled=true;
