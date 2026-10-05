@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /portal.html
 Disallow: /pmketoan/
+Disallow: /pmthue/
 Disallow: /khoahoc/c/
 
 Sitemap: https://accavn.com/sitemap.xml
