@@ -110,6 +110,12 @@ tr.void td{color:var(--muted);text-decoration:line-through}
 .err{color:var(--red);font-size:.88rem;white-space:pre-line}
 @media (max-width:900px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.steps a:nth-child(2){border-right:0}.steps a:nth-child(-n+2){border-bottom:1px solid var(--line)}}
 @media (max-width:820px){.app{grid-template-columns:1fr}.rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 16px;gap:10px}nav{flex-direction:row;overflow-x:auto}nav a{white-space:nowrap}.rail .foot{margin-top:0}main{padding:16px 16px 40px}}
+.one{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--r);padding:18px 20px}
+.one div{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1 1 320px}
+.one .btn{min-height:48px;padding:10px 22px;font-size:1.02rem}
+.busy{position:fixed;inset:0;z-index:65;background:color-mix(in srgb,var(--bg) 82%,transparent);display:grid;place-items:center;padding:16px}
+.busy div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 26px;font-weight:600;max-width:420px;text-align:center}
+@media print{.rail,.period,.btn,.toast,.alert,.busy,.no-print{display:none!important}.app{display:block}main{padding:0}body{background:#fff}.panel,.tbl-wrap{border:0;padding:0}.form01 td input{border:0;width:auto}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -134,6 +140,7 @@ tr.void td{color:var(--muted);text-decoration:line-through}
   <main id="main"></main>
 </div>
 <div id="toast" class="toast" hidden></div>
+<div id="busy" class="busy" hidden><div id="busy-msg" role="status">Đang xử lý…</div></div>
 <input type="file" id="file-tb" accept=".xml,.html,.htm,.txt,.pdf" hidden>
 <input type="file" id="file-restore" accept=".json,application/json" hidden>
 <div id="auth" class="auth" hidden>
@@ -237,16 +244,18 @@ function normInv(x,kind){
 }
 async function gdtFetchPeriod(){
   if(!GDT.token)throw new Error('Chưa đăng nhập cổng hóa đơn.');
-  const pi=perInfo();const acc={in:new Map(),out:new Map()};
+  const pi=perInfo();const acc={in:new Map(),out:new Map()};let nJob=0,nErr=0;
   const jobs=[['in','/query/invoices/purchase',';ttxly==5','mua vào – đã cấp mã'],['in','/query/invoices/purchase',';ttxly==6','mua vào – không mã'],['in','/sco-query/invoices/purchase',';ttxly==8','mua vào – máy tính tiền'],
               ['out','/query/invoices/sold','','bán ra'],['out','/sco-query/invoices/sold','','bán ra – máy tính tiền']];
   for(const [y,m] of pi.months)for(const [kind,path,extra,label] of jobs){
+    nJob++;
     try{const rows=await gdtQuery(path,gdtRange(y,m)+extra);rows.forEach(x=>{const n=normInv(x,kind);acc[kind].set(n.id,n);});glog(`Tháng ${m}/${y} · ${label}: ${rows.length} hóa đơn`);}
-    catch(e){glog(`Tháng ${m}/${y} · ${label}: LỖI ${e.message}`);if(!GDT.token)throw e;}
+    catch(e){glog(`Tháng ${m}/${y} · ${label}: LỖI ${e.message}`);nErr++;if(!GDT.token)throw e;}
   }
+  if(nErr===nJob)throw new Error('Cổng hóa đơn không trả dữ liệu cho kỳ này. Xem nhật ký ở bước 1.');
   const c=cur();c.in=[...acc.in.values()].sort((a,b)=>a.ngay.localeCompare(b.ngay));c.out=[...acc.out.values()].sort((a,b)=>a.ngay.localeCompare(b.ngay));
   c.fetchedAt=new Date().toISOString();save();
-  return {nIn:c.in.length,nOut:c.out.length};
+  return {nIn:c.in.length,nOut:c.out.length,nErr};
 }
 
 /* ===================== tính tờ khai 01/GTGT (Thông tư 80/2021) ===================== */
@@ -405,7 +414,7 @@ function buildXML(){
 /* ===================== giao diện ===================== */
 const VIEWS={tongquan:'Tổng quan',ketnoi:'Kết nối & lấy hóa đơn',hoadon:'Bảng kê hóa đơn',tokhai:'Tờ khai 01/GTGT',nop:'Nộp & thông báo',hoso:'Hồ sơ người nộp thuế'};
 let view=(location.hash||'').replace('#','');if(!VIEWS[view])view='tongquan';
-let ui={tab:'in',q:''};
+let ui={tab:'in',q:'',auto:false};
 window.addEventListener('hashchange',()=>{const v=location.hash.replace('#','');if(VIEWS[v]){view=v;render();window.scrollTo(0,0);}});
 function periodHTML(){
   const kq=P().kieuKy,ys=[];for(let y=now.getFullYear()+1;y>=2022;y--)ys.push(y);
@@ -433,6 +442,8 @@ function vHome(){
   const kpi=(l,v,s)=>`<div class="kpi"><span class="l">${l}</span><span class="v">${v}</span><span class="s">${s}</span></div>`;
   const need=!p.mst||!p.ten;
   return `${need?`<div class="alert"><b>Bước đầu</b><span>Chưa có thông tin người nộp thuế. <a class="link" href="#hoso">Khai báo hồ sơ</a> để tờ khai và tệp XML có đủ MST, tên, cơ quan thuế.</span></div>`:''}
+  <section class="one"><div><h2>Lập tờ khai ${esc(pi.label)} chỉ với một lần bấm</h2><span class="muted">Phần mềm tự lấy hóa đơn mua vào, bán ra của kỳ, tính tờ khai 01/GTGT và tải tệp XML để nộp. ${GDT.token||DEMO?'':'Lần đầu trong phiên cần đăng nhập cổng hóa đơn và gõ mã xác nhận.'}</span></div>
+   <button class="btn primary" data-act="one">Lập tờ khai ngay</button></section>
   <nav class="steps" aria-label="Quy trình">
     <a href="#ketnoi"><small>Bước 1</small><b>Kết nối &amp; lấy hóa đơn</b><span>${c.in.length+c.out.length?`Đã lấy ${c.in.length} mua vào, ${c.out.length} bán ra`:'Đăng nhập cổng hóa đơn, tự gõ mã xác nhận'}</span></a>
     <a href="#hoadon"><small>Bước 2</small><b>Bảng kê hóa đơn</b><span>Tách theo thuế suất, loại hóa đơn hủy</span></a>
@@ -462,6 +473,7 @@ function vConnect(){
      <div class="captcha"><div class="img" id="cap-img" aria-label="Mã xác nhận của cổng thuế">Đang tải mã…</div><button class="btn sm" type="button" data-act="cap-new">Đổi mã</button>
        <label for="g-cap" style="flex:1 1 160px">Nhập mã xác nhận trong hình<input id="g-cap" autocomplete="off" autocapitalize="characters" required></label></div>
      <div class="row"><button class="btn primary" type="submit" id="g-btn">Đăng nhập cổng hóa đơn</button></div>
+     ${ui.auto?'<p class="muted">Sau khi đăng nhập, phần mềm tự lấy hóa đơn và lập tờ khai.</p>':''}
      <p class="err" id="g-err" role="alert"></p></form>`}
   </section>
   <section class="panel"><h2>Kết quả lấy dữ liệu</h2>
@@ -522,7 +534,7 @@ function vForm(){
    <tr class="total"><td class="ct">[43]</td><td>Thuế GTGT còn được khấu trừ chuyển kỳ sau ([43]=[41]-[42])</td><td></td><td class="num">${fmt(t.ct43)}</td></tr>
    </tbody></table></div>
    <div class="row between"><span class="muted">Ô nhập là các chỉ tiêu phần mềm không tự biết (số chuyển kỳ, điều chỉnh, nhập khẩu). Các chỉ tiêu còn lại tính từ bảng kê hóa đơn.</span>
-    <div class="row"><button class="btn" data-act="xml">Tải tệp XML tờ khai</button><button class="btn primary" data-act="mark-lap">${c.status.lap?'Đã lập '+dmy(c.status.lap)+' · cập nhật':'Đánh dấu đã lập tờ khai'}</button></div></div>
+    <div class="row"><button class="btn" data-act="print">In / lưu PDF</button><button class="btn" data-act="xml">Tải tệp XML tờ khai</button><button class="btn primary" data-act="mark-lap">${c.status.lap?'Đã lập '+dmy(c.status.lap)+' · cập nhật':'Đánh dấu đã lập tờ khai'}</button></div></div>
   </section>`;
 }
 function vSubmit(){
@@ -578,6 +590,22 @@ function readNotice(text,name){
   const i=low.search(/lý\s+do|ly\s+do/);const ly=i>=0?plain.slice(i,i+260):'';
   return {kq,ma,ly,text:name};
 }
+function busy(on,msg){$('#busy').hidden=!on;if(msg)$('#busy-msg').textContent=msg;}
+function dlXML(quiet){const p=P();if(!p.mst||!p.ten||!p.maCQT){if(!quiet){toast('Khai báo MST, tên và mã cơ quan thuế ở Hồ sơ người nộp thuế trước khi xuất XML.');location.hash='hoso';}return false;}
+  const pi=perInfo();saveFile(`${p.mst}-01_GTGT_TT80-${pi.kieu==='Q'?'Q'+PER.n:'M'+z2(PER.n)}${PER.y}-L00.xml`,buildXML(),'application/xml');return true;}
+async function runAuto(){
+  const pi=perInfo();
+  if(!DEMO){
+    if(!GDT.token){ui.auto=true;if(view==='ketnoi')render();else location.hash='ketnoi';toast('Đăng nhập cổng hóa đơn một lần, phần mềm tự làm phần còn lại.');return;}
+    ui.auto=false;busy(true,'Đang lấy hóa đơn '+pi.label+' từ cổng thuế…');
+    try{await gdtFetchPeriod();}catch(e){busy(false);glog('LỖI: '+e.message);toast(e.message);if(view==='ketnoi')render();else location.hash='ketnoi';return;}
+    busy(false);
+  }
+  const c=cur();c.status.lap=ymd(new Date());save();
+  if(view==='tokhai')render();else location.hash='tokhai';
+  const ok=dlXML(true);
+  setTimeout(()=>toast(ok?`Đã lập tờ khai ${pi.label}: ${c.in.length} hóa đơn mua vào, ${c.out.length} bán ra. Tệp XML đã tải về.`:'Đã lập tờ khai. Bổ sung MST, tên, mã cơ quan thuế ở Hồ sơ để tải tệp XML.'),ok?3400:0);
+}
 document.addEventListener('click',async e=>{
   const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,c=cur();
   switch(a){
@@ -589,8 +617,9 @@ document.addEventListener('click',async e=>{
       render();break;}
     case 'tab':ui.tab=b.dataset.k;render();break;
     case 'csv':csvCurrent();break;
-    case 'xml':{const p=P();if(!p.mst||!p.ten||!p.maCQT){toast('Khai báo MST, tên và mã cơ quan thuế ở Hồ sơ người nộp thuế trước khi xuất XML.');location.hash='hoso';break;}
-      const pi=perInfo();saveFile(`${p.mst}-01_GTGT_TT80-${pi.kieu==='Q'?'Q'+PER.n:'M'+z2(PER.n)}${PER.y}-L00.xml`,buildXML(),'application/xml');break;}
+    case 'xml':dlXML(false);break;
+    case 'one':runAuto();break;
+    case 'print':window.print();break;
     case 'mark-lap':c.status.lap=ymd(new Date());save();toast('Đã đánh dấu tờ khai kỳ này là đã lập');render();break;
     case 'save-nop':c.status.nop=$('#s-nop').value;c.status.maGD=$('#s-gd').value.trim();save();toast('Đã lưu thông tin nộp');render();break;
     case 'tb-up':$('#file-tb').click();break;
@@ -615,7 +644,7 @@ document.addEventListener('input',e=>{const el=e.target;if(el.id==='inv-q'){ui.q
 document.addEventListener('submit',async e=>{
   e.preventDefault();const f=e.target;
   if(f.id==='gdt-form'){const btn=$('#g-btn'),err=$('#g-err');err.textContent='';btn.disabled=true;
-    try{await gdtLogin($('#g-user').value.trim(),$('#g-pass').value,$('#g-cap').value.trim());$('#g-pass').value='';toast('Đã đăng nhập cổng hóa đơn');render();}
+    try{await gdtLogin($('#g-user').value.trim(),$('#g-pass').value,$('#g-cap').value.trim());$('#g-pass').value='';toast('Đã đăng nhập cổng hóa đơn');if(ui.auto)runAuto();else render();}
     catch(ex){err.textContent=(ex.message||'Đăng nhập không thành công')+'\nKiểm tra tên đăng nhập, mật khẩu và mã xác nhận rồi thử lại.';glog('Đăng nhập thất bại: '+ex.message);btn.disabled=false;$('#g-cap').value='';gdtCaptcha();}
     return;}
   if(f.id==='form-hoso'){const g=id=>$('#'+id).value.trim();const old=P().kieuKy;
