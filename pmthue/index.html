@@ -634,14 +634,14 @@ function vInvoices(){
    :GDT.token?`<div class="alert info"><b>Đã kết nối</b><span>Tài khoản ${esc(GDT.user)}.</span></div>
      <div class="row"><button class="btn primary" data-act="gdt-fetch">Lấy hóa đơn ${esc(pi.label)}</button><button class="btn" data-act="gdt-out">Ngắt kết nối</button></div>`
    :`<form id="gdt-form" class="panel" style="padding:0;border:0" autocomplete="off">
-     <div class="grid2"><label for="g-user">Tên đăng nhập (thường là mã số thuế)<input id="g-user" value="${esc(P().mst)}" inputmode="numeric" autocomplete="off" required></label>
-     <label for="g-pass">Mật khẩu cổng hóa đơn điện tử<input id="g-pass" type="password" autocomplete="off" required></label></div>
+     <div class="grid2"><label for="g-user">Tên đăng nhập (thường là mã số thuế)<input id="g-user" name="mst-cong-thue" value="${esc(P().mst)}" inputmode="numeric" autocomplete="off" placeholder="Ví dụ: 0316119996" required></label>
+     <label for="g-pass">Mật khẩu cổng hóa đơn điện tử<input id="g-pass" name="mk-cong-thue" type="password" autocomplete="new-password" required></label></div>
      <div class="captcha"><div class="img" id="cap-img" aria-label="Mã xác nhận của cổng thuế">Đang tải mã…</div><button class="btn sm" type="button" data-act="cap-new">Đổi mã khác</button>
        <label for="g-cap" style="flex:1 1 160px">Gõ lại các chữ trong hình<input id="g-cap" autocomplete="off" autocapitalize="characters" required></label></div>
      <div class="row"><button class="btn primary" type="submit" id="g-btn">${ui.auto?'Kết nối và lập tờ khai':'Kết nối'}</button></div>
      <p class="err" id="g-err" role="alert"></p></form>`;
   return `<section class="panel"><h2>Kết nối cổng hóa đơn điện tử</h2>
-   <p class="muted">Dùng tài khoản công ty vẫn đăng nhập ở hoadondientu.gdt.gov.vn. Mật khẩu chỉ gửi thẳng tới cổng thuế, phần mềm không lưu lại.</p>
+   <p class="muted">Đây là tài khoản của <b>cơ quan thuế cấp cho công ty</b> (vẫn dùng ở hoadondientu.gdt.gov.vn), <b>không phải</b> email và mật khẩu ACCA. Mật khẩu chỉ gửi thẳng tới cổng thuế, phần mềm không lưu lại.</p>
    ${conn}
    <p class="muted">${c.fetchedAt?'Lần lấy gần nhất: '+new Date(c.fetchedAt).toLocaleString('vi-VN')+' · '+c.in.length+' hóa đơn mua vào, '+c.out.length+' hóa đơn bán ra.':'Chưa lấy hóa đơn cho kỳ này.'}</p>
    <details><summary class="muted">Nhật ký kết nối (gửi cho ACCA khi cần hỗ trợ)</summary><div class="log" id="gdt-log" aria-live="polite"></div></details>
