@@ -117,6 +117,9 @@ tr.void td{color:var(--muted);text-decoration:line-through}
 .btn.big{min-height:44px;padding:9px 20px;font-size:1rem}
 ol.plain{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;line-height:1.6}
 .hint{font-size:.82rem}
+.tip{font-size:.88rem;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:var(--r);padding:8px 12px}
+.tip b{color:var(--fg)}
+@media print{.tip{display:none}}
 code{font:500 .86em ui-monospace,Consolas,monospace;background:var(--sunk);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
 details.adv>summary,details>summary{cursor:pointer;font-weight:600}
 details.adv[open]>summary{margin-bottom:6px}
@@ -142,6 +145,7 @@ label.ck{flex-direction:row;align-items:center;gap:6px;font-size:.8rem;color:var
       <a href="#hoadon" data-v="hoadon"><i>▤</i>Hóa đơn</a>
       <a href="#nop" data-v="nop"><i>➜</i>Nộp &amp; kết quả</a>
       <a href="#congty" data-v="congty"><i>⚙</i>Thông tin công ty</a>
+      <a href="#huongdan" data-v="huongdan"><i>?</i>Hướng dẫn</a>
     </nav>
     <div class="foot">
       <a href="../portal.html" class="link">← Kho phần mềm online</a>
@@ -168,7 +172,7 @@ label.ck{flex-direction:row;align-items:center;gap:6px;font-size:.8rem;color:var
     <button class="btn primary" type="submit" id="auth-btn">Đăng nhập</button>
     <p class="err" id="auth-msg" role="alert"></p>
     <button class="btn" type="button" data-auth="reg">Chưa có tài khoản? Đăng ký ngay</button>
-    <p class="muted" style="font-size:.84rem;line-height:1.7"><button class="link" type="button" data-auth="rs">Quên mật khẩu</button> · <a href="?demo=1#viec">Xem bản dùng thử với dữ liệu mẫu</a></p>
+    <p class="muted" style="font-size:.84rem;line-height:1.7"><button class="link" type="button" data-auth="rs">Quên mật khẩu</button> · <a href="?demo=1#viec">Xem bản dùng thử</a> · <a href="?demo=1#huongdan">Hướng dẫn sử dụng</a></p>
   </form>
   <form class="auth-card" id="reg-form" autocomplete="on" hidden>
     <button class="link" type="button" data-auth="login" style="text-align:left;text-decoration:none">← Quay lại đăng nhập</button>
@@ -531,7 +535,7 @@ function dlXML(form,quiet){const p=P(),f=FORMS[form];
   const pi=perInfo();saveFile(`${p.mst}-${f.file}-${pi.kieu==='Q'?'Q'+PER.n:'M'+z2(PER.n)}${PER.y}-L00.xml`,f.build(),'application/xml');return true;}
 
 /* ===================== giao diện ===================== */
-const VIEWS={viec:'Việc cần làm',nap:'Nạp hồ sơ',gtgt:'Thuế GTGT',tncn:'Thuế TNCN từ tiền lương',hoadon:'Hóa đơn',nop:'Nộp & kết quả',congty:'Thông tin công ty'};
+const VIEWS={viec:'Việc cần làm',nap:'Nạp hồ sơ',gtgt:'Thuế GTGT',tncn:'Thuế TNCN từ tiền lương',hoadon:'Hóa đơn',nop:'Nộp & kết quả',congty:'Thông tin công ty',huongdan:'Hướng dẫn sử dụng'};
 let view=(location.hash||'').replace('#','');if(!VIEWS[view])view='viec';
 let ui={tab:'in',q:'',auto:false,form:'gtgt'};
 window.addEventListener('hashchange',()=>{const v=location.hash.replace('#','');if(VIEWS[v]){view=v;render();window.scrollTo(0,0);}});
@@ -551,8 +555,8 @@ function render(){
   $('#who').innerHTML=DEMO?'Bản dùng thử: dữ liệu mẫu, không lưu. <a class="link" href="./">Đăng nhập</a>':(AUTH.email?`Tài khoản: <b>${esc(AUTH.email)}</b> <button class="link" data-act="logout">Đăng xuất</button>`:'');
   $('#gdt-state').textContent=GDT.token?('Đang kết nối cổng hóa đơn: '+GDT.user):'';
   let body='';
-  try{body=({viec:vHome,nap:vImport,gtgt:vGtgt,tncn:vTncn,hoadon:vInvoices,nop:vSubmit,congty:vProfile})[view]();}catch(e){console.error(e);body=`<div class="alert red"><b>Lỗi hiển thị</b>${esc(e.message)}</div>`;}
-  $('#main').innerHTML=`<header class="topbar"><div><span class="eyebrow">${esc(pi.label)} · hạn nộp ${dmy(pi.due)}</span><h1>${VIEWS[view]}</h1></div>${view==='congty'?'':periodHTML()}</header>${body}`;
+  try{body=({viec:vHome,nap:vImport,gtgt:vGtgt,tncn:vTncn,hoadon:vInvoices,nop:vSubmit,congty:vProfile,huongdan:vHelp})[view]();}catch(e){console.error(e);body=`<div class="alert red"><b>Lỗi hiển thị</b>${esc(e.message)}</div>`;}
+  $('#main').innerHTML=`<header class="topbar"><div><span class="eyebrow">${esc(pi.label)} · hạn nộp ${dmy(pi.due)}</span><h1>${VIEWS[view]}</h1></div>${view==='congty'||view==='huongdan'?'':periodHTML()}</header>${HINT[view]?`<p class="tip"><b>Làm gì ở đây:</b> ${HINT[view]} <a class="link" href="#huongdan">Xem hướng dẫn</a></p>`:''}${body}`;
   if(view==='hoadon'){if(!GDT.token&&!DEMO)gdtCaptcha();const el=$('#gdt-log');if(el)el.textContent=GDT.log.join('\n');}
   if(keep){const e=document.getElementById(keep);if(e&&e!==document.activeElement)e.focus();}
 }
@@ -565,6 +569,35 @@ function tncnSay(t){
   if(!t.ct16)return {big:'Chưa có số liệu',sub:'Nhập lương đã trả cho từng người trong kỳ, phần mềm tự tính thuế phải khấu trừ.'};
   if(t.ct29>0)return {big:fmt(t.ct29)+' đ',sub:`Đây là thuế TNCN công ty đã trừ vào lương của ${t.ct18} người và phải nộp thay họ, hạn chót ${dmy(perInfo().due)}.`,pay:true};
   return {big:'Không phải nộp',sub:`Đã trả lương cho ${t.ct16} người, chưa ai tới mức phải đóng thuế TNCN trong kỳ này.`};
+}
+const HINT={
+  viec:'xem hạn nộp và số thuế của kỳ. Bấm Cách 1 hoặc Cách 2 để phần mềm tính.',
+  nap:'chọn thư mục hồ sơ trên máy, hoặc dán link Google Drive. Phần mềm tự đọc và tính thuế.',
+  gtgt:'xem số thuế GTGT phải nộp, trả lời 2 câu hỏi bên phải, rồi bấm Tải tệp để nộp.',
+  tncn:'bấm Thêm người, ghi lương từng tháng. Phần mềm tự tính thuế, rồi bấm Lập tờ khai.',
+  hoadon:'xem lại hóa đơn. Hóa đơn mua từ 5 triệu trả tiền mặt thì tích vào ô "Trả tiền mặt".',
+  nop:'làm theo 5 bước để nộp tờ khai trên trang thuế, rồi đưa tệp thông báo vào để xem kết quả.',
+  congty:'nhập một lần. Nhanh nhất là bấm Chọn tệp tờ khai cũ để phần mềm tự điền.'};
+function vHelp(){
+  const st=(n,t,d,go,btn)=>`<li><b>${t}</b><br><span class="muted">${d}</span>${go?`<br><a class="btn sm" href="#${go}">${btn}</a>`:''}</li>`;
+  return `<section class="panel"><h2>Làm xong một kỳ thuế trong 6 bước</h2>
+   <ol class="plain">
+    ${st(1,'Nhập thông tin công ty (chỉ làm lần đầu)','Bấm "Chọn tệp tờ khai cũ" để phần mềm tự điền mã số thuế, tên, cơ quan thuế. Không có tệp thì gõ tay 3 ô có dấu *.','congty','Mở Thông tin công ty')}
+    ${st(2,'Chọn kỳ đang làm','Ở góc trên bên phải, chọn Quý (hoặc Tháng) và Năm. Phần mềm tự chọn sẵn kỳ vừa kết thúc.','viec','Mở Việc cần làm')}
+    ${st(3,'Đưa hóa đơn vào','Cách 1: bấm "Tự lấy từ cổng thuế", đăng nhập tài khoản hoadondientu và gõ mã trong hình. Cách 2: tải Excel hóa đơn về một thư mục rồi bấm "Chọn thư mục hồ sơ" hoặc dán link Google Drive.','nap','Mở Nạp hồ sơ')}
+    ${st(4,'Xem số thuế GTGT','Phần mềm ghi rõ phải nộp bao nhiêu. Trả lời 2 câu: thuế kỳ trước chuyển sang, và có nhập khẩu không. Rồi bấm "Tải tệp để nộp".','gtgt','Mở Thuế GTGT')}
+    ${st(5,'Thuế TNCN từ lương (nếu có trả lương)','Bấm "Thêm người", ghi lương và bảo hiểm từng tháng. Bấm "Lập tờ khai và tải tệp để nộp".','tncn','Mở Thuế TNCN')}
+    ${st(6,'Nộp và xem kết quả','Mở thuedientu.gdt.gov.vn, chọn Khai thuế ▸ Nộp tờ khai XML, chọn tệp vừa tải, ký bằng chữ ký số, bấm Nộp. Khi có thông báo, tải về và đưa vào phần mềm để biết đã được chấp nhận chưa.','nop','Mở Nộp & kết quả')}
+   </ol></section>
+  <section class="panel"><h2>Câu hỏi hay gặp</h2>
+   <details><summary>Đăng nhập cổng hóa đơn báo sai?</summary><p class="muted">Ô đó dùng tài khoản do cơ quan thuế cấp (tên đăng nhập thường là mã số thuế), không phải email và mật khẩu ACCA. Gõ lại mã trong hình cho đúng, khó đọc thì bấm "Đổi mã khác".</p></details>
+   <details><summary>Nạp thư mục mà tệp báo "Chưa dùng"?</summary><p class="muted">Phần mềm chỉ đọc tệp Excel xuất từ cổng hóa đơn điện tử, tệp tờ khai .xml và bảng lương Excel. Tệp PDF, ảnh, Word không đọc được. Giữ nguyên tệp như lúc tải về, không sửa.</p></details>
+   <details><summary>Bấm "Tải tệp để nộp" không ra tệp?</summary><p class="muted">Còn thiếu mã số thuế, tên công ty hoặc mã cơ quan thuế. Vào Thông tin công ty điền đủ 3 ô có dấu * rồi bấm lại.</p></details>
+   <details><summary>Trang thuế báo sai phiên bản tệp?</summary><p class="muted">Vào Thông tin công ty ▸ Thông tin kỹ thuật, sửa số phiên bản theo bản HTKK mới nhất, rồi tải lại tệp. Hoặc nhắn ACCA hỗ trợ.</p></details>
+   <details><summary>Số liệu lưu ở đâu, đổi máy có mất không?</summary><p class="muted">Lưu trên trình duyệt của máy đang dùng. Muốn chuyển máy: vào Thông tin công ty ▸ Tải tệp sao lưu, sang máy mới bấm Nhập từ tệp sao lưu.</p></details>
+   <details><summary>Quên mật khẩu?</summary><p class="muted">Ở màn hình đăng nhập bấm "Quên mật khẩu", ghi email và mã số thuế đã đăng ký. Mật khẩu mới gửi về email.</p></details>
+   <p class="muted">Cần hỗ trợ thêm: ACCA Consulting Vietnam, <a href="https://accavn.com" target="_blank" rel="noopener">accavn.com</a>.</p>
+  </section>`;
 }
 function vHome(){
   const pi=perInfo(),c=cur(),t=calc01(),t5=calc05(),g=gtgtSay(t,c),n=tncnSay(t5);
