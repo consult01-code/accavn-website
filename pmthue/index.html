@@ -117,6 +117,7 @@ tr.void td{color:var(--muted);text-decoration:line-through}
 .btn.big{min-height:44px;padding:9px 20px;font-size:1rem}
 ol.plain{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;line-height:1.6}
 .hint{font-size:.82rem}
+code{font:500 .86em ui-monospace,Consolas,monospace;background:var(--sunk);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
 details.adv>summary,details>summary{cursor:pointer;font-weight:600}
 details.adv[open]>summary{margin-bottom:6px}
 label.ck{flex-direction:row;align-items:center;gap:6px;font-size:.8rem;color:var(--fg)}
@@ -837,17 +838,67 @@ async function importFiles(files){
   if(best)ST('gtgt').lap=ymd(new Date());save();
   IMP.busy=false;busy(false);go('nap');
 }
+const GUIDE_TXT=`HƯỚNG DẪN GOM HỒ SƠ KHAI THUẾ (ACCA Smart-Tax)
+
+Tạo thư mục: Q3-2026 - TÊN CÔNG TY - MÃ SỐ THUẾ, bên trong có:
+
+1. HOA DON BAN RA
+   hoadondientu.gdt.gov.vn > Tra cứu > Tra cứu hóa đơn > Hóa đơn điện tử bán ra
+   Chọn từng tháng (mỗi lần tối đa 1 tháng) > Tìm kiếm > Xuất Excel
+   Tên tệp: BAN RA - T07.xlsx, BAN RA - T08.xlsx, BAN RA - T09.xlsx
+
+2. HOA DON MUA VAO
+   Cùng trang, chọn Hóa đơn điện tử mua vào. Xuất đủ 3 loại ở ô "Kết quả kiểm tra":
+   MUA VAO - T07 - CO MA.xlsx / MUA VAO - T07 - KHONG MA.xlsx / MUA VAO - T07 - MAY TINH TIEN.xlsx
+
+3. TO KHAI KY TRUOC
+   Tệp tờ khai GTGT kỳ liền trước đã nộp (đuôi .xml)
+
+4. BANG LUONG
+   Mỗi tháng một tệp Excel, tên có chữ T07, T08...
+   Cột cần có: Họ tên, Tổng thu nhập, Bảo hiểm trừ lương, Số người phụ thuộc
+
+Sau đó vào phần mềm > Nạp hồ sơ > Chọn thư mục hồ sơ,
+hoặc tải thư mục lên Google Drive, bật chia sẻ "Bất kỳ ai có đường liên kết", dán link vào phần mềm.
+
+Lưu ý: giữ nguyên tệp Excel như lúc tải về. Không bỏ mật khẩu vào thư mục.
+`;
+async function importFromLink(link){
+  const msg=$('#link-msg'),btn=$('#link-btn');msg.className='err';msg.textContent='';
+  if(DEMO||!AUTH.token){msg.textContent='Bản dùng thử không lấy được hồ sơ từ link. Hãy đăng nhập bằng tài khoản của công ty.';return;}
+  btn.disabled=true;btn.textContent='Đang lấy hồ sơ…';busy(true,'Đang lấy hồ sơ từ Google Drive…');
+  try{const r=await api('smart_load',{sub:'drive_folder',token:AUTH.token,link});
+    if(!r.ok||!Array.isArray(r.files)){busy(false);msg.textContent=r.noAccess||(!r.files&&r.ok)?'Chức năng lấy hồ sơ từ link đang được bật. Tạm thời hãy dùng nút Chọn thư mục hồ sơ.':(r.error||'Không lấy được hồ sơ. Vui lòng thử lại.');}
+    else if(!r.files.length){busy(false);msg.textContent='Thư mục "'+(r.folder||'')+'" không có tệp Excel hay XML nào.';}
+    else{DB.driveLink=link;save();
+      const fs=r.files.map(f=>{const bin=atob(f.b64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);const file=new File([u],f.name.split('/').pop());Object.defineProperty(file,'webkitRelativePath',{value:f.name});return file;});
+      busy(false);await importFiles(fs);
+      (r.skipped||[]).forEach(n=>IMP.rows.push({name:n,ok:false,kind:'',n:0,unit:'',note:'Không lấy về (không phải Excel, XML hoặc tệp quá lớn).',per:{}}));render();return;}
+  }catch(e){busy(false);msg.textContent='Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.';}
+  const b2=$('#link-btn');if(b2){b2.disabled=false;b2.textContent='Lấy hồ sơ từ link';}
+}
 function vImport(){
   const c=cur(),pi=perInfo(),t=calc01(),say=gtgtSay(t,c),okN=IMP.rows.filter(r=>r.ok).length;
   return `<section class="panel"><h2>Cách 2: đưa thư mục hồ sơ vào, phần mềm tự lập tờ khai</h2>
-   <p class="muted">Gom hồ sơ của kỳ vào một thư mục rồi chọn cả thư mục đó. Phần mềm tự nhận ra từng tệp là gì, tự xếp hóa đơn vào đúng tháng, quý và tính thuế. Tệp chỉ được đọc trên máy của bạn, không gửi đi đâu.</p>
-   <div class="row"><button class="btn primary big" data-act="pick-dir">Chọn thư mục hồ sơ</button><button class="btn" data-act="pick-files">Hoặc chọn từng tệp</button></div>
-   <div class="tbl-wrap"><table><thead><tr><th>Loại hồ sơ</th><th>Lấy ở đâu</th><th>Tệp</th></tr></thead><tbody>
-    <tr><td><b>Hóa đơn bán ra</b></td><td>hoadondientu.gdt.gov.vn ▸ Tra cứu hóa đơn bán ra ▸ chọn từng tháng ▸ Xuất Excel</td><td>Excel</td></tr>
-    <tr><td><b>Hóa đơn mua vào</b></td><td>Cùng trang, mục hóa đơn mua vào. Xuất đủ 3 loại: đã cấp mã, không mã, máy tính tiền</td><td>Excel</td></tr>
-    <tr><td><b>Tờ khai kỳ trước</b></td><td>Tệp tờ khai GTGT kỳ liền trước đã nộp. Phần mềm lấy thông tin công ty và số thuế chuyển kỳ</td><td>XML</td></tr>
-    <tr><td><b>Bảng lương</b> (nếu có)</td><td>Mỗi tháng một tệp, tên tệp có chữ T07, T08… Cần cột Họ tên, Lương, Bảo hiểm, Người phụ thuộc</td><td>Excel</td></tr>
-   </tbody></table></div></section>
+   <p class="muted">Gom hồ sơ của kỳ vào một thư mục (xem hướng dẫn bên dưới), rồi đưa vào bằng một trong hai cách. Phần mềm tự nhận ra từng tệp là gì, tự xếp hóa đơn vào đúng tháng, quý và tính thuế.</p>
+   <div class="grid2">
+    <div class="task"><h3>Hồ sơ đang nằm trên máy này</h3><p class="muted">Chọn thư mục đã gom hồ sơ. Tệp chỉ đọc trên máy của bạn.</p>
+     <div class="row"><button class="btn primary big" data-act="pick-dir">Chọn thư mục hồ sơ</button><button class="btn" data-act="pick-files">Hoặc chọn từng tệp</button></div></div>
+    <form class="task" id="link-form"><h3>Hồ sơ nằm trên Google Drive</h3>
+     <label for="link-url">Dán link thư mục Google Drive (đã bật chia sẻ bằng link)<input id="link-url" type="url" inputmode="url" placeholder="https://drive.google.com/drive/folders/…" value="${esc(DB.driveLink||'')}" required></label>
+     <div class="row"><button class="btn primary big" type="submit" id="link-btn">Lấy hồ sơ từ link</button></div>
+     <p class="err" id="link-msg" role="alert"></p></form>
+   </div></section>
+  <details class="panel adv" ${IMP.rows.length?'':'open'}><summary>Hướng dẫn lưu hồ sơ đúng cách (làm theo 4 bước)</summary>
+   <ol class="plain">
+    <li><b>Tạo một thư mục cho kỳ này</b>, đặt tên theo kiểu <code>Q3-2026 - TÊN CÔNG TY - MÃ SỐ THUẾ</code>. Bên trong tạo các thư mục con: <code>1. HOA DON BAN RA</code>, <code>2. HOA DON MUA VAO</code>, <code>3. TO KHAI KY TRUOC</code>, <code>4. BANG LUONG</code>.<br><button class="btn sm" data-act="guide-dl" type="button">Tải bản hướng dẫn để in</button></li>
+    <li><b>Tải hóa đơn bán ra.</b> Mở cổng hóa đơn điện tử, đăng nhập, vào <b>Tra cứu ▸ Tra cứu hóa đơn ▸ Hóa đơn điện tử bán ra</b>. Chọn từ ngày 01 đến ngày cuối của <b>từng tháng</b> (mỗi lần chỉ được một tháng), bấm <b>Tìm kiếm</b>, rồi bấm <b>Xuất Excel</b>. Lưu vào thư mục 1, đặt tên <code>BAN RA - T07.xlsx</code>, <code>BAN RA - T08.xlsx</code>…<br><a class="btn sm" href="https://hoadondientu.gdt.gov.vn" target="_blank" rel="noopener">Mở cổng hóa đơn điện tử</a></li>
+    <li><b>Tải hóa đơn mua vào.</b> Cùng trang, chọn <b>Hóa đơn điện tử mua vào</b>. Ở ô <b>Kết quả kiểm tra</b> phải xuất đủ ba loại cho mỗi tháng: <b>Đã cấp mã hóa đơn</b>, <b>Cục Thuế đã nhận không mã</b>, <b>Hóa đơn từ máy tính tiền</b>. Lưu vào thư mục 2, đặt tên <code>MUA VAO - T07 - CO MA.xlsx</code>, <code>MUA VAO - T07 - KHONG MA.xlsx</code>, <code>MUA VAO - T07 - MAY TINH TIEN.xlsx</code>. Loại nào không có hóa đơn thì bỏ qua.</li>
+    <li><b>Thêm tờ khai kỳ trước và bảng lương.</b> Thư mục 3: tệp tờ khai GTGT kỳ liền trước đã nộp (đuôi .xml). Thư mục 4: bảng lương mỗi tháng một tệp Excel, tên có chữ <code>T07</code>, <code>T08</code>…, có các cột Họ tên, Tổng thu nhập, Bảo hiểm trừ lương, Số người phụ thuộc.</li>
+   </ol>
+   <div class="alert info"><b>Dùng Google Drive</b><span>Tải cả thư mục lên Google Drive, bấm chuột phải vào thư mục ▸ <b>Chia sẻ</b> ▸ mục <b>Quyền truy cập chung</b> chọn <b>Bất kỳ ai có đường liên kết</b> (Người xem) ▸ <b>Sao chép đường liên kết</b>, rồi dán vào ô phía trên. <a class="link" href="https://drive.google.com" target="_blank" rel="noopener">Mở Google Drive</a></span></div>
+   <div class="alert"><b>Lưu ý</b><span>Giữ nguyên tệp Excel như lúc tải về, không sửa, không gộp. Không bỏ mật khẩu cổng thuế hay mật khẩu chữ ký số vào thư mục. Link chia sẻ ai có cũng xem được, dùng xong nên tắt chia sẻ.</span></div>
+  </details>
   ${IMP.rows.length?`<section class="panel"><div class="row between"><h2>Kết quả đọc ${IMP.rows.length} tệp</h2><span class="chip ${okN?'ok':'red'}">${okN} tệp dùng được</span></div>
    <div class="tbl-wrap"><table><thead><tr><th>Tệp</th><th>Phần mềm nhận ra là</th><th class="num">Đọc được</th><th>Ghi chú</th></tr></thead><tbody>
    ${IMP.rows.map(r=>`<tr><td style="overflow-wrap:anywhere">${esc(r.name)}</td><td>${r.ok?`<span class="chip ok">${esc(r.kind)}</span>`:'<span class="chip amber">Chưa dùng</span>'}</td><td class="num">${r.ok?fmt(r.n)+' '+r.unit:''}</td><td>${esc(r.note||(Object.keys(r.per).length?'Kỳ: '+Object.keys(r.per).map(k=>k.replace('-',' ')).join(', '):''))}</td></tr>`).join('')}
@@ -915,6 +966,7 @@ document.addEventListener('click',async e=>{
     case 'tb-up':$('#file-tb').click();break;
     case 'prof-xml':$('#file-prof').click();break;
     case 'pick-dir':$('#file-dir').click();break;
+    case 'guide-dl':saveFile('Huong dan gom ho so khai thue.txt','\ufeff'+GUIDE_TXT);break;
     case 'pick-files':$('#file-multi').click();break;
     case 'backup':saveFile(`acca-smart-tax-${(P().mst||'du-lieu')}-${ymd(new Date())}.json`,JSON.stringify({app:'acca-smart-tax',v:2,db:DB},null,1),'application/json');break;
     case 'restore':$('#file-restore').click();break;
@@ -947,6 +999,7 @@ document.addEventListener('change',e=>{const el=e.target,c=cur();
 document.addEventListener('input',e=>{const el=e.target;if(el.id==='inv-q'){ui.q=el.value;const c=cur();$('#inv-list').innerHTML=invTable(ui.tab==='in'?c.in:c.out,ui.tab);}});
 document.addEventListener('submit',async e=>{
   e.preventDefault();const f=e.target;
+  if(f.id==='link-form'){importFromLink($('#link-url').value.trim());return;}
   if(f.id==='gdt-form'){const btn=$('#g-btn'),err=$('#g-err');err.textContent='';btn.disabled=true;
     try{await gdtLogin($('#g-user').value.trim(),$('#g-pass').value,$('#g-cap').value.trim());$('#g-pass').value='';toast('Đã kết nối cổng hóa đơn');if(ui.auto)runAuto();else render();}
     catch(ex){err.textContent=(ex.message||'Kết nối không thành công')+'\nKiểm tra tên đăng nhập, mật khẩu và các chữ trong hình rồi thử lại.';glog('Đăng nhập thất bại: '+ex.message);btn.disabled=false;$('#g-cap').value='';gdtCaptcha();}
